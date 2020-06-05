@@ -5,8 +5,7 @@ from person.models import PersonUser
 
 # Create your models here.
 
-class Category(Base):
-    pass
+
 
 
 class Question(Base):
@@ -36,8 +35,12 @@ class Option(Base):
 
 
 
+
 class Group(Base):
     owner = models.ForeignKey(PersonUser, on_delete=models.PROTECT, related_name="question_group_owner", related_query_name="group")
+
+class Category(Base):
+    group = models.ManyToManyField(Group)
 
 
 class QuestionGroupRelation(models.Model):
