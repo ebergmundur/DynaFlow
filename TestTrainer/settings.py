@@ -27,7 +27,9 @@ SECRET_KEY = 'kf_tm4on1c1jt=ua59wu)b6n2m5ly9*&84eeh7gdr=8x4%0ke5'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'testtrainer.benda.is',
+]
 
 
 # Application definition
