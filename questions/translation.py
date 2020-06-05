@@ -1,20 +1,25 @@
 from modeltranslation.translator import register, TranslationOptions
-from .models import Question, Questionnaire, Option, Group
+from .models import Question, Questionnaire, Option, Group, Category
 
 
 
 @register(Question)
-class BaseTranslationOptions(TranslationOptions):
+class QuestionTranslationOptions(TranslationOptions):
     fields = ('question', 'hint',)
 
 @register(Option)
-class BaseTranslationOptions(TranslationOptions):
+class OptionTranslationOptions(TranslationOptions):
     fields = ('answer', )
 
 # @register(Questionnaire)
 # class BaseTranslationOptions(TranslationOptions):
 #     fields = ('name', 'description',)
 #
-# @register(Group)
-# class BaseTranslationOptions(TranslationOptions):
-#     fields = ('name', 'description',)
+@register(Group)
+class GroupTranslationOptions(TranslationOptions):
+    fields = ('name', 'description',)
+
+@register(Category)
+class CategoryTranslationOptions(TranslationOptions):
+    fields = ('name', 'description',)
+
