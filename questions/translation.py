@@ -11,15 +11,15 @@ class QuestionTranslationOptions(TranslationOptions):
 class OptionTranslationOptions(TranslationOptions):
     fields = ('answer', )
 
-# @register(Questionnaire)
-# class BaseTranslationOptions(TranslationOptions):
-#     fields = ('name', 'description',)
-#
-@register(Group)
-class GroupTranslationOptions(TranslationOptions):
+@register(Questionnaire)
+class QuestionnaireTranslationOptions(TranslationOptions):
     fields = ('name', 'description',)
 
 @register(Category)
 class CategoryTranslationOptions(TranslationOptions):
     fields = ('name', 'description',)
 
+
+@register(Group)
+class GroupTranslationOptions(TranslationOptions):
+    fields = ('name', 'description',)
