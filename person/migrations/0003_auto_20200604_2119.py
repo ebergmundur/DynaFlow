@@ -9,15 +9,15 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('person', '0002_auto_20200604_2119'),
-        ('questions', '0003_auto_20200604_2119'),
+        # ('questions', '0003_auto_20200604_2119'),
         ('admin', '0003_logentry_add_action_flag_choices'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
-        migrations.DeleteModel(
-            name='Person',
-        ),
+        # migrations.DeleteModel(
+        #     name='Person',
+        # ),
         migrations.AddField(
             model_name='personuser',
             name='user',

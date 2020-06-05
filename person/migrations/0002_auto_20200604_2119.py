@@ -21,8 +21,8 @@ class Migration(migrations.Migration):
                 ('admin_note', models.TextField(blank=True)),
             ],
         ),
-        migrations.RemoveField(
-            model_name='person',
-            name='user_ptr',
-        ),
+        # migrations.RemoveField(
+        #     model_name='person',
+        #     name='user_ptr',
+        # ),
     ]
