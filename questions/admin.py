@@ -7,7 +7,8 @@ from modeltranslation.admin import TranslationAdmin, TabbedTranslationAdmin, Tra
 class OptionInline(TranslationStackedInline):
     model = Option
     fk_name = 'question_ref'
-    classes = ['collapse']
+    # classes = ['collapse']s
+    extra = 1
 
 @admin.register(Question)
 class QuestionAdmin(TabbedTranslationAdmin):

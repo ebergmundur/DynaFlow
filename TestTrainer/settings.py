@@ -29,6 +29,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     'testtrainer.benda.is',
+    '127.0.0.1',
 ]
 
 
