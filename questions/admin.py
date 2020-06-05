@@ -27,17 +27,21 @@ class QuestionAdmin(TabbedTranslationAdmin):
 
 
 @admin.register(Option)
-class OptionAdmin(TranslationAdmin):
+class OptionAdmin(TabbedTranslationAdmin):
     pass
 
 
 @admin.register(Group)
-class GroupAdmin(admin.ModelAdmin):
+class GroupAdmin(TabbedTranslationAdmin):
+    pass
+
+@admin.register(Category)
+class CategoryAdmin(TabbedTranslationAdmin):
     pass
 
 
 @admin.register(Questionnaire)
-class QuestionnaireAdmin(admin.ModelAdmin):
+class QuestionnaireAdmin(TabbedTranslationAdmin):
     pass
 
 

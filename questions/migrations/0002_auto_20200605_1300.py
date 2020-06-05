@@ -17,4 +17,3 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='question_option', related_query_name='question_option_option', to='questions.Question'),
         ),
     ]
- 
