@@ -1,6 +1,6 @@
 from django.db import models
 from base.models import Base
-from person.models import PersonUser as Person
+from person.models import PersonUser
 #from django.utils.translation import gettext as _
 
 # Create your models here.
@@ -12,7 +12,7 @@ class Category(Base):
 class Question(Base):
     question = models.TextField(blank=True)
     image = models.ImageField(blank=True, null=True)
-    owner = models.ForeignKey(Person, on_delete=models.PROTECT, related_name="question_question_owner", related_query_name="question_owner")
+    owner = models.ForeignKey(PersonUser, on_delete=models.PROTECT, related_name="question_question_owner", related_query_name="question_owner")
     timed = models.BooleanField(default=False)
     time_allowed = models.SmallIntegerField(default=120, help_text="Sekúndur")
     single_selection = models.BooleanField(default=False)
@@ -25,7 +25,7 @@ class Question(Base):
 
 class Option(Base):
     question_ref = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="question_option", related_query_name="question_option_option")
-    owner = models.ForeignKey(Person, on_delete=models.PROTECT, related_name="question_option_owner", related_query_name="option_owner")
+    owner = models.ForeignKey(PersonUser, on_delete=models.PROTECT, related_name="question_option_owner", related_query_name="option_owner")
     answer = models.CharField(max_length=300)
     correct = models.BooleanField(default=False)
     value_from = models.FloatField(default=0.0)
@@ -37,7 +37,7 @@ class Option(Base):
 
 
 class Group(Base):
-    owner = models.ForeignKey(Person, on_delete=models.PROTECT, related_name="question_group_owner", related_query_name="group")
+    owner = models.ForeignKey(PersonUser, on_delete=models.PROTECT, related_name="question_group_owner", related_query_name="group")
 
 
 class QuestionGroupRelation(models.Model):
@@ -47,7 +47,9 @@ class QuestionGroupRelation(models.Model):
 
 
 class Questionnaire(Base):
-    owner = models.ForeignKey(Person, on_delete=models.PROTECT, related_name="question_questionnaire_owner", related_query_name="questionnaire")
+    owner = models.ForeignKey(PersonUser, on_delete=models.PROTECT, related_name="question_questionnaire_owner", related_query_name="questionnaire")
+    timed = models.BooleanField(default=False)
+    time_allowed = models.SmallIntegerField(default=120, help_text="Mínútur")
 
 
 class QuestionnaireGroupRelation(models.Model):
