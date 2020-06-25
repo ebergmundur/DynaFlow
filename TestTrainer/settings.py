@@ -101,8 +101,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'testtrainerdb',
-        # 'HOST': '127.0.0.1',
-        'HOST': 'nature.is',
+        'HOST': '127.0.0.1',
+        # 'HOST': 'nature.is',
         'USER': 'vefur',
         'PASSWORD': 'planta777',
     }
