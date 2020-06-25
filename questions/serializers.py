@@ -17,17 +17,17 @@ class OptionSerializer(serializers.ModelSerializer):
             'correct_value_from',
             'correct_value_to',
             'image',
-
         ]
 
 
 class QuestionSerializer(serializers.ModelSerializer):
-    options = OptionSerializer(many=True, read_only=True)
+    options = OptionSerializer(many=True)
 
     class Meta:
         model = Question
         fields = [
             'question',
+            'options',
             'image',
             'owner',
             'timed',
@@ -37,7 +37,11 @@ class QuestionSerializer(serializers.ModelSerializer):
             'hint_cost',
             'group_correct',
             'group_false',
-            'options',
-
         ]
 
+    def create(self, validated_data):
+        options_data = validated_data.pop('options')
+        question = Question.objects.create(**validated_data)
+        for option_data in options_data:
+            Option.objects.create(question=question, **option_data)
+        return album

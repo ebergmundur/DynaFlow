@@ -20,6 +20,7 @@ from questions import views as question_views
 
 router = routers.DefaultRouter()
 router.register(r'questions', question_views.QuestionViewSet)
+router.register(r'options', question_views.OptionViewSet)
 # router.register(r'groups', question_views.GroupViewSet)
 
 # Wire up our API using automatic URL routing.

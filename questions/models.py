@@ -5,9 +5,6 @@ from person.models import PersonUser
 
 # Create your models here.
 
-
-
-
 class Question(Base):
     question = models.TextField(blank=True)
     image = models.ImageField(blank=True, null=True)
@@ -20,6 +17,10 @@ class Question(Base):
     hint_cost = models.SmallIntegerField(default=3)
     group_correct = models.ForeignKey("Group", blank=True, null=True, related_name="group_correct", on_delete=models.PROTECT )
     group_false = models.ForeignKey("Group", blank=True, null=True, related_name="group_false", on_delete=models.PROTECT )
+
+    @property
+    def options(self):
+        return self.question_option.all()
 
 
 class Option(Base):
