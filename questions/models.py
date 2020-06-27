@@ -20,9 +20,20 @@ class Question(Base):
     group_correct = models.ForeignKey("Group", blank=True, null=True, related_name="group_correct", on_delete=models.PROTECT )
     group_false = models.ForeignKey("Group", blank=True, null=True, related_name="group_false", on_delete=models.PROTECT )
 
+    def __str__(self):
+        return self.question
+
     @property
     def options(self):
         return self.question_option.all()
+
+    @property
+    def answer_count(self):
+        return self.options.count()
+
+    @property
+    def groups(self):
+        return self.questiongrouprelation_set.all()
 
 
 class Option(Base):
@@ -36,7 +47,8 @@ class Option(Base):
     correct_value_to = models.FloatField(default=0.0)
     image = models.ImageField(blank=True, upload_to='optionImage' )
 
-
+    def __str__(self):
+        return self.answer
 
 
 class Group(Base):

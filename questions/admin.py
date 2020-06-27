@@ -14,6 +14,7 @@ def curry(func, *a, **kw):
 
 @admin.register(Option)
 class OptionAdmin(TabbedTranslationAdmin):
+    list_display = ('question_ref', 'answer', 'name', 'correct')
 
     def get_form(self, request, obj, **kwargs):
         form = super(OptionAdmin, self).get_form(request, obj, **kwargs)
@@ -184,8 +185,9 @@ class OptionInline(TranslationStackedInline):
 
 @admin.register(Question)
 class QuestionAdmin(TabbedTranslationAdmin):
-# class QuestionAdmin(admin.ModelAdmin):
+    list_display = ('name', 'question', 'answer_count', 'owner', )
     inlines = [OptionInline, ]
+    list_filter = ['questiongrouprelation', 'owner' ]
 
     def get_form(self, request, obj, **kwargs):
         form = super(QuestionAdmin, self).get_form(request, obj, **kwargs)
@@ -260,4 +262,8 @@ class CategoryAdmin(TabbedTranslationAdmin):
 
 @admin.register(Questionnaire)
 class QuestionnaireAdmin(TabbedTranslationAdmin):
+    pass
+
+@admin.register(QuestionGroupRelation)
+class QuestionGroupRelationAdmin(admin.ModelAdmin):
     pass
