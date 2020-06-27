@@ -37,8 +37,9 @@ ALLOWED_HOSTS = [
 
 INSTALLED_APPS = [
     'modeltranslation',
-    'admin_interface',
-    'colorfield',
+    'baton',
+    # 'admin_interface',
+    # 'colorfield',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -50,6 +51,7 @@ INSTALLED_APPS = [
     'base',
     'person',
     'questions',
+    'baton.autodiscover',
 ]
 
 MIDDLEWARE = [
