@@ -9,7 +9,7 @@ from datetime import datetime
 
 class Question(Base):
     question = models.TextField(blank=True)
-    image = models.ImageField(blank=True, null=True)
+    image = models.ImageField(blank=True, null=True, upload_to='questionImage')
     owner = models.ForeignKey(PersonUser, on_delete=models.PROTECT, related_name="question_question_owner", related_query_name="question_owner")
     timed = models.BooleanField(default=False)
     time_allowed = models.SmallIntegerField(default=120, help_text="Sekúndur")
@@ -34,7 +34,7 @@ class Option(Base):
     value_to = models.FloatField(default=0.0)
     correct_value_from = models.FloatField(default=0.0)
     correct_value_to = models.FloatField(default=0.0)
-    image = models.ImageField(blank=True)
+    image = models.ImageField(blank=True, upload_to='optionImage' )
 
 
 

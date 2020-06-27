@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import Question, Option, Questionnaire, Category, Group, QuestionGroupRelation, QuestionnaireGroupRelation
 from modeltranslation.admin import TranslationAdmin, TabbedTranslationAdmin, TranslationGenericStackedInline, \
-    TranslationStackedInline
+    TranslationStackedInline, TranslationInlineModelAdmin, TranslationTabularInline
 import pytz
 from datetime import datetime
 from django.forms import ModelForm
@@ -13,7 +13,6 @@ def curry(func, *a, **kw):
 
 
 @admin.register(Option)
-# class OptionAdmin(admin.ModelAdmin):
 class OptionAdmin(TabbedTranslationAdmin):
 
     def get_form(self, request, obj, **kwargs):
@@ -25,15 +24,118 @@ class OptionAdmin(TabbedTranslationAdmin):
             form.base_fields['created_by'].initial = request.user
         return form
 
+    #     fieldsets = [
+    #         (u'Svar', {
+    #             'classes': ('collapse', 'open',),
+    #             'fields': (
+    #                 'answer',
+    #                 'correct',
+    #                 'image',
+    #                 'active',
+    #             )}),
+    #         (u'Gildi', {
+    #             'classes': ('collapse', 'collapsed'),
+    #             'fields': (
+    #                 'value_from',
+    #                 'correct_value_from',
+    #                 'value_to',
+    #                 'correct_value_to',
+    #             )}),
+    #         (u'Lýsing, innispunktar og virkni', {
+    #             'classes': ('collapse', 'collapsed',),
+    #             'fields': (
+    #                 'description',
+    #                 'note',
+    #             )}),
+    #         (u'Aðilar', {
+    #             'classes': ('collapse', 'collapsed'),
+    #             'fields': (
+    #                 'owner',
+    #                 'modified_by',
+    #                 'created_by',
+    #             )}),
+    # ]
+
+    fieldsets = [
+        (u'Spurning', {
+            'fields': (
+                'answer',
+                'correct',
+                'image',
+                'active',
+            ),
+            'classes': (
+              'baton-tab-fs-optvalue', 'baton-tab-fs-optnote',
+                'baton-tab-fs-optowner',),
+            'description': 'This is a description text',
+        }),
+        (u'Gildi', {
+            'classes': ('tab-fs-optvalue',),
+            'fields': (
+                'value_from',
+                'correct_value_from',
+                'value_to',
+                'correct_value_to',
+            )}),
+        (u'Lýsing, innispunktar og virkni', {
+            'fields': (
+                'description',
+                'note',
+            ),
+            'classes': ('tab-fs-optnote',),
+        }),
+        (u'Aðilar', {
+            'fields': (
+                'owner',
+                'modified_by',
+                'created_by',
+            ),
+            'classes': ('tab-fs-otpowner',),
+        }),
+    ]
+
+    # fieldsets = [
+    #     (u'Svar', {
+    #         'classes': ('collapse', 'open',),
+    #         'fields': (
+    #             'answer',
+    #             'correct',
+    #             'image',
+    #             'active',
+    #         )}),
+    #     (u'Gildi', {
+    #         'classes': ('collapse', 'collapsed'),
+    #         'fields': (
+    #             'value_from',
+    #             'correct_value_from',
+    #             'value_to',
+    #             'correct_value_to',
+    #         )}),
+    #     (u'Lýsing, innispunktar og virkni', {
+    #         'classes': ('collapse', 'collapsed',),
+    #         'fields': (
+    #             'description',
+    #             'note',
+    #         )}),
+    #     (u'Aðilar', {
+    #         'classes': ('collapse', 'collapsed'),
+    #         'fields': (
+    #             'owner',
+    #             'modified_by',
+    #             'created_by',
+    #         )}),
+    # ]
+
 
 class OptionInline(TranslationStackedInline):
+# class OptionInline(admin.StackedInline):
     model = Option
     fk_name = 'question_ref'
-    classes = ['collapse']
     extra = 1
+    # classes = ('collapse-entry',)
+    # classes = ('collapse',)
 
     def get_formset(self, request, obj=None, **kwargs):
-        initial = []
         formset = super(OptionInline, self).get_formset(request, obj, **kwargs)
         formset.form.base_fields['modified_by'].initial = request.user
         if formset.form.base_fields['owner'].initial == None:
@@ -44,14 +146,15 @@ class OptionInline(TranslationStackedInline):
 
     fieldsets = [
         (u'Svar', {
-            'classes': ('collapse',),
+            'classes': ('collapse', 'collapsed' ),
             'fields': (
                 'answer',
                 'correct',
                 'image',
+                'active',
             )}),
         (u'Gildi', {
-            'classes': ('collapse', 'closed'),
+            'classes': ('collapse', 'collapsed'),
             'fields': (
                 'value_from',
                 'correct_value_from',
@@ -59,25 +162,62 @@ class OptionInline(TranslationStackedInline):
                 'correct_value_to',
             )}),
         (u'Lýsing, innispunktar og virkni', {
-            'classes': ('collapse', 'closed'),
+            'classes': ('collapse', 'collapsed',),
             'fields': (
                 'description',
                 'note',
-                'active',
             )}),
         (u'Aðilar', {
-            'classes': ('collapse', 'closed'),
+            'classes': ('collapse', 'collapsed'),
             'fields': (
                 'owner',
                 'modified_by',
                 'created_by',
             )}),
-    ]
+]
+
+    # fieldsets = [
+    #     (u'Spurning', {
+    #         'fields': (
+    #             'answer',
+    #             'correct',
+    #             'image',
+    #             'active',
+    #         ),
+    #         'classes': (
+    #           'baton-tab-fs-optvalue', 'baton-tab-fs-optnote',
+    #             'baton-tab-fs-optowner',),
+    #         'description': 'This is a description text',
+    #     }),
+    #     (u'Gildi', {
+    #         'classes': ('tab-fs-optvalue',),
+    #         'fields': (
+    #             'value_from',
+    #             'correct_value_from',
+    #             'value_to',
+    #             'correct_value_to',
+    #         )}),
+    #     (u'Lýsing, innispunktar og virkni', {
+    #         'fields': (
+    #             'description',
+    #             'note',
+    #         ),
+    #         'classes': ('tab-fs-optnote',),
+    #     }),
+    #     (u'Aðilar', {
+    #         'fields': (
+    #             'owner',
+    #             'modified_by',
+    #             'created_by',
+    #         ),
+    #         'classes': ('tab-fs-otpowner',),
+    #     }),
+    # ]
 
 
 @admin.register(Question)
-# class QuestionAdmin(admin.ModelAdmin):
 class QuestionAdmin(TabbedTranslationAdmin):
+# class QuestionAdmin(admin.ModelAdmin):
     inlines = [OptionInline, ]
 
     def get_form(self, request, obj, **kwargs):
@@ -89,55 +229,55 @@ class QuestionAdmin(TabbedTranslationAdmin):
             form.base_fields['created_by'].initial = request.user
         return form
 
-    # def get_formsets_with_inlines(self, request, obj=None):
-    #     for inline in self.get_inline_instances(request, obj):
-    #         inlformset = inline.get_formset(request, obj)
-    #         # hide/show market-specific inlines based on market name
-    #         # optform = super(OptionInline, inline).get_formset(request, obj)
-    #         x = 1
-    #         yield inline.get_formset(request, obj), inline
-
     fieldsets = [
         (u'Spurning', {
-            'classes': ('collapse', 'open'),
             'fields': (
                 'name',
                 'points',
                 'question',
                 'image',
-            )}),
+                'active',
+            ),
+            'classes': (
+                'baton-tabs-init', 'baton-tab-fs-hint', 'baton-tab-fs-ferill', 'baton-tab-fs-note', 'baton-tab-fs-time',
+                'baton-tab-fs-owner', 'baton-tab-inline-question_option',  ),
+            'description': 'This is a description text',
+        }),
         (u'Hint', {
-            'classes': ('collapse', 'closed'),
+            'classes': ('tab-fs-hint',),
             'fields': (
                 'hint_cost',
                 'hint',
             )}),
         (u'Ferill', {
-            'classes': ('collapse', 'closed'),
             'fields': (
                 'group_correct',
                 'group_false',
-            )}),
+            ),
+            'classes': ('tab-fs-ferill',),
+        }),
         (u'Lýsing, innispunktar og virkni', {
-            'classes': ('collapse', 'closed'),
             'fields': (
                 'description',
                 'note',
-                'active',
-            )}),
+            ),
+            'classes': ('tab-fs-note',),
+        }),
         (u'Tími og stig', {
-            'classes': ('collapse', 'closed'),
             'fields': (
                 'timed',
                 'time_allowed',
-            )}),
+            ),
+            'classes': ('tab-fs-time',),
+        }),
         (u'Aðilar', {
-            'classes': ('collapse', 'closed'),
             'fields': (
                 'owner',
                 'modified_by',
                 'created_by',
-            )}),
+            ),
+            'classes': ('tab-fs-owner',),
+        }),
     ]
 
 

@@ -72,6 +72,7 @@ REST_FRAMEWORK = {
     ]
 }
 
+
 ROOT_URLCONF = 'TestTrainer.urls'
 
 X_FRAME_OPTIONS='SAMEORIGIN'
@@ -109,10 +110,6 @@ DATABASES = {
         'PASSWORD': 'planta777',
     }
 }
-
-# JET_PROJECT = 'testtrainer'
-# JET_TOKEN = '69eb9e66-84eb-43fa-9259-757fc6a03786'
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -164,5 +161,15 @@ LOCALE_PATHS = (
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_ROOT = BASE_DIR + '/static/'
+MEDIA_ROOT = BASE_DIR + '/media/'
 
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+
+
+BATON = {
+    'SITE_HEADER': 'TestTrainer',
+    'SITE_TITLE': 'TestTrainer Admin',
+    'INDEX_TITLE': 'TestTrainer Admin',
+    'ENABLE_IMAGES_PREVIEW': True,
+}
