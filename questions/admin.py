@@ -111,37 +111,37 @@ class OptionInline(TranslationStackedInline):
             formset.form.base_fields['created_by'].initial = request.user
         return formset
 
-#     fieldsets = [
-#         (u'Svar', {
-#             'classes': ('collapse', 'collapsed' ),
-#             'fields': (
-#                 'answer',
-#                 'correct',
-#                 'image',
-#                 'active',
-#             )}),
-#         (u'Gildi', {
-#             'classes': ('collapse', 'collapsed'),
-#             'fields': (
-#                 'value_from',
-#                 'correct_value_from',
-#                 'value_to',
-#                 'correct_value_to',
-#             )}),
-#         (u'Lýsing, innispunktar og virkni', {
-#             'classes': ('collapse', 'collapsed',),
-#             'fields': (
-#                 'description',
-#                 'note',
-#             )}),
-#         (u'Aðilar', {
-#             'classes': ('collapse', 'collapsed'),
-#             'fields': (
-#                 'owner',
-#                 'modified_by',
-#                 'created_by',
-#             )}),
-# ]
+    fieldsets = [
+        (u'Svar', {
+            'classes': ('collapse', 'collapsed' ),
+            'fields': (
+                'answer',
+                'correct',
+                'image',
+                'active',
+            )}),
+        (u'Gildi', {
+            'classes': ('collapse', 'collapsed'),
+            'fields': (
+                'value_from',
+                'correct_value_from',
+                'value_to',
+                'correct_value_to',
+            )}),
+        (u'Lýsing, innispunktar og virkni', {
+            'classes': ('collapse', 'collapsed',),
+            'fields': (
+                'description',
+                'note',
+            )}),
+        (u'Aðilar', {
+            'classes': ('collapse', 'collapsed'),
+            'fields': (
+                'owner',
+                'modified_by',
+                'created_by',
+            )}),
+]
 
     # fieldsets = [
     #     (u'Spurning', {
