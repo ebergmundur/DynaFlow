@@ -14,7 +14,8 @@ def curry(func, *a, **kw):
 
 @admin.register(Option)
 class OptionAdmin(TabbedTranslationAdmin):
-    list_display = ('question_ref', 'answer', 'name', 'correct')
+    list_display = ('question_ref', 'answer', 'name', 'correct', 'owner')
+    list_filter = ['question_ref__name', 'owner', 'correct', ]
 
     def get_form(self, request, obj, **kwargs):
         form = super(OptionAdmin, self).get_form(request, obj, **kwargs)
@@ -101,6 +102,7 @@ class OptionInline(TranslationStackedInline):
     fk_name = 'question_ref'
     extra = 1
     # classes = ('collapse-entry',)
+    # classes = ( 'collapse-entry','collapse',  )
     # classes = ('collapse',)
 
     def get_formset(self, request, obj=None, **kwargs):
@@ -112,75 +114,82 @@ class OptionInline(TranslationStackedInline):
             formset.form.base_fields['created_by'].initial = request.user
         return formset
 
+#     fieldsets = [
+#         (u'Svar', {
+#             'classes': ( 'collapse', 'collapsed', ),
+#             'fields': (
+#                 'name',
+#                 'answer',
+#                 'correct',
+#                 'image',
+#                 'active',
+#             )}),
+#         (u'Gildi', {
+#             'classes': ( 'collapse', 'collapsed', ),
+#             'fields': (
+#                 'value_from',
+#                 'correct_value_from',
+#                 'value_to',
+#                 'correct_value_to',
+#             )}),
+#         (u'Lýsing, innispunktar og virkni', {
+#             'classes': ( 'collapse', 'collapsed', ),
+#             'fields': (
+#                 'description',
+#                 'note',
+#             )}),
+#         (u'Aðilar', {
+    #             'classes': ( 'collapse', 'collapsed', ),
+#             'fields': (
+#                 'owner',
+#                 'modified_by',
+#                 'created_by',
+#             )}),
+# ]
+
     fieldsets = [
-        (u'Svar', {
-            'classes': ('collapse', 'collapsed' ),
+        (u'Spurning', {
             'fields': (
+                'name',
                 'answer',
                 'correct',
                 'image',
                 'active',
-            )}),
+            ),
+            'classes': ('collapse', 'collapsed',),
+            # 'classes': (
+            #    'baton-tab-fs-optvalue', 'baton-tab-fs-optnote',
+            #     'baton-tab-fs-optowner',),
+            'description': 'This is a description text',
+        }),
         (u'Gildi', {
-            'classes': ('collapse', 'collapsed'),
             'fields': (
                 'value_from',
                 'correct_value_from',
                 'value_to',
                 'correct_value_to',
-            )}),
-        (u'Lýsing, innispunktar og virkni', {
+            ),
             'classes': ('collapse', 'collapsed',),
+            # 'classes': ('tab-fs-optvalue',),
+        }),
+        (u'Lýsing, innispunktar og virkni', {
             'fields': (
                 'description',
                 'note',
-            )}),
+            ),
+            'classes': ('collapse', 'collapsed',),
+            # 'classes': ('tab-fs-optnote',),
+        }),
         (u'Aðilar', {
-            'classes': ('collapse', 'collapsed'),
             'fields': (
                 'owner',
                 'modified_by',
                 'created_by',
-            )}),
-]
-
-    # fieldsets = [
-    #     (u'Spurning', {
-    #         'fields': (
-    #             'answer',
-    #             'correct',
-    #             'image',
-    #             'active',
-    #         ),
-    #         'classes': (
-    #           ' 'baton-tab-fs-optvalue', 'baton-tab-fs-optnote',
-    #             'baton-tab-fs-optowner',),
-    #         'description': 'This is a description text',
-    #     }),
-    #     (u'Gildi', {
-    #         'classes': ('tab-fs-optvalue',),
-    #         'fields': (
-    #             'value_from',
-    #             'correct_value_from',
-    #             'value_to',
-    #             'correct_value_to',
-    #         )}),
-    #     (u'Lýsing, innispunktar og virkni', {
-    #         'fields': (
-    #             'description',
-    #             'note',
-    #         ),
-    #         'classes': ('tab-fs-optnote',),
-    #     }),
-    #     (u'Aðilar', {
-    #         'fields': (
-    #             'owner',
-    #             'modified_by',
-    #             'created_by',
-    #         ),
-    #         'classes': ('tab-fs-otpowner',),
-    #     }),
-    # ]
+            ),
+            'classes': ('collapse', 'collapsed',),
+            # 'classes': ('tab-fs-otpowner',),
+        }),
+    ]
 
 
 @admin.register(Question)

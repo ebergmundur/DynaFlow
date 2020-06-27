@@ -48,7 +48,7 @@ class Option(Base):
     image = models.ImageField(blank=True, upload_to='optionImage' )
 
     def __str__(self):
-        return self.answer
+        return "%s %s %s" % (self.name, self.answer, self.correct)
 
 
 class Group(Base):

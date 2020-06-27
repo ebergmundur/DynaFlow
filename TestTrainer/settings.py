@@ -172,4 +172,5 @@ BATON = {
     'SITE_TITLE': 'TestTrainer Admin',
     'INDEX_TITLE': 'TestTrainer Admin',
     'ENABLE_IMAGES_PREVIEW': True,
+    'CHANGELIST_FILTERS_IN_MODAL': True,
 }
