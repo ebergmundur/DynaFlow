@@ -65,7 +65,7 @@ class OptionAdmin(TabbedTranslationAdmin):
                 'active',
             ),
             'classes': (
-              'baton-tab-fs-optvalue', 'baton-tab-fs-optnote',
+              'baton-tabs-init', 'baton-tab-fs-optvalue', 'baton-tab-fs-optnote',
                 'baton-tab-fs-optowner',),
             'description': 'This is a description text',
         }),
@@ -90,7 +90,7 @@ class OptionAdmin(TabbedTranslationAdmin):
                 'modified_by',
                 'created_by',
             ),
-            'classes': ('tab-fs-otpowner',),
+            'classes': ('tab-fs-optowner',),
         }),
     ]
 
@@ -111,37 +111,37 @@ class OptionInline(TranslationStackedInline):
             formset.form.base_fields['created_by'].initial = request.user
         return formset
 
-    fieldsets = [
-        (u'Svar', {
-            'classes': ('collapse', 'collapsed' ),
-            'fields': (
-                'answer',
-                'correct',
-                'image',
-                'active',
-            )}),
-        (u'Gildi', {
-            'classes': ('collapse', 'collapsed'),
-            'fields': (
-                'value_from',
-                'correct_value_from',
-                'value_to',
-                'correct_value_to',
-            )}),
-        (u'Lýsing, innispunktar og virkni', {
-            'classes': ('collapse', 'collapsed',),
-            'fields': (
-                'description',
-                'note',
-            )}),
-        (u'Aðilar', {
-            'classes': ('collapse', 'collapsed'),
-            'fields': (
-                'owner',
-                'modified_by',
-                'created_by',
-            )}),
-]
+#     fieldsets = [
+#         (u'Svar', {
+#             'classes': ('collapse', 'collapsed' ),
+#             'fields': (
+#                 'answer',
+#                 'correct',
+#                 'image',
+#                 'active',
+#             )}),
+#         (u'Gildi', {
+#             'classes': ('collapse', 'collapsed'),
+#             'fields': (
+#                 'value_from',
+#                 'correct_value_from',
+#                 'value_to',
+#                 'correct_value_to',
+#             )}),
+#         (u'Lýsing, innispunktar og virkni', {
+#             'classes': ('collapse', 'collapsed',),
+#             'fields': (
+#                 'description',
+#                 'note',
+#             )}),
+#         (u'Aðilar', {
+#             'classes': ('collapse', 'collapsed'),
+#             'fields': (
+#                 'owner',
+#                 'modified_by',
+#                 'created_by',
+#             )}),
+# ]
 
     # fieldsets = [
     #     (u'Spurning', {
@@ -152,7 +152,7 @@ class OptionInline(TranslationStackedInline):
     #             'active',
     #         ),
     #         'classes': (
-    #           'baton-tab-fs-optvalue', 'baton-tab-fs-optnote',
+    #           ' 'baton-tab-fs-optvalue', 'baton-tab-fs-optnote',
     #             'baton-tab-fs-optowner',),
     #         'description': 'This is a description text',
     #     }),
