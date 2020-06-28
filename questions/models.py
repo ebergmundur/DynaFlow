@@ -50,6 +50,10 @@ class Option(Base):
     def __str__(self):
         return "%s %s %s" % (self.name, self.answer, self.correct)
 
+    class Meta:
+        verbose_name = "svar",
+        verbose_name_plural = "svör"
+
 
 class Group(Base):
     owner = models.ForeignKey(PersonUser, on_delete=models.PROTECT, related_name="question_group_owner", related_query_name="group")
