@@ -23,6 +23,10 @@ class Question(Base):
     def __str__(self):
         return self.question
 
+    class Meta:
+        verbose_name = "spurning",
+        verbose_name_plural = "spurningar"
+
     @property
     def options(self):
         return self.question_option.all()
@@ -58,8 +62,22 @@ class Option(Base):
 class Group(Base):
     owner = models.ForeignKey(PersonUser, on_delete=models.PROTECT, related_name="question_group_owner", related_query_name="group")
 
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "hópur",
+        verbose_name_plural = "hópar"
+
 class Category(Base):
     group = models.ManyToManyField(Group, blank=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "flokkur",
+        verbose_name_plural = "flokkar"
 
 
 class QuestionGroupRelation(models.Model):
@@ -67,14 +85,35 @@ class QuestionGroupRelation(models.Model):
     group = models.ForeignKey(Group, on_delete=models.PROTECT)
     order = models.SmallIntegerField(default=1)
 
+    def __str__(self):
+        return "%s - %s" % (self.question, self.group)
+
+    class Meta:
+        verbose_name = "tengd spurnin",
+        verbose_name_plural = "tengdar spurningar"
+
 
 class Questionnaire(Base):
     owner = models.ForeignKey(PersonUser, on_delete=models.PROTECT, related_name="question_questionnaire_owner", related_query_name="questionnaire")
     timed = models.BooleanField(default=False)
     time_allowed = models.SmallIntegerField(default=120, help_text="Mínútur")
 
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "spurningalisti",
+        verbose_name_plural = "spurningalistar"
+
 
 class QuestionnaireGroupRelation(models.Model):
     group = models.ForeignKey(Group, on_delete=models.PROTECT)
     questionnaire = models.ForeignKey(Questionnaire, on_delete=models.PROTECT)
     order = models.SmallIntegerField(default=1)
+
+    def __str__(self):
+        return "%s - %s" % (self.questionnaire, self.group)
+
+    class Meta:
+        verbose_name = "tengdur hópur",
+        verbose_name_plural = "tengdir hópar"
