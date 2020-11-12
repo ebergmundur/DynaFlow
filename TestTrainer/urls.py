@@ -32,7 +32,7 @@ router.register(r'options', question_views.OptionViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(router.urls)),
+    path('api/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('baton/', include('baton.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

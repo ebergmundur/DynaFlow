@@ -50,6 +50,7 @@ class Option(Base):
     correct_value_from = models.FloatField(default=0.0)
     correct_value_to = models.FloatField(default=0.0)
     image = models.ImageField(blank=True, upload_to='optionImage' )
+    checked = models.BooleanField(default=False)
 
     def __str__(self):
         return "%s %s %s" % (self.name, self.answer, self.correct)
@@ -57,6 +58,22 @@ class Option(Base):
     class Meta:
         verbose_name = "svar",
         verbose_name_plural = "svör"
+
+    @property
+    def label(self):
+        return self.answer
+
+    @property
+    def option(self):
+        return self.answer\
+
+    @property
+    def value(self):
+        return self.id\
+
+    @property
+    def selected(self):
+        return self.checked
 
 
 class Group(Base):
@@ -89,7 +106,7 @@ class QuestionGroupRelation(models.Model):
         return "%s - %s" % (self.question, self.group)
 
     class Meta:
-        verbose_name = "tengd spurnin",
+        verbose_name = "tengd spurning",
         verbose_name_plural = "tengdar spurningar"
 
 
@@ -117,3 +134,29 @@ class QuestionnaireGroupRelation(models.Model):
     class Meta:
         verbose_name = "tengdur hópur",
         verbose_name_plural = "tengdir hópar"
+
+
+class TestAnswers(Base):
+    user = models.OneToOneField(PersonUser, on_delete=models.PROTECT, blank=True, default=1)
+    curr_question = models.SmallIntegerField(default=0)
+    options_ids = models.CharField(max_length=200)
+
+    # @property
+    # def question(self):
+    #     return Question.objects.get(id=self.question_id)
+
+    # def __str__(self):
+    #     q = Question.objects.get(id=self.question_id)
+    #     return '%s %s' % (self.user.get_full_name(), q.label)
+
+
+class TestMemo(Base):
+    user = models.OneToOneField(PersonUser, on_delete=models.PROTECT, blank=True, default=1)
+    curr_question = models.SmallIntegerField(default=0)
+    memo = models.TextField(blank=True)
+    known = models.BooleanField(default=False)
+    not_known = models.BooleanField(default=True)
+
+    # @property
+    # def question(self):
+    #     return Question.objects.get(id=self.question_id)

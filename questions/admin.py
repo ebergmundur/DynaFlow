@@ -14,8 +14,8 @@ def curry(func, *a, **kw):
 
 @admin.register(Option)
 class OptionAdmin(TabbedTranslationAdmin):
-    list_display = ('question_ref', 'answer', 'name', 'correct', 'owner')
-    list_filter = ['question_ref__name', 'owner', 'correct', ]
+    list_display = ('answer', 'question_ref', 'name', 'correct', 'owner')
+    list_filter = ['question_ref__name', 'owner__user__username', 'correct', ]
 
     def get_form(self, request, obj, **kwargs):
         form = super(OptionAdmin, self).get_form(request, obj, **kwargs)
@@ -67,7 +67,7 @@ class OptionAdmin(TabbedTranslationAdmin):
                 'active',
             ),
             'classes': (
-              'baton-tabs-init', 'baton-tab-fs-optvalue', 'baton-tab-fs-optnote',
+                'baton-tabs-init', 'baton-tab-fs-optvalue', 'baton-tab-fs-optnote',
                 'baton-tab-fs-optowner',),
             'description': 'This is a description text',
         }),
@@ -101,6 +101,7 @@ class OptionInline(TranslationStackedInline):
     model = Option
     fk_name = 'question_ref'
     extra = 1
+
     # classes = ('collapse-entry',)
     # classes = ( 'collapse-entry','collapse',  )
     # classes = ('collapse',)
@@ -114,38 +115,38 @@ class OptionInline(TranslationStackedInline):
             formset.form.base_fields['created_by'].initial = request.user
         return formset
 
-#     fieldsets = [
-#         (u'Svar', {
-#             'classes': ( 'collapse', 'collapsed', ),
-#             'fields': (
-#                 'name',
-#                 'answer',
-#                 'correct',
-#                 'image',
-#                 'active',
-#             )}),
-#         (u'Gildi', {
-#             'classes': ( 'collapse', 'collapsed', ),
-#             'fields': (
-#                 'value_from',
-#                 'correct_value_from',
-#                 'value_to',
-#                 'correct_value_to',
-#             )}),
-#         (u'Lýsing, innispunktar og virkni', {
-#             'classes': ( 'collapse', 'collapsed', ),
-#             'fields': (
-#                 'description',
-#                 'note',
-#             )}),
-#         (u'Aðilar', {
+    #     fieldsets = [
+    #         (u'Svar', {
     #             'classes': ( 'collapse', 'collapsed', ),
-#             'fields': (
-#                 'owner',
-#                 'modified_by',
-#                 'created_by',
-#             )}),
-# ]
+    #             'fields': (
+    #                 'name',
+    #                 'answer',
+    #                 'correct',
+    #                 'image',
+    #                 'active',
+    #             )}),
+    #         (u'Gildi', {
+    #             'classes': ( 'collapse', 'collapsed', ),
+    #             'fields': (
+    #                 'value_from',
+    #                 'correct_value_from',
+    #                 'value_to',
+    #                 'correct_value_to',
+    #             )}),
+    #         (u'Lýsing, innispunktar og virkni', {
+    #             'classes': ( 'collapse', 'collapsed', ),
+    #             'fields': (
+    #                 'description',
+    #                 'note',
+    #             )}),
+    #         (u'Aðilar', {
+    #             'classes': ( 'collapse', 'collapsed', ),
+    #             'fields': (
+    #                 'owner',
+    #                 'modified_by',
+    #                 'created_by',
+    #             )}),
+    # ]
 
     fieldsets = [
         (u'Spurning', {
@@ -194,9 +195,9 @@ class OptionInline(TranslationStackedInline):
 
 @admin.register(Question)
 class QuestionAdmin(TabbedTranslationAdmin):
-    list_display = ('name', 'question', 'answer_count', 'owner', )
+    list_display = ('name', 'question', 'answer_count', 'owner',)
     inlines = [OptionInline, ]
-    list_filter = ['questiongrouprelation', 'owner' ]
+    list_filter = ['questiongrouprelation', 'owner']
 
     def get_form(self, request, obj, **kwargs):
         form = super(QuestionAdmin, self).get_form(request, obj, **kwargs)
@@ -212,13 +213,14 @@ class QuestionAdmin(TabbedTranslationAdmin):
             'fields': (
                 'name',
                 'points',
+                'single_selection',
                 'question',
                 'image',
                 'active',
             ),
             'classes': (
                 'baton-tabs-init', 'baton-tab-fs-hint', 'baton-tab-fs-ferill', 'baton-tab-fs-note', 'baton-tab-fs-time',
-                'baton-tab-fs-owner', 'baton-tab-inline-question_option',  ),
+                'baton-tab-fs-owner', 'baton-tab-inline-question_option',),
             'description': 'This is a description text',
         }),
         (u'Hint', {
@@ -272,6 +274,7 @@ class CategoryAdmin(TabbedTranslationAdmin):
 @admin.register(Questionnaire)
 class QuestionnaireAdmin(TabbedTranslationAdmin):
     pass
+
 
 @admin.register(QuestionGroupRelation)
 class QuestionGroupRelationAdmin(admin.ModelAdmin):
