@@ -156,6 +156,7 @@ class TestMemo(Base):
     memo = models.TextField(blank=True)
     known = models.BooleanField(default=False)
     not_known = models.BooleanField(default=True)
+    review_date = models.DateField(blank=True, null=True)
 
     # @property
     # def question(self):

@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Question, Option, Questionnaire, Category, Group, QuestionGroupRelation, QuestionnaireGroupRelation
+from .models import Question, Option, Questionnaire, Category, Group, QuestionGroupRelation, QuestionnaireGroupRelation, \
+    TestMemo, TestAnswers
 from modeltranslation.admin import TranslationAdmin, TabbedTranslationAdmin, TranslationGenericStackedInline, \
     TranslationStackedInline, TranslationInlineModelAdmin, TranslationTabularInline
 import pytz
@@ -272,10 +273,20 @@ class CategoryAdmin(TabbedTranslationAdmin):
 
 
 @admin.register(Questionnaire)
-class QuestionnaireAdmin(TabbedTranslationAdmin):
+class QuestionnaireAdmin(admin.ModelAdmin):
     pass
 
 
 @admin.register(QuestionGroupRelation)
 class QuestionGroupRelationAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(TestMemo)
+class TestMemoAdmin(TabbedTranslationAdmin):
+    pass
+
+
+@admin.register(TestAnswers)
+class TestAnswersAdmin(TabbedTranslationAdmin):
     pass

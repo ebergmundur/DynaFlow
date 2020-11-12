@@ -13,9 +13,9 @@
           <q-btn flat round dense icon="close" v-close-popup/>
         </q-toolbar>
 
-        <q-card-section>
+        <q-card-section style="max-height: 70vh; width: 30vw;" class="scroll">
 
-          <h5>{{ currentQuestion.name }}</h5>
+          <h6>{{ currentQuestion.name }}</h6>
           <q-form
             @submit="onMemoSubmit"
             @reset="onMemoReset"
@@ -38,7 +38,9 @@
                 type="textarea"
               />
             </div>
-             <q-toggle v-model="accept" label="I accept the license and terms" />
+            <q-toggle v-model="showDate" label="Minna mig á þann: "/>
+            <span v-if="showDate">{{formDate}}</span><br>
+            <q-date v-if="showDate" v-model="date" minimal/>
             <div>
               <q-btn label="Submit" type="submit" color="primary"/>
               <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm"/>
@@ -47,6 +49,14 @@
         </q-card-section>
       </q-card>
     </q-dialog>
+
+<!--    <q-dialog v-model="calendar" >-->
+<!--      <q-card>-->
+<!--        <q-card-section>-->
+<!--            -->
+<!--        </q-card-section>-->
+<!--      </q-card>-->
+<!--    </q-dialog>-->
 
     <!--    <q-card class="my-card bg-secondary text-white">-->
     <!--      <q-card-section>-->
@@ -92,7 +102,12 @@
     <!--      </q-card-actions>-->
     <!--    </q-card>-->
 
-    <q-card flat bordered class="my-card bg-grey-1" v-model='currentQuestion' v-if="currentQuestion">
+    <q-card flat bordered
+            class="my-card bg-grey-1"
+            v-model='currentQuestion'
+            v-if="currentQuestion"
+            style="max-height: 80vh; width: 50%;"
+    >
       <q-card-section>
         <div class="row items-center no-wrap">
           <div class="col">
@@ -113,7 +128,7 @@
                     <q-item-section>Kann, má sleppa næst</q-item-section>
                   </q-item>
                   <q-item clickable>
-                    <q-item-section @click="memo = true"> Minnispunktar</q-item-section>
+                    <q-item-section @click="memo = true">Minnispunktar</q-item-section>
                   </q-item>
                 </q-list>
               </q-menu>
@@ -182,12 +197,16 @@
 
 <script>
 import store from '../router/store'
+import { date } from 'quasar'
 // import { mapMutations } from 'vuex'
 export default {
   name: 'Question',
   computed: {
     currentQuestion () {
       return store.getters.currQest.payload
+    },
+    formDate () {
+      return date.formatDate(this.date, 'YYYY-MM-DD')
     },
     // currTestQuest () {
     //   return store.getters.currTestQest
@@ -256,6 +275,8 @@ export default {
       this.memotext = ''
       this.difficulty = 50
       this.accept = false
+      this.calendar = false
+      this.showDate = false
     },
     hint () {
       this.hinttext = this.currentQuestion.hint
@@ -263,6 +284,10 @@ export default {
     },
     openUrl () {
       window.open('https://testtrainer.benda.is/admin/questions/question/' + this.currentQuestion.id, '_blank')
+    },
+    showCal () {
+      this.calendar = true
+      this.showDate = !this.showDate
     }
   },
   data () {
@@ -273,10 +298,12 @@ export default {
       hintloss: '',
       currTestQuest: [],
       memo: false,
+      calendar: false,
       memotext: '',
       difficulty: 50,
-      accept: false
-
+      accept: false,
+      date: '2020/24/12',
+      showDate: false
     }
   }
 }

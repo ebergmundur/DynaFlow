@@ -1,2 +1,6 @@
 /test_trainer_venv/
 /static/
+/tt_ui/
+/test_trainer_ui_X/
+datadump
+datadump.json
