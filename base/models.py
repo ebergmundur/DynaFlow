@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.utils.timezone import now
 from django.conf.global_settings import LANGUAGES
 
+default_user = User.objects.get(id=1)
 
 #     nowtime = datetime.now(pytz.utc)
 #     if not obj.owner.id:
@@ -21,9 +22,9 @@ class Base(models.Model):
     description = models.TextField(blank=True)
     note = models.TextField(blank=True)
     active = models.BooleanField(default=True)
-    created_by = models.ForeignKey(User, on_delete=models.PROTECT, related_name='+', )
+    created_by = models.ForeignKey(User, on_delete=models.PROTECT, related_name='+', default=1 )
     created_date = models.DateTimeField(auto_now_add=True)
-    modified_by = models.ForeignKey(User, on_delete=models.PROTECT, related_name='+'  )
+    modified_by = models.ForeignKey(User, on_delete=models.PROTECT, related_name='+' , default=1 )
     modified_date = models.DateTimeField(auto_now=True)
     expire = models.DateTimeField(blank=True, null=True)
 

@@ -196,9 +196,10 @@ class OptionInline(TranslationStackedInline):
 
 @admin.register(Question)
 class QuestionAdmin(TabbedTranslationAdmin):
-    list_display = ('name', 'question', 'answer_count', 'owner',)
+    list_display = ('name', 'question', 'answer_count', 'owner','single_selection',)
     inlines = [OptionInline, ]
     list_filter = ['questiongrouprelation', 'owner']
+    list_editable = ['single_selection',]
 
     def get_form(self, request, obj, **kwargs):
         form = super(QuestionAdmin, self).get_form(request, obj, **kwargs)
@@ -213,8 +214,8 @@ class QuestionAdmin(TabbedTranslationAdmin):
         (u'Spurning', {
             'fields': (
                 'name',
-                'points',
                 'single_selection',
+                'points',
                 'question',
                 'image',
                 'active',
@@ -269,12 +270,13 @@ class GroupAdmin(TabbedTranslationAdmin):
 
 @admin.register(Category)
 class CategoryAdmin(TabbedTranslationAdmin):
-    pass
+    filter_horizontal = ['question']
 
 
 @admin.register(Questionnaire)
 class QuestionnaireAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('name', )
+    filter_horizontal = ['question_collection']
 
 
 @admin.register(QuestionGroupRelation)

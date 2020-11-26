@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import json
+from six.moves.urllib import request
+from cryptography.x509 import load_pem_x509_certificate
+from cryptography.hazmat.backends import default_backend
 
 #from django.utils.translation import gettext as _
 
@@ -33,6 +37,12 @@ ALLOWED_HOSTS = [
     '127.0.0.1:8080',
     'localhost',
     'localhost:8080',
+    '192.168.31.139',
+    '192.168.31.139:8000',
+    '192.168.31.139:8080',
+    'einars-macbook-pro.local',
+    'einars-macbook-pro.local:8000',
+    'einars-macbook-pro.local:8080',
 ]
 
 CORS_ALLOWED_ORIGINS = [
@@ -42,6 +52,15 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
     "http://127.0.0.1:8000",
     "http://127.0.0.1:8080",
+    "http://192.168.31.139",
+    "http://192.168.31.139:8000",
+    "http://192.168.31.139:8080",
+    'http://einars-macbook-pro.local',
+    'http://einars-macbook-pro.local:8000',
+    'http://einars-macbook-pro.local:8080',
+    'http://0.0.0.0',
+    'http://0.0.0.0:8000',
+    'http://0.0.0.0:8080',
 ]
 
 # Application definition
@@ -57,9 +76,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.admindocs',
     'corsheaders',
 #    'jet_django',
     'rest_framework',
+    'rest_framework_jwt',
     'base',
     'person',
     'questions',
@@ -81,8 +102,13 @@ REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+        # 'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+        'rest_framework.permissions.AllowAny'
+    ],
+    # 'DEFAULT_AUTHENTICATION_CLASSES': [
+    #    'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+    # ],
 }
 
 
@@ -187,3 +213,36 @@ BATON = {
     'ENABLE_IMAGES_PREVIEW': True,
     'CHANGELIST_FILTERS_IN_MODAL': True,
 }
+"""
+https://manage.auth0.com/
+einar@abending.is Safari password
+"""
+
+
+
+# AUTH0_DOMAIN = '<YOUR_AUTH0_DOMAIN>'
+# API_IDENTIFIER = '<YOUR_API_IDENTIFIER>'
+# PUBLIC_KEY = None
+# JWT_ISSUER = None
+#
+# if AUTH0_DOMAIN:
+#     jsonurl = request.urlopen('https://' + AUTH0_DOMAIN + '/.well-known/jwks.json')
+#     jwks = json.loads(jsonurl.read().decode('utf-8'))
+#     cert = '-----BEGIN CERTIFICATE-----\n' + jwks['keys'][0]['x5c'][0] + '\n-----END CERTIFICATE-----'
+#     certificate = load_pem_x509_certificate(cert.encode('utf-8'), default_backend())
+#     PUBLIC_KEY = certificate.public_key()
+#     JWT_ISSUER = 'https://' + AUTH0_DOMAIN + '/'
+#
+#
+# def jwt_get_username_from_payload_handler(payload):
+#     return 'auth0user'
+#
+#
+# JWT_AUTH = {
+#     'JWT_PAYLOAD_GET_USERNAME_HANDLER': jwt_get_username_from_payload_handler,
+#     'JWT_PUBLIC_KEY': PUBLIC_KEY,
+#     'JWT_ALGORITHM': 'RS256',
+#     'JWT_AUDIENCE': API_IDENTIFIER,
+#     'JWT_ISSUER': JWT_ISSUER,
+#     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+# }

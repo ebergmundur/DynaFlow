@@ -24,15 +24,23 @@ from django.conf.urls.static import static
 router = routers.DefaultRouter()
 router.register(r'questions', question_views.QuestionViewSet)
 router.register(r'options', question_views.OptionViewSet)
+router.register(r'groups', question_views.GroupViewSet)
+router.register(r'category', question_views.CategoryViewSet)
+router.register(r'questionn', question_views.QuestionnaireViewSet)
+# router.register(r'answewr', question_views.QuestionAnswerViewSet)
 # router.register(r'groups', question_views.GroupViewSet)
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('api/', include(router.urls)),
+    path('api/memos/', question_views.memo_add),
+    path('api/answer/', question_views.answer_add),
+    path('api/questionnaiere/', question_views.practice_test),
+    path('api/handin/', question_views.practice_hand_in),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('baton/', include('baton.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

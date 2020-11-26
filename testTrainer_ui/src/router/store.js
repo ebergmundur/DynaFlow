@@ -6,9 +6,13 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     currentQuestion: 'CurrentQuestionInSession',
-    testQuestion: []
+    testQuestion: [],
+    timeAllowed: 0
   },
   mutations: {
+    setTimeAllowed (state, payload) {
+      state.timeAllowed = payload
+    },
     setQuestion (state, payload) {
       state.currentQuestion = payload
     },
@@ -30,6 +34,9 @@ const store = new Vuex.Store({
     },
     currTestQest: state => {
       return state.testQuestion
+    },
+    currTimeAllowed: state => {
+      return state.timeAllowed
     }
     // ,
     // setSelected: state => {

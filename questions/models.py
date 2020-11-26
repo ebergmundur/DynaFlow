@@ -7,6 +7,15 @@ from datetime import datetime
 
 # Create your models here.
 
+# default_user = PersonUser.objects.get(id=1)
+default_user = 1
+
+RESULT = [
+    [0, 'Failed'],
+    [1, 'Correct'],
+    [2, 'Omitted'],
+]
+
 class Question(Base):
     question = models.TextField(blank=True)
     image = models.ImageField(blank=True, null=True, upload_to='questionImage')
@@ -21,11 +30,15 @@ class Question(Base):
     group_false = models.ForeignKey("Group", blank=True, null=True, related_name="group_false", on_delete=models.PROTECT )
 
     def __str__(self):
-        return self.question
+        if len(self.name) > 5:
+            return self.name
+        else:
+            return self.question
 
     class Meta:
         verbose_name = "spurning",
         verbose_name_plural = "spurningar"
+        ordering = ['?']
 
     @property
     def options(self):
@@ -38,6 +51,11 @@ class Question(Base):
     @property
     def groups(self):
         return self.questiongrouprelation_set.all()
+
+    @property
+    def memos(self):
+        return TestMemo.objects.filter(curr_question=self.id)
+        # return TestMemo.objects.filter(curr_question=self.id, tesing_user=1 )
 
 
 class Option(Base):
@@ -58,6 +76,7 @@ class Option(Base):
     class Meta:
         verbose_name = "svar",
         verbose_name_plural = "svör"
+        ordering = ['?']
 
     @property
     def label(self):
@@ -86,8 +105,19 @@ class Group(Base):
         verbose_name = "hópur",
         verbose_name_plural = "hópar"
 
+    # @property
+    # def categories(self):
+    #     return self.category_set.all()
+    #
+    # @property
+    # def q_count(self):
+    #     return self.questiongrouprelation_set.count
+    #     # return QuestionGroupRelation.objects.filter(group=self.id).count()
+
+
 class Category(Base):
-    group = models.ManyToManyField(Group, blank=True)
+    # group = models.ManyToManyField(Group, blank=True)
+    question = models.ManyToManyField(Question, blank=True)
 
     def __str__(self):
         return self.name
@@ -95,6 +125,11 @@ class Category(Base):
     class Meta:
         verbose_name = "flokkur",
         verbose_name_plural = "flokkar"
+
+    @property
+    def q_count(self):
+        return self.question.count
+        # return QuestionGroupRelation.objects.filter(group=self.id).count()
 
 
 class QuestionGroupRelation(models.Model):
@@ -111,16 +146,32 @@ class QuestionGroupRelation(models.Model):
 
 
 class Questionnaire(Base):
-    owner = models.ForeignKey(PersonUser, on_delete=models.PROTECT, related_name="question_questionnaire_owner", related_query_name="questionnaire")
-    timed = models.BooleanField(default=False)
-    time_allowed = models.SmallIntegerField(default=120, help_text="Mínútur")
+    owner = models.ForeignKey(PersonUser, default=1, on_delete=models.PROTECT, related_name="question_questionnaire_owner", related_query_name="questionnaire")
+    timed = models.BooleanField(default=True, blank=True)
+    time_allowed = models.SmallIntegerField(default=120, help_text="Mínútur", blank=True)
+    question_collection = models.ManyToManyField(Question, blank=True)
+    question_collection_str = models.CharField(max_length=200, blank=True)
+    omit_known = models.BooleanField(default=False, blank=True)
+    only_failed = models.BooleanField(default=False, blank=True)
+
 
     def __str__(self):
         return self.name
 
     class Meta:
-        verbose_name = "spurningalisti",
-        verbose_name_plural = "spurningalistar"
+        verbose_name = "Próf/æfing",
+        verbose_name_plural = "Próf/æfing"
+
+    @property
+    def q_count(self):
+        return self.question_collection.count
+
+class QuestionnaireResults(models.Model):
+    user = models.ForeignKey(PersonUser, default=1, on_delete=models.PROTECT,)
+    questionnaire = models.ForeignKey(Questionnaire, on_delete=models.PROTECT, )
+    question = models.ForeignKey(Question, on_delete=models.PROTECT)
+    result = models.SmallIntegerField(default=0, choices=RESULT)
+    result_date = models.DateTimeField(auto_now_add=True)
 
 
 class QuestionnaireGroupRelation(models.Model):
@@ -137,9 +188,15 @@ class QuestionnaireGroupRelation(models.Model):
 
 
 class TestAnswers(Base):
-    user = models.OneToOneField(PersonUser, on_delete=models.PROTECT, blank=True, default=1)
+    tesing_user = models.ManyToManyField(PersonUser, default=default_user, blank=True )
     curr_question = models.SmallIntegerField(default=0)
-    options_ids = models.CharField(max_length=200)
+    options_ids = models.CharField(max_length=200, default='')
+    time_in = models.TimeField(blank=True, null=True)
+    time_out = models.TimeField(blank=True, null=True)
+    time_taken = models.SmallIntegerField(blank=True, null=True, default=0)
+    time_allowed = models.SmallIntegerField(default=0)
+    test_practice = models.ForeignKey(Questionnaire, on_delete=models.PROTECT, default=1)
+    points = models.SmallIntegerField(default=0)
 
     # @property
     # def question(self):
@@ -151,13 +208,34 @@ class TestAnswers(Base):
 
 
 class TestMemo(Base):
-    user = models.OneToOneField(PersonUser, on_delete=models.PROTECT, blank=True, default=1)
+    tesing_user = models.ManyToManyField(PersonUser, blank=True, default=1)
     curr_question = models.SmallIntegerField(default=0)
     memo = models.TextField(blank=True)
+    difficulty = models.SmallIntegerField(default=5)
     known = models.BooleanField(default=False)
-    not_known = models.BooleanField(default=True)
+    archive = models.BooleanField(default=True)
     review_date = models.DateField(blank=True, null=True)
 
     # @property
     # def question(self):
     #     return Question.objects.get(id=self.question_id)
+
+
+
+def collect_questions(cats=[]):
+    i = 0
+    for q in cats:
+        print(q)
+        if q != None:
+            try:
+                category = Category.objects.get(id=i)
+                print(category)
+                questions = category.question.all()[:q]
+                print(questions)
+                for quest in questions:
+                    # question_collection.add(quest)
+                    pass
+                # print(questions.count())
+            except:
+                pass
+        i = i + 1
