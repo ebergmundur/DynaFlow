@@ -46,6 +46,9 @@ ALLOWED_HOSTS = [
     'test.enam.is:8000',
     'test.enam.is:8080',
     'test.enam.is',
+    'api.enam.is:8000',
+    'api.enam.is:8080',
+    'api.enam.is',
 ]
 
 CORS_ALLOWED_ORIGINS = [
@@ -78,6 +81,9 @@ CORS_ALLOWED_ORIGINS = [
     'https://test.enam.is:8000',
     'https://test.enam.is:8080',
     'https://test.enam.is',
+    'https://api.enam.is:8000',
+    'https://api.enam.is:8080',
+    'https://api.enam.is',
     'https://enam.is:8000',
     'https://enam.is:8080',
     'https://enam.is',
