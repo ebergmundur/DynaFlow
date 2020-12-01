@@ -119,7 +119,7 @@
 </template>
 
 <script>
-import { App } from './../App'
+import { App } from '../App'
 import Clock from 'components/Clock'
 
 export default {
