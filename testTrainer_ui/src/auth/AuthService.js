@@ -52,7 +52,7 @@ export default class AuthService {
             alert(`Error: ${err.error}. Check the console for further details.`)
           })
       }
-      router.replace('/')
+      // router.replace('/')
     })
   }
 
@@ -74,7 +74,7 @@ export default class AuthService {
     delete this.expiresAt
     this.authNotifier.emit('authChange', false)
     // navigate to the home route
-    router.replace('/')
+    // router.replace('/')
   }
 
   // checks if the user is authenticated
