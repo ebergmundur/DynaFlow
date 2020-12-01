@@ -18,10 +18,8 @@
           <div class="text-h5">Velkomin</div>
         </q-card-section>
         <q-card-section class="q-pt-none">
-          BMAT Ninja is an online BMAT course and question bank rolled into one. It was made with ♥ by 6med, a small
-          startup built and run exclusively by medical students. We really hope you enjoy using the website and find it
-          useful - we remember how daunting the medical applications process was, and we're thrilled that you've allowed
-          us to be a part of your journey. Good luck!
+          E-nám er vettvangur þar sem nemendur geta æft sig fyrir próf...
+
         </q-card-section>
       </q-card>
 
@@ -30,10 +28,8 @@
           <div class="text-h5">Leiðbeiningar</div>
         </q-card-section>
         <q-card-section class="q-pt-none">
-          Brush up on your Section 1 and 2 knowledge in the Training Temple and when you're ready, try some practice
-          questions in the Practice Dojo. As the exam nears, work through the most recent past papers in the Exam Arena
-          under timed conditions. If you need a hand with anything, please drop us an email - we're always happy to
-          help!
+          Dustaðu rykið af þekkingu þinni og spreyttu þig á stuttum æfingum eða heilum prófum.
+
         </q-card-section>
       </q-card>
 <!--    </div>-->
