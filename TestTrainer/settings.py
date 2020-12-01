@@ -72,6 +72,15 @@ CORS_ALLOWED_ORIGINS = [
     'http://0.0.0.0',
     'http://0.0.0.0:8000',
     'http://0.0.0.0:8080',
+    'http://test.enam.is:8000',
+    'http://test.enam.is:8080',
+    'http://test.enam.is',
+    'https://test.enam.is:8000',
+    'https://test.enam.is:8080',
+    'https://test.enam.is',
+    'https://enam.is:8000',
+    'https://enam.is:8080',
+    'https://enam.is',
 ]
 
 CORS_ORIGIN_WHITELIST = CORS_ALLOWED_ORIGINS
