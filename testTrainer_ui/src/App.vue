@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import AuthService from './../auth/AuthService'
+import AuthService from './auth/AuthService'
 import axios from 'axios'
 
 const API_URL = 'http://api.enam.is'
