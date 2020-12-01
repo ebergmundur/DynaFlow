@@ -179,7 +179,7 @@
 
 import Clock from 'components/Clock'
 // import AuthService from './../auth/AuthService'
-import axios from 'axios'
+// import axios from 'axios'
 
 // const API_URL = 'http://api.enam.is'
 // const auth = new AuthService()
