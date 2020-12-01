@@ -49,7 +49,6 @@
 
       <div style="margin-right: 200px; margin-top: 20px;">
 
-                    <h5>//{{authenticated}}//</h5>
 <!--      <button-->
 <!--        class="btn btn-primary btn-margin"-->
 <!--        v-if="!authenticated"-->
@@ -119,7 +118,6 @@
 </template>
 
 <script>
-import { App } from '../App'
 import Clock from 'components/Clock'
 
 export default {
@@ -129,8 +127,7 @@ export default {
   },
   data () {
     return {
-      loginblock: '',
-      authenticated: App.authenticated
+      loginblock: ''
     }
   }
 }
