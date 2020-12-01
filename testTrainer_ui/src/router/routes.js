@@ -34,7 +34,16 @@ const routes = [
     ]
   },
   {
-    path: '/testpage',
+    path: '/testreal',
+    name: 'testreal',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      // { path: '', component: () => import('components/Questions.vue') },
+      { path: '', component: () => import('components/Testpage') }
+    ]
+  },
+  {
+    path: '/testpractice',
     name: 'testpage',
     component: () => import('layouts/MainLayout.vue'),
     children: [
@@ -49,7 +58,14 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       // { path: '', component: () => import('components/Questions.vue') },
-      { path: '', component: () => import('components/Testpage') }
+      { path: '', component: () => import('components/Review') }
+    ]
+  },
+  {
+    path: '/flipcard',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('components/Flipcard') }
     ]
   },
   {

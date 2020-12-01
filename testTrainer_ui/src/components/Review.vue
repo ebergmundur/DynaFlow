@@ -1,276 +1,97 @@
 <template>
-  <div class="q-pa-md row items-start q-gutter-md">
 
-    <q-dialog v-model="testFinished">
-      <q-card>
-        <q-toolbar>
-          <q-avatar>
-            <img src="../assets/enam-logo.svg">
-          </q-avatar>
-          <q-toolbar-title><span class="text-weight-bold">E-nám</span> Ljúka prófi?</q-toolbar-title>
-          <q-btn flat round dense icon="close" v-close-popup/>
-        </q-toolbar>
-        <q-card-section class="scroll">
-          Viltu fara í gegnum svörin núna?
-
-          <q-btn
-          @click="reviewTest"
-          >
-            Já endilega hreint.
-          </q-btn>
-
-        </q-card-section>
-      </q-card>
-    </q-dialog>
-
-    <q-dialog v-model="memo">
-      <q-card>
-        <q-toolbar>
-          <q-avatar>
-            <img src="../assets/enam-logo.svg">
-          </q-avatar>
-
-          <q-toolbar-title><span class="text-weight-bold">E-nám</span> minnismiðar</q-toolbar-title>
-
-          <q-btn flat round dense icon="close" v-close-popup/>
-        </q-toolbar>
-
-        <!--        style="max-height: 70vh; width: 30vw;"-->
-        <q-card-section class="scroll">
-
-          <h6 class=" q-ma-sm">{{ currentQuestion.name }}</h6>
-          <q-form
-            @submit="onMemoSubmit"
-            @reset="onMemoReset"
-            class="q-gutter-md"
-          >
-            <div class="q-pa-md q-ma-sm">
-
-              Þyngd: {{ difficulty / 10 }}
-              <q-slider
-                v-model="difficulty"
-                :step="10"
-              />
-            </div>
-
-            <div class="q-pa-md q-ma-xs">
-              <q-input
-                v-model="memotext"
-                filled
-                type="textarea"
-              />
-            </div>
-            <q-toggle v-model="known" label="Kann vel " class=" q-ma-sm"/>
-            <!--            <span v-if="showDate">{{ formDate }}</span><br>-->
-            <!--            <q-date v-if="showDate" v-model="date" minimal/>-->
-            <div>
-              <q-btn label="Skrá" type="submit" color="primary"/>
-              <q-btn label="Hreinsa" type="reset" color="primary" flat class="q-ml-sm"/>
-            </div>
-          </q-form>
-        </q-card-section>
-      </q-card>
-    </q-dialog>
-
-    <!--MEMOS-->
-    <q-dialog v-model="memolist" position="right">
-      <q-card>
-        <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">Minnismiðar</div>
-          <q-space/>
-          <q-btn icon="close" flat round dense v-close-popup/>
-        </q-card-section>
-        <q-card-section>
-          <div class="q-pa-md row items-start q-gutter-md">
-
-            <q-card
-              flat bordered
-              class="my-card bg-grey-1 scroll "
-              v-for="(data) in currentQuestion.memos"
-              :key="data.id"
-            >
-              <q-card-section>
-                <div class="row items-center no-wrap">
-                  <div class="col">
-
-                    <div class="text-h6">
-                      <!--                      {{ formatDate(data.created_date) }}-->
-
-                      <q-toggle v-model="data.known" label="Kann vel " class=" q-ma-sm" disable/>
-                    </div>
-                    <!--                <div class="text-h6">{{formatDate(data.created_date)}}</div>-->
-                    <div class="text-subtitle2">
-                      Þyngd: {{ data.difficulty }}
-                      <q-linear-progress size="25px" :value="data.difficulty/10" color="red" class="q-mt-sm"/>
-                    </div>
-                  </div>
-                </div>
-              </q-card-section>
-
-              <q-card-section>
-                {{ data.memo }}
-              </q-card-section>
-
-              <q-separator/>
-
-              <q-card-actions>
-
-                <q-btn>Í geymslu</q-btn>
-                <!--            <q-btn>Minna á síðar</q-btn>-->
-              </q-card-actions>
-            </q-card>
-          </div>
-        </q-card-section>
-      </q-card>
-    </q-dialog>
-    <q-card bordered
-            class="my-card bg-grey-1 absolute-center col-xs-10 col-sm-10 col-md-10 col-xl-6 col-lg-6"
-            v-model='currentQuestion'
-            v-if="currentQuestion"
-    >
-      <!--            style="max-height: 80vh; width: 40%;"-->
-      <q-toolbar class="q-dark" style="background-color: #616161;">
+  <div class="q-pa-md row items-start q-gutter-md justify-center">
+    <div class="mainlist col-lg-6 col-md-8 col-sm ">
+      <q-toolbar>
         <q-toolbar-title>
-          {{ questNum }} / {{ totalQuestions }} | {{ currentQuestion.name }}
+          {{ myJson.name }} -
+          {{ formatDate(myJson.created_date) }}
+
+          <span class="" style="float: right">
+          {{ totpoints }} af {{ optpoints }} = {{ Math.round((totpoints / optpoints) * 100) }}%
+          </span>
         </q-toolbar-title>
-        <div class="col-auto">
-          <q-toggle v-model="known" label="Kann vel " class=" q-ma-sm"/>
-          <q-toggle v-model="postpone" label="Sleppa " class=" q-ma-sm"/>
-
-          <q-btn label="Minnismiðar" icon="">
-            <q-menu cover auto-close>
-              <q-list>
-                <q-btn
-                  v-if="currentQuestion.memos.length > 0"
-                  @click="openMemos"
-                  color="orange"
-                  style="width: 100%"
-                >
-                  Minnismiðar {{ currentQuestion.memos.length }}
-                </q-btn>
-                <br>
-                <q-btn
-                  color="green"
-                  @click="memo = true"
-                  style="width: 100%"
-                >
-                  Nýr minnismiði
-                </q-btn>
-              </q-list>
-            </q-menu>
-          </q-btn>
-          <q-btn
-            color="blue"
-            @click="openUrl"
-            label="E"
-          />
-        </div>
       </q-toolbar>
-      <q-card-section>
-        <div class="row items-center no-wrap">
-          <div class="col-6">
-            <div class="text-h6">{{ currentQuestion.question }}</div>
-            <!--            <div class="text-subtitle2">{{ currentQuestion.name }}</div>-->
-            <!--            <div class="text-subtitle2">{{ currentQuestion.owner.fullname }}</div>-->
-            <div
-              v-if="hinttext"
-              class="text-white bg-orange q-pa-sm ">{{ hinttext }}
+      <q-list bordered class="rounded-borders">
+        <q-expansion-item
+          v-for="(item, index) in myJson.answers"
+          :key="index"
+          :class="iscorrect( item.result)"
+          expand-separator
+          :label="item.question.name"
+          class=""
+        >
+          <q-card-section style="background-color: white;" class="row">
+            <div class="col-6">
+            <span v-for="(opt, idx) in item.question.options"
+                  :key="idx"
+            >
+                <span
+                  v-if="parseInt(item.options_ids * 1) == opt.id"
+                  class="float-left"
+                >
+                  <strong>Þitt svar:</strong> {{ opt.answer }}<br>
+                  <strong> {{item.points_given}} stig </strong>
+                </span>
+            </span>
+              <span v-if="item.result === 0">
+                          <strong>Spurningu sleppt</strong><br>
+                  <strong> {{item.points_given}} stig </strong>
+                        </span>
             </div>
-          </div>
 
-        </div>
-      </q-card-section>
-      <q-card-section class="row">
-        <div class="col-lg-6 q-px-md scroll">
-          {{ currentQuestion.description }}
-        </div>
-        <div class="col-lg-6">
-          <div
-            v-for="opt in currentOptions"
-            :key="opt.id"
-            class="quest-options"
-          >
-            <q-radio
-              v-if="currentQuestion.single_selection"
-              :name="opt.question_ref.toString()"
-              :label="opt.answer"
-              value="false"
-              :val="opt.id"
-              v-model="currTestAnsw"
-              @input="setAnswerChecked"
-            />
-            <q-checkbox
-              v-if="!currentQuestion.single_selection"
-              :name="opt.question_ref.toString()"
-              :label="opt.answer"
-              value="false"
-              :val="opt.id"
-              v-model="currTestAnsw"
-              @input="setAnswerChecked"
-            />
-            {{ opt.correct }}
+            <div class="col-6 ">
+            <span v-for="(memo, innx) in item.question.memos"
+                  :key="innx"
+            >
+              <strong>{{ formatDate(memo.created_date) }}:</strong> {{ memo.memo }}<br>
+            </span>
+            </div>
 
-          </div>
-        </div>
-        <!--        <q-linear-progress rounded size="20px" :value="progress" color="red" class="q-mt-sm"/>-->
-      </q-card-section>
-      <q-separator/>
-      <q-card-actions>
-        <div class="text-h5">
-          {{ currPoints }} stig &nbsp;
-          <!--          <span q-red>{{hintloss}}</span>&nbsp;-->
-        </div>
-        <q-btn
-          v-if="currentQuestion.hint.length"
-          @click="hint">„Tips“ {{ currentQuestion.hint_cost }} stig
-        </q-btn>
+          </q-card-section>
+        </q-expansion-item>
+      </q-list>
 
-        <q-btn
-          @click="onAnswerSubmit"
-          color="green"
-        >
-          Svara
-        </q-btn>
+      <!--      <q-card-->
+      <!--        v-for="(item, index) in myJson.answers"-->
+      <!--        :key="index"-->
+      <!--      >-->
+      <!--        <q-toolbar class="q-dark">-->
+      <!--          {{ item.question.name }}-->
+      <!--        </q-toolbar>-->
+      <!--        <q-card-section>-->
+      <!--          &lt;!&ndash;          //{{ item.result }}&ndash;&gt;-->
+      <!--          {{ item.options_ids }}-->
+      <!--          <q-card-section-->
+      <!--            v-for="(opt, idx) in item.question.options"-->
+      <!--            :key="idx"-->
+      <!--          >-->
+      <!--            {{ opt.id }}: {{ opt.answer }}-->
+      <!--          </q-card-section>-->
+      <!--        </q-card-section>-->
 
-      </q-card-actions>
-    </q-card>
-
-    <!--    <ol>-->
-    <!--      <li-->
-    <!--        v-for="(question, index) in myJson.question_collection"-->
-    <!--        :key="index">-->
-    <!--        {{ question.name }}-->
-    <!--      </li>-->
-    <!--    </ol>-->
-
-    <div class="questlist">
-        <q-btn-toggle
-          v-model="questNum"
-          :options="questionsNumbersList"
-          size="sm"
-          @input="setQuestion"
-        >
-        </q-btn-toggle>
+      <!--      </q-card>-->
     </div>
-<!--    <div class="questlist">-->
-<!--      <div class="absolute-center" style="">-->
-<!--        <q-btn-toggle-->
-<!--          v-model="questNum"-->
-<!--          :options="questionsNumbersList"-->
-<!--          size="sm"-->
-<!--          @input="setQuestion"-->
-<!--        >-->
-<!--        </q-btn-toggle>-->
+    <!--    MAIN CARDS-->
 
-<!--      </div>-->
-<!--    </div>-->
-
+    <!--    BOTTOM LIST OF QUESTIONS-->
+    <div class="questlist ">
+      <!--      <q-page-sticky expand position="bottom" class="questlist ">-->
+      <q-btn-toggle
+        v-model="questNum"
+        :options="questionsNumbersList"
+        size="sm"
+      >
+        <!--        @input="setQuestion"-->
+      </q-btn-toggle>
+      <!--      </q-page-sticky>-->
+    </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
-import store from '../router/store'
+// import store from '../router/store'
 import { date } from 'quasar'
 // import { clock } from './Clock'
 // import Question from 'components/Question'
@@ -305,120 +126,55 @@ export default {
       btnmodel: 'one',
       currPoints: 0,
       postpone: false,
+      myJson: null,
+      optpoints: 0,
+      totpoints: 0,
       totalQuestions: 0
     }
   },
-  computed: {
-    currentQuestion () {
-      return store.getters.currQest.payload
-    },
-    formDate () {
-      return date.formatDate(this.date, 'YYYY-MM-DD')
-    },
-    currentOptions () {
-      return store.getters.currQest.payload.options
-    }
-  },
   methods: {
-    setQuestion (e) {
-      var index = 0
-      if (e > -1) {
-        index = e - 1
-      } else {
-        index = 0
-      }
-      this.hinttext = ''
-      this.editingIndex = index
-      this.question = JSON.parse(JSON.stringify(this.myJson.question_collection[index]))
-      store.commit({ type: 'setQuestion', payload: this.question })
-      // store.commit({ type: 'setTestQuestion', payload: [] })
-      // Question.setAnswerChecked()
-      this.currPoints = this.question.points
-      this.questNum = index + 1
-    },
-    setAnswerChecked (e) {
-      if (this.currentQuestion.id !== this.cQ) {
-        this.cQ = this.currentQuestion.id
-        this.currTestAnsw = []
-        // this.progress = 0.001
-      }
-    },
-    onMemoSubmit (e) {
-      const formdata = {
-        difficulty: this.difficulty,
-        memo: this.memotext,
-        known: this.known,
-        curr_question: this.currentQuestion.id
-      }
-      axios({
-        method: 'post',
-        url: 'http://einars-macbook-pro.local:8000/api/memos/',
-        data: formdata
-      })
-    },
-    onAnswerSubmit (e) {
-      if (this.currTestAnsw < 1) {
-        if (confirm('Hey ætlar þú ekki að svara?\n OK merkir spurninguna til að hún gleymist ekki.')) {
-          this.questionsNumbersList[this.questNum - 1].answered = false
-          this.questionsNumbersList[this.questNum - 1].color = 'warning'
-          this.questionsNumbersList[this.questNum - 1]['toggle-color'] = 'negative'
-          // console.log(this.questionsNumbersList)
-          this.setQuestion(this.questNum + 1)
-          return
-        }
-      }
-
-      this.questionsNumbersList[this.questNum - 1].answer = this.currTestAnsw
-      this.questionsNumbersList[this.questNum - 1].answered = true
-      this.questionsNumbersList[this.questNum - 1].color = 'positive'
-
-      var answers = 0
-      var i
-      for (i = 0; i < this.totalQuestions; i++) {
-        if (this.questionsNumbersList[i].answered) {
-          answers++
-        }
-      }
-
-      if (answers === this.totalQuestions) {
-        this.testFinished = true
-      }
-
-      var ii
-      for (ii = 0; ii < this.totalQuestions; ii++) {
-        if (!this.questionsNumbersList[ii].answered) {
-          this.setQuestion(ii + 1)
-          ii = this.totalQuestions
-        }
-      }
-
-      console.log(this.questionsNumbersList)
-
-      const formdata = {
-        time_allowed: this.time_allowed,
-        time_taken: parseInt(this.time_taken),
-        options_ids: this.currTestAnsw.toString(),
-        curr_question: parseInt(this.currentQuestion.id),
-        test_practice: parseInt(this.myJson.id)
-      }
-
-      axios({
-        method: 'post',
-        url: 'http://einars-macbook-pro.local:8000/api/answer/',
-        data: formdata
-      })
-    },
+    // setQuestion (e) {
+    //   var index = 0
+    //   if (e > -1) {
+    //     index = e - 1
+    //   } else {
+    //     index = 0
+    //   }
+    //   this.hinttext = ''
+    //   this.editingIndex = index
+    //   this.question = JSON.parse(JSON.stringify(this.myJson.answers[index]))
+    //   store.commit({ type: 'setQuestion', payload: this.question })
+    //   // store.commit({ type: 'setTestQuestion', payload: [] })
+    //   // Question.setAnswerChecked()
+    //   this.currPoints = this.question.points
+    //   this.questNum = index + 1
+    // },
+    // setAnswerChecked (e) {
+    //   if (this.currentQuestion.id !== this.cQ) {
+    //     this.cQ = this.currentQuestion.id
+    //     this.currTestAnsw = []
+    //     // this.progress = 0.001
+    //   }
+    // },
+    // onMemoSubmit (e) {
+    //   const formdata = {
+    //     difficulty: this.difficulty,
+    //     memo: this.memotext,
+    //     known: this.known,
+    //     curr_question: this.currentQuestion.id
+    //   }
+    //   axios({
+    //     method: 'post',
+    //     url: 'http://einars-macbook-pro.local:8000/api/memos/',
+    //     data: formdata
+    //   })
+    // },
     onMemoReset () {
       this.memotext = ''
       this.difficulty = 50
       this.accept = false
       this.calendar = false
       this.showDate = false
-    },
-    hint (e) {
-      e.target.offsetParent.disabled = true
-      this.hinttext = this.currentQuestion.hint
-      this.currPoints = this.currentQuestion.points - this.currentQuestion.hint_cost
     },
     openUrl () {
       window.open('http://einars-macbook-pro.local:8000/admin/questions/question/' + this.currentQuestion.id, '_blank')
@@ -434,7 +190,7 @@ export default {
       return date.formatDate(d, 'YYYY-MM-DD')
     },
     showTooltip (e) {
-      console.log(e)
+      // console.log(e)
     },
     formatOptions () {
       if (this.currentQuestion.single_selection) {
@@ -442,36 +198,24 @@ export default {
       } else {
         return 'checkbox'
       }
-      // },
-      // questionsNumbers (id) {
-      //   var i
-      //   var qs = []
-      //   for (i = 0; i < this.myJson.question_collection.length; i++) {
-      //     // console.log(this.myJson.question_collection[i].name)
-      //     qs.push({
-      //       label: i + 1,
-      //       value: i,
-      //       slot: this.myJson.question_collection[i].name,
-      //       answered: false
-      //     })
-      //   }
-      //   // console.log(qs)
-      //   this.questionsNumbersList = qs
     },
-    timerCount () {
-      this.time_allowed = this.currentQuestion.time_allowed // 10 // til að stytta
-      // this.time_step = 1 / this.time_allowed
-      // this.time_taken = this.progress * this.time_allowed
-      // if (this.progress > 1.0) {
-      //   // alert('Tíminn búinn')
-      //   this.progress = 0.001
-      // } else {
-      //   this.progress = this.progress + this.time_step
-      // }
+    iscorrect (i) {
+      // console.log(p)
+      // console.log('totpoints')
+      // console.log(this.totpoints)
+      // this.totpoints = this.totpoints + p
+
+      if (i === 1) {
+        return 'correct'
+      } else if (i === 0) {
+        return 'postponed'
+      } else {
+        return 'wrong'
+      }
     },
     reviewTest () {
       this.testFinished = false
-      this.$router.push({ path: '/review', params: { exam: 52 } }).catch(err => {
+      this.$router.push({ path: '/review', params: { exam: 50 } }).catch(err => {
         console.log(err.message)
       })
     }
@@ -480,19 +224,23 @@ export default {
     if (exam > 0) {
       alert('MOUNTED REVIEW')
     }
-    axios('http://einars-macbook-pro.local:8000/api/questionn/50/?format=json')
+    axios('http://einars-macbook-pro.local:8000/api/review/68/?format=json')
       .then(response => {
         this.myJson = JSON.parse(JSON.stringify(response.data))
-        this.totalQuestions = this.myJson.question_collection.length
+        // console.log(this.myJson)
+        this.totalQuestions = this.myJson.answers.length
+        // console.log(this.totalQuestions)
         var i
         var qs = []
         for (i = 0; i < this.totalQuestions; i++) {
-          // console.log(this.myJson.question_collection[i].name)
+          // console.log(this.myJson.answers[i])
+          this.totpoints = this.totpoints + this.myJson.answers[i].points_given
+          this.optpoints = this.optpoints + this.myJson.answers[i].points
+
           qs.push({
             label: i + 1,
             value: i + 1,
             slot: i + 1,
-            title: this.myJson.question_collection[i].name,
             color: 'info',
             answered: false,
             answer: 0
@@ -500,13 +248,13 @@ export default {
         }
         // console.log(qs)
         this.questionsNumbersList = qs
-        store.commit({ type: 'setTimeAllowed', payload: this.myJson.time_allowed + 0 })
-        console.log(this.myJson.time_allowed)
+        // store.commit({ type: 'setTimeAllowed', payload: this.myJson.time_allowed + 0 })
+        // console.log(this.myJson.time_allowed)
 
         // console.log(clock)
         // clock.limit = this.myJson.time_allowed * (60000)
 
-        this.setQuestion(1)
+        // this.setQuestion(1)
       })
       .catch(error => console.log('Error', error.message))
 
@@ -516,7 +264,7 @@ export default {
     // }, 1000)
   },
   updated () {
-    this.setAnswerChecked()
+    // this.setAnswerChecked()
   },
   created () {
     if (exam > 0) {
@@ -544,4 +292,20 @@ export default {
   min-height: 40px
   overflow: scroll
   text-align: center
+
+.mainlist
+  text-align: left
+
+.correct
+  background-color: #e7f3da
+
+.postponed
+  background-color: #faf5a8
+
+.wrong
+  background-color: #f3c7c7
+
+.redborder
+  border: 1px solid red
+
 </style>

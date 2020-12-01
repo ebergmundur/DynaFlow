@@ -18,7 +18,7 @@
 
       <q-btn
         dense
-        :size="sm"
+        :size="xs"
         :icon="mdiRestart"
         @click="reset"
 
@@ -26,7 +26,7 @@
 
       <q-btn
         dense
-        :size="sm"
+        :size="xs"
         :icon="mdiPlay"
         @click="start"
       />

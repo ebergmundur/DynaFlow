@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-md row items-start q-gutter-md">
+  <div class="tpage q-pa-md row items-start q-gutter-md scroll">
 
     <q-dialog v-model="testFinished">
       <q-card>
@@ -14,7 +14,7 @@
           Viltu fara í gegnum svörin núna?
 
           <q-btn
-          @click="reviewTest"
+            @click="reviewTest"
           >
             Já endilega hreint.
           </q-btn>
@@ -123,19 +123,20 @@
         </q-card-section>
       </q-card>
     </q-dialog>
+
     <q-card bordered
-            class="my-card bg-grey-1 absolute-center col-xs-10 col-sm-10 col-md-10 col-xl-6 col-lg-6"
+            class="my-card bg-grey-1 col-xs-12 col-sm-12 col-md-10 col-lg-6 q-my-xs-lg q-my-sm-lg q-mx-xs-none"
             v-model='currentQuestion'
             v-if="currentQuestion"
     >
       <!--            style="max-height: 80vh; width: 40%;"-->
       <q-toolbar class="q-dark" style="background-color: #616161;">
         <q-toolbar-title>
-          {{ questNum }} / {{ totalQuestions }} | {{ currentQuestion.name }}
+          {{ questNum }} / {{ totalQuestions }} | {{ myJson.name }}
         </q-toolbar-title>
         <div class="col-auto">
-          <q-toggle v-model="known" label="Kann vel " class=" q-ma-sm"/>
-          <q-toggle v-model="postpone" label="Sleppa " class=" q-ma-sm"/>
+          <q-toggle v-model="known" value="false" label="Kann vel " class=" q-ma-sm"/>
+          <!--          <q-toggle v-model="postpone" value="false" label="Sleppa " class=" q-ma-sm"/>-->
 
           <q-btn label="Minnismiðar" icon="">
             <q-menu cover auto-close>
@@ -166,25 +167,21 @@
           />
         </div>
       </q-toolbar>
-      <q-card-section>
-        <div class="row items-center no-wrap">
-          <div class="col-6">
-            <div class="text-h6">{{ currentQuestion.question }}</div>
-            <!--            <div class="text-subtitle2">{{ currentQuestion.name }}</div>-->
-            <!--            <div class="text-subtitle2">{{ currentQuestion.owner.fullname }}</div>-->
-            <div
-              v-if="hinttext"
-              class="text-white bg-orange q-pa-sm ">{{ hinttext }}
-            </div>
+      <q-card-section class="row col">
+        <div class="col-md-6 q-pr-lg ">
+          <div class="text-h6">{{ currentQuestion.question }}</div>
+          <!--            <div class="text-subtitle2">{{ currentQuestion.name }}</div>-->
+          <!--            <div class="text-subtitle2">{{ currentQuestion.owner.fullname }}</div>-->
+          <div
+            v-if="hinttext"
+            class="text-white bg-orange q-pa-sm ">{{ hinttext }}
+          </div>
+          <div class="qdeskr scroll q-mb-md">
+            {{ currentQuestion.description }}
           </div>
 
         </div>
-      </q-card-section>
-      <q-card-section class="row">
-        <div class="col-lg-6 q-px-md scroll">
-          {{ currentQuestion.description }}
-        </div>
-        <div class="col-lg-6">
+        <div class="col-md-6 col-sm-12 col-xs-12">
           <div
             v-for="opt in currentOptions"
             :key="opt.id"
@@ -216,7 +213,7 @@
       </q-card-section>
       <q-separator/>
       <q-card-actions>
-        <div class="text-h5">
+        <div class="text-h5 ">
           {{ currPoints }} stig &nbsp;
           <!--          <span q-red>{{hintloss}}</span>&nbsp;-->
         </div>
@@ -235,35 +232,15 @@
       </q-card-actions>
     </q-card>
 
-    <!--    <ol>-->
-    <!--      <li-->
-    <!--        v-for="(question, index) in myJson.question_collection"-->
-    <!--        :key="index">-->
-    <!--        {{ question.name }}-->
-    <!--      </li>-->
-    <!--    </ol>-->
-
     <div class="questlist">
-        <q-btn-toggle
-          v-model="questNum"
-          :options="questionsNumbersList"
-          size="sm"
-          @input="setQuestion"
-        >
-        </q-btn-toggle>
+      <q-btn-toggle
+        v-model="questNum"
+        :options="questionsNumbersList"
+        size="sm"
+        @input="setQuestion"
+      >
+      </q-btn-toggle>
     </div>
-<!--    <div class="questlist">-->
-<!--      <div class="absolute-center" style="">-->
-<!--        <q-btn-toggle-->
-<!--          v-model="questNum"-->
-<!--          :options="questionsNumbersList"-->
-<!--          size="sm"-->
-<!--          @input="setQuestion"-->
-<!--        >-->
-<!--        </q-btn-toggle>-->
-
-<!--      </div>-->
-<!--    </div>-->
 
   </div>
 </template>
@@ -295,7 +272,6 @@ export default {
       difficulty: 50,
       accept: false,
       date: '2020/24/12',
-      known: false,
       interval: 0,
       progress: 0.01,
       time_allowed: 0,
@@ -304,7 +280,9 @@ export default {
       tesing_user: 1,
       btnmodel: 'one',
       currPoints: 0,
+      known: false,
       postpone: false,
+      maximizedToggle: true,
       totalQuestions: 0
     }
   },
@@ -354,23 +332,40 @@ export default {
         method: 'post',
         url: 'http://einars-macbook-pro.local:8000/api/memos/',
         data: formdata
-      })
+      }).catch(error => console.log('Error', error.message))
     },
     onAnswerSubmit (e) {
       if (this.currTestAnsw < 1) {
         if (confirm('Hey ætlar þú ekki að svara?\n OK merkir spurninguna til að hún gleymist ekki.')) {
-          this.questionsNumbersList[this.questNum - 1].answered = false
+          this.questionsNumbersList[this.questNum - 1].answered = true
           this.questionsNumbersList[this.questNum - 1].color = 'warning'
           this.questionsNumbersList[this.questNum - 1]['toggle-color'] = 'negative'
           // console.log(this.questionsNumbersList)
-          this.setQuestion(this.questNum + 1)
-          return
+          // this.setQuestion(this.questNum + 1)
         }
       }
+
+      var formdata = {
+        // time_allowed: this.time_allowed,
+        // time_taken: parseInt(this.time_taken),
+        options_ids: this.currTestAnsw.toString(),
+        curr_question: parseInt(this.currentQuestion.id),
+        test_practice: parseInt(this.myJson.id),
+        points: parseInt(this.currPoints),
+        known: this.known,
+        postpone: this.postpone
+      }
+
+      axios({
+        method: 'post',
+        url: 'http://einars-macbook-pro.local:8000/api/answer/',
+        data: formdata
+      })
 
       this.questionsNumbersList[this.questNum - 1].answer = this.currTestAnsw
       this.questionsNumbersList[this.questNum - 1].answered = true
       this.questionsNumbersList[this.questNum - 1].color = 'positive'
+      this.known = false
 
       var answers = 0
       var i
@@ -391,22 +386,7 @@ export default {
           ii = this.totalQuestions
         }
       }
-
-      console.log(this.questionsNumbersList)
-
-      const formdata = {
-        time_allowed: this.time_allowed,
-        time_taken: parseInt(this.time_taken),
-        options_ids: this.currTestAnsw.toString(),
-        curr_question: parseInt(this.currentQuestion.id),
-        test_practice: parseInt(this.myJson.id)
-      }
-
-      axios({
-        method: 'post',
-        url: 'http://einars-macbook-pro.local:8000/api/answer/',
-        data: formdata
-      })
+      // console.log(this.questionsNumbersList)
     },
     onMemoReset () {
       this.memotext = ''
@@ -480,7 +460,7 @@ export default {
     if (exam > 0) {
       alert('MOUNTED REVIEW')
     }
-    axios('http://einars-macbook-pro.local:8000/api/questionn/50/?format=json')
+    axios('http://einars-macbook-pro.local:8000/api/questionn/68/?format=json')
       .then(response => {
         this.myJson = JSON.parse(JSON.stringify(response.data))
         this.totalQuestions = this.myJson.question_collection.length
@@ -501,7 +481,7 @@ export default {
         // console.log(qs)
         this.questionsNumbersList = qs
         store.commit({ type: 'setTimeAllowed', payload: this.myJson.time_allowed + 0 })
-        console.log(this.myJson.time_allowed)
+        // console.log(this.myJson.time_allowed)
 
         // console.log(clock)
         // clock.limit = this.myJson.time_allowed * (60000)
@@ -528,6 +508,20 @@ export default {
 </script>
 
 <style scoped lang="sass">
+
+.my-card
+  margin: 5% auto
+  @media screen and (max-width: $breakpoint-xs)
+    margin-top: 10px
+    margin-bottom: 30px
+    margin-right: 5px
+    margin-left: 8px
+
+.tpage
+  @media screen and (max-width: $breakpoint-xs)
+    //padding-top: 130px
+    //padding-bottom: 230px
+
 .quest-options
   border: 1px solid #8d8c8c
   padding: 5px
@@ -537,11 +531,16 @@ export default {
 .questlist
   padding: 10px 20px
   width: 100%
-  position: absolute
-  bottom: 50px
-  margin: 0 auto
+  position: fixed
+  bottom: 0px
+  margin: 60px 0 0 0
   background-color: #9ab2d0
   min-height: 40px
   overflow: scroll
   text-align: center
+
+.qdeskr
+  max-height: 250px
+  overflow: scroll
+//padding-right: 10px
 </style>

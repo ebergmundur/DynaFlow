@@ -5,10 +5,8 @@
 </template>
 
 <script>
-export default {
-  name: 'App',
-  methods: {
 
-  }
+export default {
+  name: 'App'
 }
 </script>

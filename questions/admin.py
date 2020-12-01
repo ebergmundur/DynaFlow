@@ -274,8 +274,8 @@ class CategoryAdmin(TabbedTranslationAdmin):
 
 
 @admin.register(Questionnaire)
-class QuestionnaireAdmin(admin.ModelAdmin):
-    list_display = ('name', )
+class QuestionnaireAdmin(TabbedTranslationAdmin):
+    list_display = ('name', 'q_count' )
     filter_horizontal = ['question_collection']
 
 
@@ -291,4 +291,4 @@ class TestMemoAdmin(TabbedTranslationAdmin):
 
 @admin.register(TestAnswers)
 class TestAnswersAdmin(TabbedTranslationAdmin):
-    pass
+    list_display = ('result_date', 'result', 'known', 'postpone', 'question', 'points_given' )

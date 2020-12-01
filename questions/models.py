@@ -11,9 +11,9 @@ from datetime import datetime
 default_user = 1
 
 RESULT = [
-    [0, 'Failed'],
+    [-1, 'Failed'],
+    [0, 'Postponed'],
     [1, 'Correct'],
-    [2, 'Omitted'],
 ]
 
 class Question(Base):
@@ -30,7 +30,7 @@ class Question(Base):
     group_false = models.ForeignKey("Group", blank=True, null=True, related_name="group_false", on_delete=models.PROTECT )
 
     def __str__(self):
-        if len(self.name) > 5:
+        if len(self.name) > 10:
             return self.name
         else:
             return self.question
@@ -146,7 +146,7 @@ class QuestionGroupRelation(models.Model):
 
 
 class Questionnaire(Base):
-    owner = models.ForeignKey(PersonUser, default=1, on_delete=models.PROTECT, related_name="question_questionnaire_owner", related_query_name="questionnaire")
+    owner = models.ForeignKey(PersonUser, default=1, on_delete=models.CASCADE, related_name="question_questionnaire_owner", related_query_name="questionnaire")
     timed = models.BooleanField(default=True, blank=True)
     time_allowed = models.SmallIntegerField(default=120, help_text="Mínútur", blank=True)
     question_collection = models.ManyToManyField(Question, blank=True)
@@ -166,12 +166,16 @@ class Questionnaire(Base):
     def q_count(self):
         return self.question_collection.count
 
-class QuestionnaireResults(models.Model):
-    user = models.ForeignKey(PersonUser, default=1, on_delete=models.PROTECT,)
-    questionnaire = models.ForeignKey(Questionnaire, on_delete=models.PROTECT, )
-    question = models.ForeignKey(Question, on_delete=models.PROTECT)
-    result = models.SmallIntegerField(default=0, choices=RESULT)
-    result_date = models.DateTimeField(auto_now_add=True)
+    @property
+    def answers(self):
+        return self.testanswers_set.all()
+
+# class QuestionnaireResults(models.Model):
+#     user = models.ForeignKey(PersonUser, default=1, on_delete=models.PROTECT,)
+#     questionnaire = models.ForeignKey(Questionnaire, on_delete=models.PROTECT, )
+#     question = models.ForeignKey(Question, on_delete=models.PROTECT)
+#     result = models.SmallIntegerField(default=0, choices=RESULT)
+#     result_date = models.DateTimeField(auto_now_add=True)
 
 
 class QuestionnaireGroupRelation(models.Model):
@@ -190,13 +194,15 @@ class QuestionnaireGroupRelation(models.Model):
 class TestAnswers(Base):
     tesing_user = models.ManyToManyField(PersonUser, default=default_user, blank=True )
     curr_question = models.SmallIntegerField(default=0)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE,  default=55)
     options_ids = models.CharField(max_length=200, default='')
-    time_in = models.TimeField(blank=True, null=True)
-    time_out = models.TimeField(blank=True, null=True)
-    time_taken = models.SmallIntegerField(blank=True, null=True, default=0)
-    time_allowed = models.SmallIntegerField(default=0)
-    test_practice = models.ForeignKey(Questionnaire, on_delete=models.PROTECT, default=1)
+    test_practice = models.ForeignKey(Questionnaire, on_delete=models.CASCADE, default=1)
     points = models.SmallIntegerField(default=0)
+    points_given = models.SmallIntegerField(default=0)
+    known = models.BooleanField(default=False)
+    postpone = models.BooleanField(default=False)
+    result = models.SmallIntegerField(default=0, choices=RESULT)
+    result_date = models.DateTimeField(auto_now_add=True)
 
     # @property
     # def question(self):
@@ -208,8 +214,9 @@ class TestAnswers(Base):
 
 
 class TestMemo(Base):
-    tesing_user = models.ManyToManyField(PersonUser, blank=True, default=1)
+    tesing_user = models.ManyToManyField(PersonUser, blank=True, default=default_user)
     curr_question = models.SmallIntegerField(default=0)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, default=55)
     memo = models.TextField(blank=True)
     difficulty = models.SmallIntegerField(default=5)
     known = models.BooleanField(default=False)

@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User, Group
 from .models import Question, Questionnaire, QuestionGroupRelation, QuestionnaireGroupRelation, \
-    Option, Category, Group as QGroup, TestMemo, TestAnswers, QuestionnaireResults
+    Option, Category, Group as QGroup, TestMemo, TestAnswers
 from person.models import PersonUser
 from rest_framework import serializers
 
@@ -77,29 +77,25 @@ class QuestionMemoSerializer(serializers.ModelSerializer):
             'created_date',
             'tesing_user',
             'curr_question',
+            'question',
             'known',
             'difficulty',
             'memo',
         ]
 
 
-class QuestionAnswerSerializer(serializers.ModelSerializer):
-    # tesing_user = PersonSerializer(many=False)
-
-    class Meta:
-        model = TestAnswers
-        fields = [
-            'id',
-            'created_date',
-            # 'tesing_user',
-            'time_allowed',
-            'time_taken',
-            'options_ids',
-            'points',
-            'curr_question',
-            'test_practice',
-        ]
-
+# class QuestionnaireResultsSerializer(serializers.ModelSerializer):
+#
+#     class Meta:
+#         model = QuestionnaireResults
+#         fields = [
+#             'id',
+#             'user',
+#             'questionnaire',
+#             'question',
+#             'result',
+#             'result_date',
+#         ]
 
 class QuestionSerializer(serializers.ModelSerializer):
     options = OptionSerializer(many=True)
@@ -121,8 +117,8 @@ class QuestionSerializer(serializers.ModelSerializer):
             'single_selection',
             'points',
             'hint_cost',
-            'group_correct',
-            'group_false',
+            # 'group_correct',
+            # 'group_false',
             'hint',
             'memos'
         ]
@@ -151,26 +147,48 @@ class QuestionnaireSerializer(serializers.ModelSerializer):
             'question_collection',
             'question_collection_str',
             'q_count',
+            'created_date',
         ]
 
-    # def save(self):
-    #     print(self.validated_data)
-    #     q_coll = collect_questions(self.validated_data['question_collection'])
-    #     # owner = 1
-    #     # timed = self.validated_data['timed']
-    #     # time_allowed = self.validated_data['time_allowed']
-    #     # omit_known = self.validated_data['omit_known']
-    #     # question_collection_str = self.validated_data['question_collection_str']
 
-class QuestionnaireResultsSerializer(serializers.ModelSerializer):
+class QuestionAnswerSerializer(serializers.ModelSerializer):
+    # tesing_user = PersonSerializer(many=False)
+    question = QuestionSerializer(many=False)
 
     class Meta:
-        model = QuestionnaireResults
+        model = TestAnswers
         fields = [
             'id',
-            'user',
-            'questionnaire',
+            'created_date',
+            'points',
+            'points_given',
+            'curr_question',
             'question',
             'result',
             'result_date',
+            'options_ids',
         ]
+
+
+class RevieweSerializer(serializers.ModelSerializer):
+    # questions = QuestionSerializer(many=True)
+    answers = QuestionAnswerSerializer(many=True)
+
+    class Meta:
+        model = Questionnaire
+        fields = [
+            'id',
+            'owner',
+            'name',
+            'timed',
+            'time_allowed',
+            'omit_known',
+            'only_failed',
+            # 'questions',
+            'answers',
+            'question_collection_str',
+            'q_count',
+            'created_date',
+        ]
+
+

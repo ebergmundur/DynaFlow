@@ -27,6 +27,7 @@ router.register(r'options', question_views.OptionViewSet)
 router.register(r'groups', question_views.GroupViewSet)
 router.register(r'category', question_views.CategoryViewSet)
 router.register(r'questionn', question_views.QuestionnaireViewSet)
+router.register(r'review', question_views.ReviewViewSet)
 # router.register(r'answewr', question_views.QuestionAnswerViewSet)
 # router.register(r'groups', question_views.GroupViewSet)
 
