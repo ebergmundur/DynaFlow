@@ -44,6 +44,8 @@ ALLOWED_HOSTS = [
     'einars-macbook-pro.local:8000',
     'einars-macbook-pro.local:8080',
     'test.enam.is:8000',
+    'test.enam.is:8080',
+    'test.enam.is',
 ]
 
 CORS_ALLOWED_ORIGINS = [
