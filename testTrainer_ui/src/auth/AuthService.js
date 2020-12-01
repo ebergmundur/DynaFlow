@@ -19,7 +19,7 @@ export default class AuthService {
   auth0 = new auth0.WebAuth({
     domain: 'dev-4z-pkajz.eu.auth0.com',
     clientID: 'QVNW3HExUygBcPkY2hfxFSXCQAss6EzG',
-    redirectUri: 'https://enam.is/#/callback',
+    redirectUri: 'https://enam.is/',
     audience: 'https://dev-4z-pkajz.eu.auth0.com/api/v2/',
     responseType: 'token id_token',
     scope: 'openid profile'
