@@ -1,6 +1,32 @@
 <template>
   <div id="q-app">
     <router-view />
+      <div style="margin-right: 200px; margin-top: 20px;">
+
+                    <h5>//{{authenticated}}//</h5>
+      <button
+        class="btn btn-primary btn-margin"
+        v-if="!authenticated"
+        @click="login()">
+        Log In
+      </button>
+
+      <button
+        class="btn btn-primary btn-margin"
+      v-if="authenticated"
+        @click="privateMessage()">
+        Call Private
+      </button>
+
+      <button
+        class="btn btn-primary btn-margin"
+        v-if="!authenticated"
+        @click="logout()">
+        Log Out
+      </button>
+      {{ message }}
+      <br>
+        </div>
   </div>
 </template>
 
