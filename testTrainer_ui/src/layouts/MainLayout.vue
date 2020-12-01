@@ -181,7 +181,7 @@ import Clock from 'components/Clock'
 import AuthService from './../auth/AuthService'
 import axios from 'axios'
 
-const API_URL = 'http://localhost:8000'
+const API_URL = 'http://test.enam.is:8000'
 const auth = new AuthService()
 
 export default {
