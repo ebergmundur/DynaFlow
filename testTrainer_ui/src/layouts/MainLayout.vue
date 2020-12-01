@@ -49,7 +49,7 @@
 
       <div style="margin-right: 200px; margin-top: 20px;">
 
-        <h5>//{{authenticated}}//</h5>
+                    <h5>//{{authenticated}}//</h5>
       <button
         class="btn btn-primary btn-margin"
         v-if="!authenticated"
@@ -73,7 +73,6 @@
       {{ message }}
       <br>
         </div>
-
       <clock></clock>
       <!--      </q-tabs>-->
 
@@ -120,111 +119,19 @@
 </template>
 
 <script>
-// export default {
-//   data () {
-//     return {
-//       left: false,
-//       right: false
-//     }
-//   }
-// }
-
-// import EssentialLink from 'components/EssentialLink.vue'
-// import Questions from '../components/Questions.vue'
-
-// const linksData = [
-//   {
-//     title: 'Docs',
-//     caption: 'quasar.dev',
-//     icon: 'school',
-//     link: 'https://quasar.dev'
-//   },
-//   {
-//     title: 'Github',
-//     caption: 'github.com/quasarframework',
-//     icon: 'code',
-//     link: 'https://github.com/quasarframework'
-//   },
-//   {
-//     title: 'Discord Chat Channel',
-//     caption: 'chat.quasar.dev',
-//     icon: 'chat',
-//     link: 'https://chat.quasar.dev'
-//   },
-//   {
-//     title: 'Forum',
-//     caption: 'forum.quasar.dev',
-//     icon: 'record_voice_over',
-//     link: 'https://forum.quasar.dev'
-//   },
-//   {
-//     title: 'Twitter',
-//     caption: '@quasarframework',
-//     icon: 'rss_feed',
-//     link: 'https://twitter.quasar.dev'
-//   },
-//   {
-//     title: 'Facebook',
-//     caption: '@QuasarFramework',
-//     icon: 'public',
-//     link: 'https://facebook.quasar.dev'
-//   },
-//   {
-//     title: 'Quasar Awesome',
-//     caption: 'Community Quasar projects',
-//     icon: 'favorite',
-//     link: 'https://awesome.quasar.dev'
-//   }
-// ]
-
+import { App } from './../App'
 import Clock from 'components/Clock'
-// import AuthService from './../auth/AuthService'
-// import axios from 'axios'
-
-// const API_URL = 'http://api.enam.is'
-// const auth = new AuthService()
 
 export default {
   name: 'MainLayout',
-  components: { Clock }
-  // components: { Questions },
-  // data () {
-  //   return {
-  //     leftDrawer: true,
-  //     rightDrawer: false
-  //   }
-  // }
-  // data () {
-  //   this.handleAuthentication()
-  //   this.authenticated = false
-  //
-  //   auth.authNotifier.on('authChange', authState => {
-  //     this.authenticated = authState.authenticated
-  //   })
-  //
-  //   return {
-  //     authenticated: false,
-  //     message: ''
-  //   }
-  // },
-  // methods: {
-  //   // this method calls the AuthService login() method
-  //   login () {
-  //     auth.login()
-  //   },
-  //   handleAuthentication () {
-  //     auth.handleAuthentication()
-  //   },
-  //   logout () {
-  //     auth.logout()
-  //   },
-  //   privateMessage () {
-  //     const url = `${API_URL}/api/private/`
-  //     return axios.get(url, { headers: { Authorization: `Bearer ${auth.getAuthToken()}` } }).then((response) => {
-  //       console.log(response.data)
-  //       this.message = response.data || ''
-  //     })
-  //   }
-  // }
+  components: {
+    Clock
+  },
+  data () {
+    return {
+      loginblock: '',
+      authenticated: App.authenticated
+    }
+  }
 }
 </script>
