@@ -76,6 +76,14 @@ const routes = [
       { path: '', component: () => import('components/Clock') }
     ]
   },
+  {
+    path: '/callback',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      // { path: '', component: () => import('components/Questions.vue') },
+      { path: '', component: () => import('components/Clock') }
+    ]
+  },
 
   // Always leave this as last one,
   // but you can also remove it
