@@ -65,6 +65,8 @@ export default {
     },
     privateMessage () {
       const url = `${API_URL}/api/questionn/68/?format=json`
+      console.log(auth.getAuthToken())
+
       return axios.get(url, { headers: { Authorization: `Bearer ${auth.getAuthToken()}` } }).then((response) => {
         console.log(response.data)
         this.message = response.data || ''
