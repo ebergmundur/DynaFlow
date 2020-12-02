@@ -34,7 +34,7 @@
 import AuthService from './auth/AuthService'
 import axios from 'axios'
 
-const API_URL = 'http://api.enam.is'
+const API_URL = 'https://api.enam.is'
 const auth = new AuthService()
 
 export default {
