@@ -49,28 +49,28 @@
 
       <div style="margin-right: 200px; margin-top: 20px;">
 
-<!--      <button-->
-<!--        class="btn btn-primary btn-margin"-->
-<!--        v-if="!authenticated"-->
-<!--        @click="login()">-->
-<!--        Log In-->
-<!--      </button>-->
+      <button
+        class="btn btn-primary btn-margin"
+        v-if="!authenticated"
+        @click="login">
+        Log In
+      </button>
 
-<!--      <button-->
-<!--        class="btn btn-primary btn-margin"-->
-<!--      v-if="authenticated"-->
-<!--        @click="privateMessage()">-->
-<!--        Call Private-->
-<!--      </button>-->
+      <button
+        class="btn btn-primary btn-margin"
+      v-if="authenticated"
+        @click="privateMessage()">
+        Call Private
+      </button>
 
-<!--      <button-->
-<!--        class="btn btn-primary btn-margin"-->
-<!--        v-if="!authenticated"-->
-<!--        @click="logout()">-->
-<!--        Log Out-->
-<!--      </button>-->
-<!--      {{ message }}-->
-<!--      <br>-->
+      <button
+        class="btn btn-primary btn-margin"
+        v-if="!authenticated"
+        @click="logout">
+        Log Out
+      </button>
+      {{ message }}
+      <br>
         </div>
       <clock></clock>
       <!--      </q-tabs>-->
@@ -119,7 +119,7 @@
 
 <script>
 import Clock from 'components/Clock'
-
+import App from '../App'
 export default {
   name: 'MainLayout',
   components: {
@@ -127,7 +127,10 @@ export default {
   },
   data () {
     return {
-      loginblock: ''
+      loginblock: '',
+      login: App.login,
+      logout: App.logout
+
     }
   }
 }

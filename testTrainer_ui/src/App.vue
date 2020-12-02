@@ -20,7 +20,7 @@
 
       <button
         class="btn btn-primary btn-margin"
-        v-if="!authenticated"
+        v-if="authenticated"
         @click="logout()">
         Log Out
       </button>
