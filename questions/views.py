@@ -5,9 +5,29 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .serializers import OptionSerializer, QuestionSerializer, QuestionMemoSerializer, QuestionAnswerSerializer, \
-    GroupSerializer, CategorySerializer, QuestionnaireSerializer, RevieweSerializer
+    GroupSerializer, CategorySerializer, QuestionnaireSerializer, RevieweSerializer, PersonSerializer
 from .models import Option, Question, Questionnaire, QuestionGroupRelation, QuestionnaireGroupRelation, Group, Category, \
     TestMemo, TestAnswers
+from person.models import PersonUser
+
+
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import generics
+
+
+
+# View for 'Mods' model
+class ModsView(generics.RetrieveAPIView):
+    permission_classes = (IsAuthenticated,)  # checks if user is authenticated to view the model objects
+
+    def get_queryset(self):
+        return Category.objects.all()  # return all model objects
+
+    def get(self, request, *args, **kwargs):  # GET request handler for the model
+        queryset = self.get_queryset()
+        serializer = CategorySerializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class QuestionViewSet(viewsets.ModelViewSet):
@@ -15,6 +35,14 @@ class QuestionViewSet(viewsets.ModelViewSet):
     API endpoint that allows users to be viewed or edited.
     """
     queryset = Question.objects.all().order_by('?')
+    serializer_class = QuestionSerializer
+
+
+class FlipcardViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = Question.objects.all().order_by('?')[:1]
     serializer_class = QuestionSerializer
 
 
@@ -50,12 +78,28 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
     serializer_class = QuestionnaireSerializer
 
 
+class DahboardViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    queryset = Questionnaire.objects.filter(owner_id=1).order_by('created_date')
+    serializer_class = QuestionnaireSerializer
+
+
 class ReviewViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
     queryset = Questionnaire.objects.all().order_by('?')
     serializer_class = RevieweSerializer
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    queryset = PersonUser.objects.all().order_by('?')
+    serializer_class = PersonSerializer
 
 
 # class QuestionMemoViewSet(viewsets.ModelViewSet):
@@ -72,6 +116,16 @@ class ReviewViewSet(viewsets.ModelViewSet):
 #     """
 #     memo = TestAnswers.objects.all()
 #     serializer_class = QuestionAnswerSerializer
+
+
+@api_view(['GET'])
+def userdata(request):
+
+    print(request)
+    if request.method == 'GET':
+        user = PersonUser.objects.filter(user__username__gt='')
+        serializer = PersonSerializer(user[0], many=False)
+        return Response(serializer.data)
 
 
 @api_view(['POST'])
@@ -108,7 +162,7 @@ def answer_add(request):
     """
     List all code snippets, or create a new snippet.
     """
-    print(request.data)
+    # print(request.data)
 
     if request.method == 'GET':
         # memos = TestAnswers.objects.filter(curr_question=request)
@@ -169,8 +223,8 @@ def answer_add(request):
 
         obj.save()
 
-        print(obj.points_given)
-        print(obj.result)
+        # print(obj.points_given)
+        # print(obj.result)
 
         if serializer.is_valid():
             # serializer.save()
@@ -206,28 +260,28 @@ def practice_test(request):
         )
 
         i = 0  # index of array refers to Category id
-        print(data['question_collection'])
+        # print(data['question_collection'])
         for q in data['question_collection']:
-            print(q)
+            # print(q)
             if q == None:
                 q = 0
             if q > 0:
                 category = Category.objects.get(id=i)
-                print(category.name)
-                print('actual q: ', q)
+                # print(category.name)
+                # print('actual q: ', q)
                 questions = category.question.all().order_by('?')
                 # print(questions.count())
                 quest_counter = 0
                 for question in questions:
-                    print('quest_counter ', quest_counter)
+                    # print('quest_counter ', quest_counter)
                     if quest_counter < q:
                         if data['omit_known'] == False and data['only_failed'] == False:
-                            print('normal')
+                            # print('normal')
                             obj.question_collection.add(question)
                             quest_counter += 1
                         else:
                             if data['omit_known'] == True:
-                                print('known')
+                                # print('known')
                                 answers = TestAnswers.objects.filter(
                                     tesing_user_id=1,
                                     curr_question=question.id,
@@ -238,7 +292,7 @@ def practice_test(request):
                                     quest_counter += 1
 
                             if data['only_failed'] == True:
-                                print('only_failed')
+                                # print('only_failed')
                                 previous_results = TestAnswers.objects.filter(
                                     user_id=1,
                                     question=question.id,
@@ -272,8 +326,8 @@ def practice_hand_in(request):
         tp = Questionnaire.objects.filter(id=data['test_practice'])
         total_points = cq[0].points
 
-        print(points)
-        print(total_points)
+        # print(points)
+        # print(total_points)
 
         if cq[0].single_selection:
             answered = Option.objects.filter(id=int(data['options_ids']))
@@ -283,28 +337,28 @@ def practice_hand_in(request):
             i = 0
             corrects = 0
             corr_opts = Option.objects.filter(id__in=cq[0].options, correct=True).count()
-            print(corr_opts)
+            # print(corr_opts)
 
             points_per_correct = total_points / corr_opts
 
             anstring = data['options_ids'].split(',')
             for answ in anstring:
                 opt = Option.objects.get(id=int(answ))
-                print(opt.answer)
-                print(opt.correct)
+                # print(opt.answer)
+                # print(opt.correct)
                 if opt.correct:
-                    print('correct')
+                    # print('correct')
                     corrects = corrects + points_per_correct
-                    print(corrects)
+                    # print(corrects)
                 else:
-                    print('wrong')
+                    # print('wrong')
                     corrects = corrects - round(total_points / corr_opts)
-                    print(corrects)
+                    # print(corrects)
                 i += 1
 
             points = round(corrects)
             # points = round(corrects/total_points)
-        print(points)
+        # print(points)
 
         obj = TestAnswers.objects.create(
             # tesing_user=1,

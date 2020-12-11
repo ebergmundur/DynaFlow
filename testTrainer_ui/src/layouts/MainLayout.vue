@@ -1,137 +1,83 @@
 <template>
-  <q-layout view="hHh lpR fFf">
+  <q-layout view="hHh lpr fFf">
+    <div class="q-pa-none q-ma-none">
+      <Header></Header>
+      <q-page-container class="basebackground">
+        <router-view/>
+      </q-page-container>
+      <Footer></Footer>
 
-    <q-header elevated class="bg-primary text-white row" height-hint="98">
-      <!--      <q-toolbar>-->
-      <!--        <q-btn dense flat round icon="menu" @click="leftDrawer = !leftDrawer"/>-->
-
-      <!--        <q-toolbar-title>-->
-      <!--          <q-avatar>-->
-      <!--&lt;!&ndash;            <img src="https://cdn.quasar.dev/logo/svg/quasar-logo.svg">&ndash;&gt;-->
-      <!--            <img src="../assets/enam-logo.svg">-->
-      <!--          </q-avatar>-->
-      <!--        </q-toolbar-title>-->
-
-      <!--        <q-btn dense flat round icon="menu" @click="rightDrawer = !rightDrawer"/>-->
-      <!--      </q-toolbar>-->
-
-      <q-tabs align="left" class="col-lg">
-
-        <q-route-tab to="/" label="">
-          <q-avatar class="q-ma-md">
-            <!--            <img src="https://cdn.quasar.dev/logo/svg/quasar-logo.svg">-->
-            <img src="../assets/enam-logo.svg">
-          </q-avatar>
-        </q-route-tab>
-        <q-route-tab to="/createtest" label="Æfingar"/>
-        <!--        <q-btn-dropdown auto-close stretch flat label="Æfingar">-->
-        <!--          <q-list>-->
-        <!--            <q-route-tab to="/createtest" label="Búa til æfingapróf"/>-->
-        <!--&lt;!&ndash;            <q-item clickable @click="tab = 'movies'">&ndash;&gt;-->
-        <!--&lt;!&ndash;              <q-item-section>Búa til æfingapróf</q-item-section>&ndash;&gt;-->
-        <!--&lt;!&ndash;            </q-item>&ndash;&gt;-->
-
-        <!--&lt;!&ndash;            <q-item clickable @click="tab = 'photos'">&ndash;&gt;-->
-        <!--&lt;!&ndash;              <q-item-section>Skoða tekin próf</q-item-section>&ndash;&gt;-->
-        <!--&lt;!&ndash;            </q-item>&ndash;&gt;-->
-        <!--          </q-list>-->
-        <!--        </q-btn-dropdown>-->
-        <q-route-tab to="/testpractice" label="Æfing"/>
-        <q-route-tab to="/testreal" label="Próf"/>
-        <q-route-tab to="/review" label="Niðurstöður"/>
-        <q-route-tab to="/flipcard" label="Flettikort"/>
-        <q-route-tab to="/dashboard" label="Mælaborð"/>
-      </q-tabs>
-      <!--      <q-tabs-->
-      <!--        class="col-1"-->
-      <!--        style="border: 1px solid greenyellow;"-->
-      <!--      >-->
-
-      <div style="margin-right: 200px; margin-top: 20px;">
-
-      <button
-        class="btn btn-primary btn-margin"
-        v-if="!authenticated"
-        @click="login">
-        Log In
-      </button>
-
-      <button
-        class="btn btn-primary btn-margin"
-      v-if="authenticated"
-        @click="privateMessage()">
-        Call Private
-      </button>
-
-      <button
-        class="btn btn-primary btn-margin"
-        v-if="!authenticated"
-        @click="logout">
-        Log Out
-      </button>
-      {{ message }}
-      <br>
-        </div>
-      <clock></clock>
-      <!--      </q-tabs>-->
-
-    </q-header>
-
-    <!--    <q-drawer show-if-above v-model="leftDrawer" side="left" bordered>-->
-    <!-- drawer content -->
-    <!--      <q-list>-->
-    <!--        <q-item-label-->
-    <!--          header-->
-    <!--          class="text-grey-8"-->
-    <!--        >-->
-    <!--          Spurningar-->
-    <!--        </q-item-label>-->
-    <!--&lt;!&ndash;      <Questions></Questions>&ndash;&gt;-->
-    <!--&lt;!&ndash;        <questionsset&ndash;&gt;-->
-    <!--&lt;!&ndash;          v-for="link in essentialLinks"&ndash;&gt;-->
-    <!--&lt;!&ndash;          :key="link.title"&ndash;&gt;-->
-    <!--&lt;!&ndash;          v-bind="link"&ndash;&gt;-->
-    <!--&lt;!&ndash;        />&ndash;&gt;-->
-    <!--&lt;!&ndash;      </q-list>&ndash;&gt;-->
-    <!--    </q-drawer>-->
-
-    <!--    <q-drawer show-if-above v-model="rightDrawer" side="right" bordered>-->
-    <!--      &lt;!&ndash; drawer content &ndash;&gt;-->
-    <!--    </q-drawer>-->
-
-    <q-page-container>
-      <router-view/>
-    </q-page-container>
-
-    <!--    <q-footer bordered class="bg-grey-8 text-white">-->
-    <!--      <q-toolbar>-->
-    <!--        <q-toolbar-title>-->
-    <!--          <q-avatar>-->
-    <!--            <img src="../assets/enam-logo.svg">-->
-    <!--          </q-avatar>-->
-    <!--          Eitthvað spennandi-->
-    <!--        </q-toolbar-title>-->
-    <!--      </q-toolbar>-->
-    <!--    </q-footer>-->
-
+    </div>
   </q-layout>
 </template>
 
 <script>
-import Clock from 'components/Clock'
-import App from '../App'
+// import { mapState } from 'vuex'
+import Header from 'components/Header'
+import Footer from 'components/Footer'
+
 export default {
   name: 'MainLayout',
   components: {
-    Clock
+    Footer,
+    Header
   },
   data () {
-    return {
-      loginblock: '',
-      login: App.login,
-      logout: App.logout
-
-    }
+    return {}
   }
+  // computed: mapState(['accessToken'])
 }
 </script>
+
+<style scoped lang="css">
+@import url(https://fonts.googleapis.com/css?family=Quicksand);
+/*.nav-bar {*/
+/*  background-color: #2f3033;*/
+/*  width: 100%;*/
+/*  position: fixed;*/
+/*  top: 0;*/
+/*  left: 0;*/
+/*  overflow: hidden;*/
+/*}*/
+.nav-bar ul {
+  position: absolute;
+  right: -70px;
+  top: 15px;
+  list-style: none;
+  margin: 0 14%;
+  padding: 0;
+  text-align: center;
+  color: white;
+}
+
+.nav-bar ul li {
+  display: inline-block;
+  margin: 0 5px;
+  /*padding: 25px;*/
+  float: right;
+}
+
+.nav-bar:after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+.nav-bar ul li a {
+  text-decoration: none;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 10px;
+  font-weight: bold;
+  color: white;
+  padding: 5px;
+  border-radius: 7px;
+}
+
+.nav-bar ul li a:hover {
+  background-color: #a72a64;
+}
+
+.router-link-active {
+  background-color: #a72a64
+}
+</style>

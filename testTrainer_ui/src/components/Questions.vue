@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { axiosBase } from 'src/api/axios-base'
 import store from '../router/store'
 import Question from './Question'
 // import draggable from 'vuedraggable'
@@ -96,7 +96,7 @@ export default {
         this.editingIndex = index
         this.question = JSON.parse(JSON.stringify(this.myJson[index]))
         store.commit({ type: 'setQuestion', payload: this.question })
-        // store.commit({ type: 'setTestQuestion', payload: [] })
+        // index.commit({ type: 'setTestQuestion', payload: [] })
         Question.setAnswerChecked()
       } else {
         console.log('Ekki spurning')
@@ -136,7 +136,7 @@ export default {
     }
   },
   mounted () {
-    axios('http://einars-macbook-pro.local:8000/api/questions/?format=json')
+    axiosBase.get('/api/questions/?format=json')
       .then(response => {
         this.myJson = JSON.parse(JSON.stringify(response.data))
       })

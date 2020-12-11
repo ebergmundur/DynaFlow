@@ -292,9 +292,9 @@
 </template>
 
 <script>
-import store from '../router/store'
+import store from 'src/store'
 import { date } from 'quasar'
-import axios from 'axios'
+import { axiosBase } from 'src/api/axios-base'
 // import { mapMutations } from 'vuex'
 
 const SCHEMA = {
@@ -336,9 +336,8 @@ export default {
         known: this.known,
         curr_question: this.currentQuestion.id
       }
-      axios({
-        method: 'post',
-        url: 'http://einars-macbook-pro.local:8000/api/memos/',
+      axiosBase.post({
+        url: '/api/memos/',
         data: formdata
       })
     },
@@ -350,9 +349,8 @@ export default {
         curr_question: this.currentQuestion.id
       }
       console.log(formdata)
-      axios({
-        method: 'post',
-        url: 'http://einars-macbook-pro.local:8000/api/answer/',
+      axiosBase.post({
+        url: '/api/answer/',
         data: formdata
       })
     },

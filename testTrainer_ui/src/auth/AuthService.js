@@ -1,6 +1,9 @@
 import auth0 from 'auth0-js'
 import EventEmitter from 'eventemitter3'
-import router from './../router'
+import router from 'src/router'
+
+const server = 'https://einars-macbook-pro.local:8000'
+// const server = 'https://enam.is'
 
 export default class AuthService {
   authenticated = this.isAuthenticated()
@@ -18,8 +21,8 @@ export default class AuthService {
   // API and Client credentials
   auth0 = new auth0.WebAuth({
     domain: 'dev-4z-pkajz.eu.auth0.com',
-    clientID: 'QVNW3HExUygBcPkY2hfxFSXCQAss6EzG',
-    redirectUri: 'https://enam.is/',
+    clientID: 'jLtBvFXWbLeJQ3m9d3iDS8EkaCUOgbra',
+    redirectUri: server + '/',
     audience: 'https://dev-4z-pkajz.eu.auth0.com/api/v2/',
     responseType: 'token id_token',
     scope: 'openid profile'
@@ -52,7 +55,7 @@ export default class AuthService {
             alert(`Error: ${err.error}. Check the console for further details.`)
           })
       }
-      router.toString().replace('/')
+      router.replace('/')
     })
   }
 
@@ -74,7 +77,7 @@ export default class AuthService {
     delete this.expiresAt
     this.authNotifier.emit('authChange', false)
     // navigate to the home route
-    router.toString().replace('/')
+    router.replace('/')
   }
 
   // checks if the user is authenticated

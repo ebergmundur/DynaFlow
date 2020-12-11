@@ -41,7 +41,7 @@
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <routerJs-view />
     </q-page-container>
   </q-layout>
 </template>

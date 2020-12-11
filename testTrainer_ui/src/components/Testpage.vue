@@ -38,7 +38,7 @@
         <!--        style="max-height: 70vh; width: 30vw;"-->
         <q-card-section class="scroll">
 
-          <h6 class=" q-ma-sm">{{ currentQuestion.name }}</h6>
+          <h6 class=" q-ma-sm">{{ currentQuestion.virtname }}</h6>
           <q-form
             @submit="onMemoSubmit"
             @reset="onMemoReset"
@@ -74,50 +74,38 @@
 
     <!--MEMOS-->
     <q-dialog v-model="memolist" position="right">
-      <q-card>
-        <q-card-section class="row items-center q-pb-none">
+      <q-card  class="memowing">
+        <q-card-section class="row items-center q-pb-none col-lg-8">
           <div class="text-h6">Minnismiðar</div>
           <q-space/>
           <q-btn icon="close" flat round dense v-close-popup/>
         </q-card-section>
         <q-card-section>
-          <div class="q-pa-md row items-start q-gutter-md">
+          <div class="q-pa-md items-start q-gutter-md col">
 
             <q-card
               flat bordered
-              class="my-card bg-grey-1 scroll "
+              class="my-card bg-grey-1 scroll col"
               v-for="(data) in currentQuestion.memos"
               :key="data.id"
             >
               <q-card-section>
                 <div class="row items-center no-wrap">
                   <div class="col">
-
-                    <div class="text-h6">
-                      <!--                      {{ formatDate(data.created_date) }}-->
-
+                    <div class="text-h6">{{formatDate(data.created_date)}}</div>
+                    <div>
                       <q-toggle v-model="data.known" label="Kann vel " class=" q-ma-sm" disable/>
+                      <q-toggle v-model="data.postpone" label="Geymd" class=" q-ma-sm" disable/>
                     </div>
-                    <!--                <div class="text-h6">{{formatDate(data.created_date)}}</div>-->
                     <div class="text-subtitle2">
                       Þyngd: {{ data.difficulty }}
-                      <q-linear-progress size="25px" :value="data.difficulty/10" color="red" class="q-mt-sm"/>
+                      <q-linear-progress size="14px" :value="data.difficulty/15" color="red" track-color="orange" class="q-mt-sm"/>
                     </div>
                   </div>
                 </div>
-              </q-card-section>
-
-              <q-card-section>
+                <div class="text-subtitle2 q-mt-sm">Minnistatriði</div>
                 {{ data.memo }}
               </q-card-section>
-
-              <q-separator/>
-
-              <q-card-actions>
-
-                <q-btn>Í geymslu</q-btn>
-                <!--            <q-btn>Minna á síðar</q-btn>-->
-              </q-card-actions>
             </q-card>
           </div>
         </q-card-section>
@@ -132,10 +120,10 @@
       <!--            style="max-height: 80vh; width: 40%;"-->
       <q-toolbar class="q-dark" style="background-color: #616161;">
         <q-toolbar-title>
-          {{ questNum }} / {{ totalQuestions }} | {{ myJson.name }}
+          {{ questNum }} / {{ totalQuestions }} | {{ myJson.name }}  // {{totaltime}} // {{questTime}}
         </q-toolbar-title>
         <div class="col-auto">
-          <q-toggle v-model="known" value="false" label="Kann vel " class=" q-ma-sm"/>
+
           <!--          <q-toggle v-model="postpone" value="false" label="Sleppa " class=" q-ma-sm"/>-->
 
           <q-btn label="Minnismiðar" icon="">
@@ -213,6 +201,9 @@
       </q-card-section>
       <q-separator/>
       <q-card-actions>
+                  <q-toggle v-model="known" value="false" label="Kann vel " class=" q-ma-sm"/>
+          <q-toggle v-model="postpone" value="false" label="Geyma" class=" q-ma-sm"/>
+
         <div class="text-h5 ">
           {{ currPoints }} stig &nbsp;
           <!--          <span q-red>{{hintloss}}</span>&nbsp;-->
@@ -246,12 +237,11 @@
 </template>
 
 <script>
-import axios from 'axios'
-import store from '../router/store'
+import { axiosBase } from 'src/api/axios-base'
+import store from 'src/store'
 import { date } from 'quasar'
-// import { clock } from './Clock'
-// import Question from 'components/Question'
-// import { date } from 'quasar'
+const access = store.getters.token
+
 var exam = 0
 export default {
   data () {
@@ -283,7 +273,10 @@ export default {
       known: false,
       postpone: false,
       maximizedToggle: true,
-      totalQuestions: 0
+      totalQuestions: 0,
+      totaltime: null,
+      questStartTime: null,
+      questTime: null
     }
   },
   computed: {
@@ -298,6 +291,10 @@ export default {
     }
   },
   methods: {
+    timers () {
+      this.totaltime = date.formatDate(Date.now() - this.startTime, 'HH:mm:ss').toString()
+      this.questTime = date.formatDate(Date.now() - this.questStartTime, 'HH:mm:ss').toString()
+    },
     setQuestion (e) {
       var index = 0
       if (e > -1) {
@@ -309,10 +306,12 @@ export default {
       this.editingIndex = index
       this.question = JSON.parse(JSON.stringify(this.myJson.question_collection[index]))
       store.commit({ type: 'setQuestion', payload: this.question })
-      // store.commit({ type: 'setTestQuestion', payload: [] })
+      // index.commit({ type: 'setTestQuestion', payload: [] })
       // Question.setAnswerChecked()
       this.currPoints = this.question.points
       this.questNum = index + 1
+
+      this.questStartTime = Date.now()
     },
     setAnswerChecked (e) {
       if (this.currentQuestion.id !== this.cQ) {
@@ -328,9 +327,9 @@ export default {
         known: this.known,
         curr_question: this.currentQuestion.id
       }
-      axios({
-        method: 'post',
-        url: 'http://einars-macbook-pro.local:8000/api/memos/',
+      axiosBase.post({
+        url: '/api/memos/',
+        headers: { Authorization: `Bearer ${access}` },
         data: formdata
       }).catch(error => console.log('Error', error.message))
     },
@@ -356,10 +355,10 @@ export default {
         postpone: this.postpone
       }
 
-      axios({
-        method: 'post',
-        url: 'http://einars-macbook-pro.local:8000/api/answer/',
-        data: formdata
+      axiosBase.post({
+        url: '/api/answer/',
+        data: formdata,
+        headers: { Authorization: `Bearer ${access}` }
       })
 
       this.questionsNumbersList[this.questNum - 1].answer = this.currTestAnsw
@@ -401,7 +400,7 @@ export default {
       this.currPoints = this.currentQuestion.points - this.currentQuestion.hint_cost
     },
     openUrl () {
-      window.open('http://einars-macbook-pro.local:8000/admin/questions/question/' + this.currentQuestion.id, '_blank')
+      window.open('https://127.0.0.1:8000/admin/questions/question/' + this.currentQuestion.id, '_blank')
     },
     openMemos () {
       this.memolist = true
@@ -460,14 +459,18 @@ export default {
     if (exam > 0) {
       alert('MOUNTED REVIEW')
     }
-    axios('http://einars-macbook-pro.local:8000/api/questionn/68/?format=json')
+    axiosBase.get({
+      url: '/api/questionn/76/?format=json',
+      headers: { Authorization: `Bearer ${access}` }
+    })
       .then(response => {
+        console.log(response.data)
         this.myJson = JSON.parse(JSON.stringify(response.data))
         this.totalQuestions = this.myJson.question_collection.length
         var i
         var qs = []
         for (i = 0; i < this.totalQuestions; i++) {
-          // console.log(this.myJson.question_collection[i].name)
+          console.log(this.myJson.question_collection[i].name)
           qs.push({
             label: i + 1,
             value: i + 1,
@@ -478,14 +481,9 @@ export default {
             answer: 0
           })
         }
-        // console.log(qs)
+        console.log(qs)
         this.questionsNumbersList = qs
         store.commit({ type: 'setTimeAllowed', payload: this.myJson.time_allowed + 0 })
-        // console.log(this.myJson.time_allowed)
-
-        // console.log(clock)
-        // clock.limit = this.myJson.time_allowed * (60000)
-
         this.setQuestion(1)
       })
       .catch(error => console.log('Error', error.message))
@@ -502,12 +500,17 @@ export default {
     if (exam > 0) {
       alert('CREATED REVIEW')
     }
+    this.clock = setInterval(this.timers, 1000)
+    this.startTime = Date.now()
   }
 }
 
 </script>
 
 <style scoped lang="sass">
+
+.memowing
+  width: 400px
 
 .my-card
   margin: 5% auto
@@ -533,7 +536,7 @@ export default {
   width: 100%
   position: fixed
   bottom: 0px
-  margin: 60px 0 0 0
+  margin: 0 0 50px -32px
   background-color: #9ab2d0
   min-height: 40px
   overflow: scroll

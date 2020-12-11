@@ -1,0 +1,63 @@
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+// import Home from '../layouts/MainLayout'
+// import login from '../components/Login'
+// import register from '../components/Register'
+// // import downloads from '../components/Downloads'
+// import logout from '../components/Logout'
+import routes from './routes'
+
+Vue.use(VueRouter)
+
+const router = new VueRouter({
+  mode: 'history',
+  base: 'http://127.0.0.1:8080',
+  scrollBehavior: () => ({ x: 0, y: 0 }),
+  // base: process.env.BASE_URL,
+  routes: routes
+  // routes: [
+  //   {
+  //     path: '/',
+  //     name: 'front',
+  //     component: Home
+  //   },
+  //   {
+  //     path: '/login',
+  //     name: 'login',
+  //     component: login,
+  //     meta: {
+  //       requiresLogged: true
+  //     }
+  //   },
+  //   {
+  //     path: '/register',
+  //     name: 'register',
+  //     component: register,
+  //     meta: {
+  //       requiresLogged: true
+  //     }
+  //   },
+  //   {
+  //     path: '/downloads',
+  //     name: 'downloads',
+  //     component: downloads,
+  //     meta: {
+  //       requiresAuth: true
+  //     }
+  //   },
+  //   {
+  //     path: '/logout',
+  //     name: 'logout',
+  //     component: logout,
+  //     meta: {
+  //       requiresAuth: true
+  //     }
+  //   }
+  // ]
+  // mode: process.env.VUE_ROUTER_MODE,
+  // base: process.env.VUE_ROUTER_BASE
+})
+//   return Router
+// }
+
+export default router

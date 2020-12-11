@@ -45,6 +45,10 @@ class Question(Base):
         return self.question_option.all()
 
     @property
+    def virtname(self):
+        return self.__str__
+
+    @property
     def answer_count(self):
         return self.options.count()
 
@@ -169,6 +173,24 @@ class Questionnaire(Base):
     @property
     def answers(self):
         return self.testanswers_set.all()
+
+    @property
+    def results(self):
+        optional_points = 0
+        given_points = 0
+        for a in self.testanswers_set.all():
+            print(a)
+            optional_points = optional_points + a.points
+            given_points = given_points + a.points_given
+        return {'optional_points': optional_points, 'given_points': given_points }
+
+
+    @property
+    def final_results(self):
+        if self.results['optional_points'] > 0:
+            return self.results['given_points'] / self.results['optional_points']
+        else:
+            return 0
 
 # class QuestionnaireResults(models.Model):
 #     user = models.ForeignKey(PersonUser, default=1, on_delete=models.PROTECT,)

@@ -1,4 +1,5 @@
 <template>
+  <q-page class="flex flex-center q-pa-xs ">
   <div class="q-pa-md row items-start q-gutter-md">
     <q-card bordered
             class="my-card bg-grey-1 absolute-center col-xs-10 col-sm-10 col-md-10 col-xl-6 col-lg-6">
@@ -88,14 +89,17 @@
         >
           Vista
         </q-btn>
+        {{access}}
       </q-card-actions>
     </q-card>
   </div>
+  </q-page>
 </template>
 
 <script>
-import axios from 'axios'
-// import store from 'src/router/store'
+// import axios from 'axios'
+import store from 'src/store'
+import { axiosBase } from 'src/api/axios-base'
 // import { date } from 'quasar'
 
 export default {
@@ -113,7 +117,8 @@ export default {
       manualTime: 0,
       omit_known: false,
       only_failed: false,
-      examname: ''
+      examname: '',
+      access: store.getters.token
     }
   },
   computed: {
@@ -140,9 +145,9 @@ export default {
         examname: this.examname
       }
       console.log(formdata)
-      axios({
-        method: 'post',
-        url: 'http://einars-macbook-pro.local:8000/api/questionnaiere/',
+      axiosBase.post({
+        url: '/api/questionnaiere/',
+        // headers: { Authorization: `Bearer ${access}` },
         data: formdata
       })
     },
@@ -181,10 +186,13 @@ export default {
     }
   },
   mounted () {
-    axios('http://einars-macbook-pro.local:8000/api/category/?format=json')
+    axiosBase.get({
+      url: '/api/category/?format=json'
+      // headers: { Authorization: `Bearer ${access}` }
+    })
       .then(response => {
         this.myJson = JSON.parse(JSON.stringify(response.data))
-        // console.log(this.myJson)
+        console.log(this.myJson)
         this.set_slider()
         this.count_time_limit()
       })

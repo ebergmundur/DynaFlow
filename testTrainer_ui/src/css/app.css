@@ -1,3 +1,13 @@
+.redborder {
+  border: 1px solid crimson;
+}
 
+.pinkbackground {
+  background-color: pink;
+}
+
+.basebackground {
+  background-color: #efefef;
+}
 
 /*# sourceMappingURL=app.css.map */

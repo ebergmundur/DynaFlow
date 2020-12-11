@@ -151,7 +151,7 @@ export default {
       }
     },
 
-    // store the id of the draggable element
+    // index the id of the draggable element
     onDragStart (e) {
       e.dataTransfer.setData('text', e.target.id)
       e.dataTransfer.dropEffect = 'move'

@@ -64,6 +64,7 @@ class PersonSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'fullname',
+            'username',
             'isadmin',
         ]
 
@@ -107,6 +108,7 @@ class QuestionSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'name',
+            'virtname',
             'question',
             'description',
             'options',
@@ -143,6 +145,8 @@ class QuestionnaireSerializer(serializers.ModelSerializer):
             'timed',
             'time_allowed',
             'omit_known',
+            'results',
+            'final_results',
             'only_failed',
             'question_collection',
             'question_collection_str',

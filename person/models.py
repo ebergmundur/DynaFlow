@@ -19,6 +19,10 @@ class PersonUser(models.Model):
         return self.user.get_full_name()
 
     @property
+    def username(self):
+        return self.user.username
+
+    @property
     def isadmin(self):
         return self.user.is_superuser
 

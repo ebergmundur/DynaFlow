@@ -4,8 +4,8 @@
     <div class="mainlist col-lg-6 col-md-8 col-sm ">
       <q-toolbar>
         <q-toolbar-title>
-          {{ myJson.name }} -
-          {{ formatDate(myJson.created_date) }}
+          {{ testname }} -
+          {{ formatDate(testdate) }}
 
           <span class="" style="float: right">
           {{ totpoints }} af {{ optpoints }} = {{ Math.round((totpoints / optpoints) * 100) }}%
@@ -14,11 +14,11 @@
       </q-toolbar>
       <q-list bordered class="rounded-borders">
         <q-expansion-item
-          v-for="(item, index) in myJson.answers"
+          v-for="(item, index) in currTestAnsw"
           :key="index"
           :class="iscorrect( item.result)"
           expand-separator
-          :label="item.question.name"
+          :label="item.question.virtname"
           class=""
         >
           <q-card-section style="background-color: white;" class="row">
@@ -75,27 +75,27 @@
     <!--    MAIN CARDS-->
 
     <!--    BOTTOM LIST OF QUESTIONS-->
-    <div class="questlist ">
-      <!--      <q-page-sticky expand position="bottom" class="questlist ">-->
-      <q-btn-toggle
-        v-model="questNum"
-        :options="questionsNumbersList"
-        size="sm"
-      >
-        <!--        @input="setQuestion"-->
-      </q-btn-toggle>
-      <!--      </q-page-sticky>-->
-    </div>
+<!--    <div class="questlist ">-->
+<!--      &lt;!&ndash;      <q-page-sticky expand position="bottom" class="questlist ">&ndash;&gt;-->
+<!--      <q-btn-toggle-->
+<!--        v-model="questNum"-->
+<!--        :options="questionsNumbersList"-->
+<!--        size="sm"-->
+<!--      >-->
+<!--        &lt;!&ndash;        @input="setQuestion"&ndash;&gt;-->
+<!--      </q-btn-toggle>-->
+<!--      &lt;!&ndash;      </q-page-sticky>&ndash;&gt;-->
+<!--    </div>-->
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-// import store from '../router/store'
+import { axiosBase } from 'src/api/axios-base'
+import store from 'src/store'
 import { date } from 'quasar'
-// import { clock } from './Clock'
-// import Question from 'components/Question'
-// import { date } from 'quasar'
+
+const access = store.getters.token
+
 var exam = 0
 export default {
   data () {
@@ -129,7 +129,9 @@ export default {
       myJson: null,
       optpoints: 0,
       totpoints: 0,
-      totalQuestions: 0
+      totalQuestions: 0,
+      testdate: '2020-01-01',
+      testname: 'Próf'
     }
   },
   methods: {
@@ -143,8 +145,8 @@ export default {
     //   this.hinttext = ''
     //   this.editingIndex = index
     //   this.question = JSON.parse(JSON.stringify(this.myJson.answers[index]))
-    //   store.commit({ type: 'setQuestion', payload: this.question })
-    //   // store.commit({ type: 'setTestQuestion', payload: [] })
+    //   index.commit({ type: 'setQuestion', payload: this.question })
+    //   // index.commit({ type: 'setTestQuestion', payload: [] })
     //   // Question.setAnswerChecked()
     //   this.currPoints = this.question.points
     //   this.questNum = index + 1
@@ -177,7 +179,7 @@ export default {
       this.showDate = false
     },
     openUrl () {
-      window.open('http://einars-macbook-pro.local:8000/admin/questions/question/' + this.currentQuestion.id, '_blank')
+      window.open('https://127.0.0.1:8000/admin/questions/question/' + this.currentQuestion.id, '_blank')
     },
     openMemos () {
       this.memolist = true
@@ -224,7 +226,10 @@ export default {
     if (exam > 0) {
       alert('MOUNTED REVIEW')
     }
-    axios('http://einars-macbook-pro.local:8000/api/review/68/?format=json')
+    axiosBase.get({
+      url: '/api/review/76/?format=json',
+      headers: { Authorization: `Bearer ${access}` }
+    })
       .then(response => {
         this.myJson = JSON.parse(JSON.stringify(response.data))
         // console.log(this.myJson)
@@ -232,6 +237,10 @@ export default {
         // console.log(this.totalQuestions)
         var i
         var qs = []
+        this.testname = this.myJson.name
+        this.testdate = this.myJson.created_date
+        this.currTestAnsw = this.myJson.answers
+
         for (i = 0; i < this.totalQuestions; i++) {
           // console.log(this.myJson.answers[i])
           this.totpoints = this.totpoints + this.myJson.answers[i].points_given
@@ -248,7 +257,7 @@ export default {
         }
         // console.log(qs)
         this.questionsNumbersList = qs
-        // store.commit({ type: 'setTimeAllowed', payload: this.myJson.time_allowed + 0 })
+        // index.commit({ type: 'setTimeAllowed', payload: this.myJson.time_allowed + 0 })
         // console.log(this.myJson.time_allowed)
 
         // console.log(clock)
