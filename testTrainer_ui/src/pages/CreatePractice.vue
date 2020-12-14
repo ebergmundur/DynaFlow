@@ -89,7 +89,6 @@
         >
           Vista
         </q-btn>
-        {{access}}
       </q-card-actions>
     </q-card>
   </div>
@@ -99,9 +98,9 @@
 <script>
 // import axios from 'axios'
 import store from 'src/store'
-import { axiosBase } from 'src/api/axios-base'
+import { getAPI } from 'src/api/axios-base'
 // import { date } from 'quasar'
-
+const access = store.getters.token
 export default {
 
   data () {
@@ -144,10 +143,11 @@ export default {
         omit_known: this.omit_known,
         examname: this.examname
       }
-      console.log(formdata)
-      axiosBase.post({
+      // console.log(formdata)
+      getAPI({
         url: '/api/questionnaiere/',
-        // headers: { Authorization: `Bearer ${access}` },
+        method: 'post',
+        headers: { Authorization: `Bearer ${access}` },
         data: formdata
       })
     },
@@ -185,12 +185,14 @@ export default {
       this.manualTime = this.time_limit
     }
   },
-  mounted () {
-    axiosBase.get({
-      url: '/api/category/?format=json'
-      // headers: { Authorization: `Bearer ${access}` }
+  beforeMount () {
+    getAPI({
+      url: '/api/category/',
+      method: 'get',
+      headers: { Authorization: `Bearer ${access}` }
     })
       .then(response => {
+        // console.log(response)
         this.myJson = JSON.parse(JSON.stringify(response.data))
         console.log(this.myJson)
         this.set_slider()

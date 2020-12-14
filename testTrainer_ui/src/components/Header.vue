@@ -52,8 +52,8 @@
 <script>
 // import Clock from 'components/Clock'
 import store from 'src/store'
-import axios from 'axios'
-// import { axiosBase } from 'src/api/axios-base'
+// import axios from 'axios'
+import { getAPI } from 'src/api/axios-base'
 
 // import { mapState } from 'vuex'
 
@@ -94,12 +94,17 @@ export default {
   mounted () {
     // if (!store.getters.getUserName) {
     const access = store.getters.token
-    console.log(access)
-    axios({
+    // axios({
+    //   data: { username: this.user },
+    //   method: 'post',
+    //   headers: { Authorization: `Bearer ${access}` }, // the new access token is attached to the authorization header
+    //   url: 'https://einars-macbook-pro.local:8000/userdata/'
+    // })
+    getAPI({
       data: { username: this.user },
       method: 'post',
       headers: { Authorization: `Bearer ${access}` }, // the new access token is attached to the authorization header
-      url: 'https://einars-macbook-pro.local:8000/userdata/'
+      url: '/userdata/'
     })
       .then(response => {
         // console.log(response)

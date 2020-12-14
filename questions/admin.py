@@ -150,7 +150,7 @@ class OptionInline(TranslationStackedInline):
     # ]
 
     fieldsets = [
-        (u'Spurning', {
+        (u'', {
             'fields': (
                 'name',
                 'answer',
@@ -158,30 +158,30 @@ class OptionInline(TranslationStackedInline):
                 'image',
                 'active',
             ),
-            'classes': ('collapse', 'collapsed',),
+            'classes': (),
             # 'classes': (
             #    'baton-tab-fs-optvalue', 'baton-tab-fs-optnote',
             #     'baton-tab-fs-optowner',),
-            'description': 'This is a description text',
+            # 'description': 'This is a description text',
         }),
-        (u'Gildi', {
-            'fields': (
-                'value_from',
-                'correct_value_from',
-                'value_to',
-                'correct_value_to',
-            ),
-            'classes': ('collapse', 'collapsed',),
-            # 'classes': ('tab-fs-optvalue',),
-        }),
-        (u'Lýsing, innispunktar og virkni', {
-            'fields': (
-                'description',
-                'note',
-            ),
-            'classes': ('collapse', 'collapsed',),
-            # 'classes': ('tab-fs-optnote',),
-        }),
+        # (u'Gildi', {
+        #     'fields': (
+        #         'value_from',
+        #         'correct_value_from',
+        #         'value_to',
+        #         'correct_value_to',
+        #     ),
+        #     'classes': ('collapse', 'collapsed',),
+        #     # 'classes': ('tab-fs-optvalue',),
+        # }),
+        # (u'Lýsing, innispunktar og virkni', {
+        #     'fields': (
+        #         'description',
+        #         'note',
+        #     ),
+        #     'classes': ('collapse', 'collapsed',),
+        #     # 'classes': ('tab-fs-optnote',),
+        # }),
         (u'Aðilar', {
             'fields': (
                 'owner',
@@ -196,10 +196,10 @@ class OptionInline(TranslationStackedInline):
 
 @admin.register(Question)
 class QuestionAdmin(TabbedTranslationAdmin):
-    list_display = ('name', 'question', 'answer_count', 'owner','single_selection',)
+    list_display = ('name', 'question', 'category', 'answer_count', 'owner','single_selection',)
     inlines = [OptionInline, ]
-    list_filter = ['questiongrouprelation', 'owner']
-    list_editable = ['single_selection',]
+    list_filter = [ 'category', 'owner','single_selection',]
+    list_editable = ['single_selection', 'category']
 
     def get_form(self, request, obj, **kwargs):
         form = super(QuestionAdmin, self).get_form(request, obj, **kwargs)
@@ -217,6 +217,8 @@ class QuestionAdmin(TabbedTranslationAdmin):
                 'single_selection',
                 'points',
                 'question',
+                'hint_cost',
+                'hint',
                 'image',
                 'active',
             ),
@@ -225,33 +227,33 @@ class QuestionAdmin(TabbedTranslationAdmin):
                 'baton-tab-fs-owner', 'baton-tab-inline-question_option',),
             'description': 'This is a description text',
         }),
-        (u'Hint', {
-            'classes': ('tab-fs-hint',),
-            'fields': (
-                'hint_cost',
-                'hint',
-            )}),
-        (u'Ferill', {
-            'fields': (
-                'group_correct',
-                'group_false',
-            ),
-            'classes': ('tab-fs-ferill',),
-        }),
-        (u'Lýsing, innispunktar og virkni', {
-            'fields': (
-                'description',
-                'note',
-            ),
-            'classes': ('tab-fs-note',),
-        }),
-        (u'Tími og stig', {
-            'fields': (
-                'timed',
-                'time_allowed',
-            ),
-            'classes': ('tab-fs-time',),
-        }),
+        # (u'Hint', {
+        #     'classes': ('tab-fs-hint',),
+        #     'fields': (
+        #         'hint_cost',
+        #         'hint',
+        #     )}),
+        # (u'Ferill', {
+        #     'fields': (
+        #         'group_correct',
+        #         'group_false',
+        #     ),
+        #     'classes': ('tab-fs-ferill',),
+        # }),
+        # (u'Lýsing, innispunktar og virkni', {
+        #     'fields': (
+        #         'description',
+        #         'note',
+        #     ),
+        #     'classes': ('tab-fs-note',),
+        # }),
+        # (u'Tími og stig', {
+        #     'fields': (
+        #         'timed',
+        #         'time_allowed',
+        #     ),
+        #     'classes': ('tab-fs-time',),
+        # }),
         (u'Aðilar', {
             'fields': (
                 'owner',
@@ -270,18 +272,18 @@ class GroupAdmin(TabbedTranslationAdmin):
 
 @admin.register(Category)
 class CategoryAdmin(TabbedTranslationAdmin):
-    filter_horizontal = ['question']
+    pass
 
 
 @admin.register(Questionnaire)
 class QuestionnaireAdmin(TabbedTranslationAdmin):
-    list_display = ('name', 'q_count' )
-    filter_horizontal = ['question_collection']
+    list_display = ('name',)
+    # filter_horizontal = ['question_collection']
 
 
-@admin.register(QuestionGroupRelation)
-class QuestionGroupRelationAdmin(admin.ModelAdmin):
-    pass
+# @admin.register(QuestionGroupRelation)
+# class QuestionGroupRelationAdmin(admin.ModelAdmin):
+#     pass
 
 
 @admin.register(TestMemo)

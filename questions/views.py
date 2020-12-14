@@ -116,8 +116,7 @@ def logout(request):
 
 @api_view(['POST'])
 def userdata(request):
-
-    print(request.user)
+    # print(request.user)
     if request.method == 'POST':
         user = PersonUser.objects.filter(user__username=request.user)
         serializer = PersonSerializer(user[0], many=False)

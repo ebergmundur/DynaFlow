@@ -1,6 +1,7 @@
 from django.db import models
 from base.models import Base
 from person.models import PersonUser
+from django.utils.functional import cached_property
 import pytz
 from datetime import datetime
 #from django.utils.translation import gettext as _
@@ -16,8 +17,28 @@ RESULT = [
     [1, 'Correct'],
 ]
 
+
+class Category(Base):
+    # group = models.ManyToManyField(Group, blank=True)
+    # question = models.ManyToManyField(Question, blank=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "flokkur",
+        verbose_name_plural = "flokkar"
+
+    @property
+    def q_count(self):
+        return self.question_set.count
+        # return QuestionGroupRelation.objects.filter(group=self.id).count()
+
+
+
 class Question(Base):
     question = models.TextField(blank=True)
+    category = models.ForeignKey(Category, on_delete=models.PROTECT, default=1)
     image = models.ImageField(blank=True, null=True, upload_to='questionImage')
     owner = models.ForeignKey(PersonUser, on_delete=models.PROTECT, related_name="question_question_owner", related_query_name="question_owner")
     timed = models.BooleanField(default=False)
@@ -119,21 +140,6 @@ class Group(Base):
     #     # return QuestionGroupRelation.objects.filter(group=self.id).count()
 
 
-class Category(Base):
-    # group = models.ManyToManyField(Group, blank=True)
-    question = models.ManyToManyField(Question, blank=True)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = "flokkur",
-        verbose_name_plural = "flokkar"
-
-    @property
-    def q_count(self):
-        return self.question.count
-        # return QuestionGroupRelation.objects.filter(group=self.id).count()
 
 
 class QuestionGroupRelation(models.Model):
