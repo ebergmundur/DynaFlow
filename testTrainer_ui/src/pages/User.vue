@@ -1,11 +1,12 @@
 <template>
+    <q-page class="flex flex-center q-pa-xs ">
   <div class="q-pa-md row items-start q-gutter-md">
     <q-card
       class="my-card bg-grey-1 absolute-center col-xs-12 col-xs-12 col-md-6 col-xl-4 col-lg-4"
     >
       <q-toolbar class="q-dark" style="background-color: #616161;">
         <q-toolbar-title>
-          Notandi // {{ loggedIn }} //{{ user }} /// {{ firstName }} {{ lastName }} ///
+          {{ userInfo.firstName }} {{ userInfo.lastName }} - {{ user }}
         </q-toolbar-title>
 
       </q-toolbar>
@@ -85,6 +86,7 @@
 
     </q-card>
   </div>
+    </q-page>
 
 </template>
 
@@ -109,8 +111,7 @@ export default {
     }
   },
   methods: {
-    userInfo (username) {
-    }
+
   },
   // computed: mapState(['accessToken', 'userName']),
   computed: {
@@ -119,6 +120,9 @@ export default {
     },
     user () {
       return store.getters.getUserName
+    },
+    userInfo () {
+      return store.getters.getUserInfo
     }
   },
   mounted () {

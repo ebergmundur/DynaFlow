@@ -1,6 +1,7 @@
 from django.db import models
 from base.models import Base
 from django.contrib.auth.models import User
+from django.utils.functional import cached_property
 
 
 class PersonUser(models.Model):
@@ -38,4 +39,12 @@ class PersonUser(models.Model):
     def last_name(self):
         return self.user.last_name
 
+
+class Payment(models.Model):
+    person = models.ForeignKey(PersonUser, on_delete=models.CASCADE)
+    created_date = models.DateTimeField(auto_now_add=True)
+    period_start = models.DateTimeField(blank=True, null=True)
+    period_end = models.DateTimeField(blank=True, null=True)
+    payment_verified = models.BooleanField(default=False)
+    amount = models.SmallIntegerField(default=0)
 

@@ -223,8 +223,14 @@ class QuestionAdmin(TabbedTranslationAdmin):
                 'active',
             ),
             'classes': (
-                'baton-tabs-init', 'baton-tab-fs-hint', 'baton-tab-fs-ferill', 'baton-tab-fs-note', 'baton-tab-fs-time',
-                'baton-tab-fs-owner', 'baton-tab-inline-question_option',),
+                'baton-tabs-init',
+                # 'baton-tab-fs-hint',
+                # 'baton-tab-fs-ferill',
+                # 'baton-tab-fs-note',
+                # 'baton-tab-fs-time',
+                'baton-tab-fs-owner',
+                'baton-tab-inline-question_option',
+            ),
             'description': 'This is a description text',
         }),
         # (u'Hint', {
