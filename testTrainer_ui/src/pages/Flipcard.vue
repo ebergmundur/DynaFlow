@@ -1,132 +1,121 @@
 <template>
-  <div class="q-pa-md row items-start q-gutter-md justify-center scroll">
+  <q-page class="justify-center">
+    <div class="q-pa-lg-md q-mt-md ">
+      <div class="row q-gutter-md justify-center col ">
 
-    <q-slide-item
-      @left="onLeft"
-      @right="onRight"
-      @top="onTop"
-      @bottom="onBottom"
-      left-color="transparent"
-      right-color="transparent"
-      top-color="transparent"
-      bottom-color="transparent"
-      class="flip-card"
-    >
-      <!--      @click="flippit"-->
+        <q-slide-item
+          @left="onLeft"
+          @right="onRight"
+          @top="onTop"
+          @bottom="onBottom"
+          left-color="transparent"
+          right-color="transparent"
+          top-color="transparent"
+          bottom-color="transparent"
+          class="flip-card"
+        >
+          <!--      @click="flippit"-->
 
-      <template v-slot:top>
-        <q-icon name="link"/>
-      </template>
-      <template v-slot:right>
-        <q-icon name="forward"/>
-      </template>
-      <template v-slot:bottom>
-        <q-icon name="link_off"/>
-      </template>
-      <template v-slot:left>
-        <q-icon name="back"/>
-      </template>
+          <template v-slot:top>
+            <q-icon name="link"/>
+          </template>
+          <template v-slot:right>
+            <q-icon name="forward"/>
+          </template>
+          <template v-slot:bottom>
+            <q-icon name="link_off"/>
+          </template>
+          <template v-slot:left>
+            <q-icon name="back"/>
+          </template>
 
-      <q-item class="q-pa-none flip-card" style="width: 300px; height: 500px;">
-        <div class="flip-card-inner">
+          <q-item class="q-pa-none flip-card" style="width: 300px; height: 500px;">
+            <div class="flip-card-inner ">
 
-          <div class="col q-pa-none flip-card-front">
-            <q-toolbar class="q-dark q-ma-none" style="background-color: #616161;">
-              <q-toolbar-title>
-                Flettikort
-              </q-toolbar-title>
-            </q-toolbar>
-            <div class="row items-center no-wrap">
+              <div class="col q-pa-none flip-card-front">
+                <q-toolbar class="q-dark q-ma-none" style="background-color: #616161;">
+                  <q-toolbar-title>
+                    Flettikort
+                  </q-toolbar-title>
+                </q-toolbar>
+                <div class="row items-center no-wrap">
 
-              <div class="col-12 q-pa-md scroll">
-                <div class="">{{ currentQuestion.question }}</div>
-                {{ currentQuestion.description }}
+                  <div class="col-12 q-pa-md scroll">
+                    <div class="">{{ currentQuestion.question }}</div>
+                    {{ currentQuestion.description }}
+                  </div>
+
+                </div>
               </div>
 
+              <div class="flip-card-back">
+                <q-toolbar class="q-dark q-ma-none" style="background-color: #616161;">
+                  <q-toolbar-title>
+                    Flettikort
+                  </q-toolbar-title>
+                </q-toolbar>
+                <div class="col-12 q-pa-md ">
+                  <div class="">{{ currentQuestion.question }}</div>
+                </div>
+                <div class="col-12 text-left">
+                  <div
+                    v-for="opt in currentOptions"
+                    :key="opt.id"
+                    class="quest-options"
+                  >
+                    <q-radio
+                      v-if="currentQuestion.single_selection"
+                      :name="opt.question_ref.toString()"
+                      :label="opt.answer"
+                      value="false"
+                      :val="opt.id"
+                      v-model="currTestAnsw"
+                      @input="setAnswerChecked"
+                    />
+                    <q-checkbox
+                      v-if="!currentQuestion.single_selection"
+                      :name="opt.question_ref.toString()"
+                      :label="opt.answer"
+                      value="false"
+                      :val="opt.id"
+                      v-model="currTestAnsw"
+                      @input="setAnswerChecked"
+                    />
+                    {{ opt.correct }}
+                  </div>
+                </div>
+              </div>
             </div>
+
+          </q-item>
+        </q-slide-item>
+        <q-separator></q-separator>
+
+        <div class="col-2 col-lg-offset-5 align-center text-center redborder">
+          <div class="row col">
+            <div class="col-12">Merkja „kann vel“</div>
           </div>
-
-          <div class="flip-card-back">
-            <q-toolbar class="q-dark q-ma-none" style="background-color: #616161;">
-              <q-toolbar-title>
-                Flettikort
-              </q-toolbar-title>
-            </q-toolbar>
-            <div class="col-12 q-pa-md ">
-              <div class="">{{ currentQuestion.question }}</div>
-            </div>
-            <div class="col-12 text-left">
-              <div
-                v-for="opt in currentOptions"
-                :key="opt.id"
-                class="quest-options"
-              >
-                <q-radio
-                  v-if="currentQuestion.single_selection"
-                  :name="opt.question_ref.toString()"
-                  :label="opt.answer"
-                  value="false"
-                  :val="opt.id"
-                  v-model="currTestAnsw"
-                  @input="setAnswerChecked"
-                />
-                <q-checkbox
-                  v-if="!currentQuestion.single_selection"
-                  :name="opt.question_ref.toString()"
-                  :label="opt.answer"
-                  value="false"
-                  :val="opt.id"
-                  v-model="currTestAnsw"
-                  @input="setAnswerChecked"
-                />
-                {{ opt.correct }}
-              </div>
-            </div>
+          <div class="row col-12">
+            <div class="col-3 redborder" style="float: left;">Fyrri</div>
+            <div class="col-6 redborder" style="float: left;"></div>
+            <div class="col-3 redborder" style="float: right;">Svar</div>
+          </div>
+          <div class="row col">
+            <div class="col-12">Næsta spurning</div>
           </div>
         </div>
-
-      </q-item>
-    </q-slide-item>
-    <q-separator></q-separator>
-
-    <div class="col-2 col-lg-offset-5 align-center text-center redborder">
-      <div class="row col">
-        <div class="col-12">Merkja „kann vel“</div>
-      </div>
-      <div class="row col-12">
-        <div class="col-3 redborder" style="float: left;">Fyrri</div>
-        <div class="col-6 redborder" style="float: left;"></div>
-        <div class="col-3 redborder" style="float: right;">Svar</div>
-      </div>
-      <div class="row col">
-        <div class="col-12">Næsta spurning</div>
       </div>
     </div>
-  </div>
+  </q-page>
 </template>
 
 <script>
 import store from 'src/store'
 import { date } from 'quasar'
-import { axiosBase } from 'src/api/axios-base'
+import { getAPI } from 'src/api/axios-base'
+// import axios from 'axios'
 
 const access = store.getters.token // attempt to obtain new access token by running 'refreshToken' action
-//       axios.request({
-//   method: 'get',
-//   headers: { Authorization: `Bearer ${access}` }, // the new access token is attached to the authorization header
-//   url: 'https://127.0.0.1:8000/api/dashboard/'
-// })
-
-const SCHEMA = {
-  type: 'object',
-  properties: {
-    question: '',
-    memotext: '',
-    difficulty: 50,
-    date: '',
-    user: 1
-  }
-}
 
 export default {
   name: 'Question',
@@ -178,7 +167,8 @@ export default {
         known: this.known,
         curr_question: this.currentQuestion.id
       }
-      axiosBase.post({
+      getAPI({
+        method: 'post',
         headers: { Authorization: `Bearer ${access}` },
         url: '/api/memos/',
         data: formdata
@@ -191,7 +181,8 @@ export default {
         options_ids: this.currTestQuest.toString(),
         curr_question: this.currentQuestion.id
       }
-      axiosBase.post({
+      getAPI({
+        method: 'post',
         headers: { Authorization: `Bearer ${access}` },
         url: '/api/answer/',
         data: formdata
@@ -254,13 +245,15 @@ export default {
     //   i.setAttribute('style', 'transform: rotateY(180deg)')
     // },
     flippit () {
-      axiosBase.get({
+      console.log('flippit')
+      getAPI({
+        method: 'get',
         headers: { Authorization: `Bearer ${access}` },
         url: '/api/flipcard/?format=json'
       })
         .then(response => {
           this.myJson = JSON.parse(JSON.stringify(response.data))
-          // console.log(this.myJson)
+          console.log(this.myJson)
           this.setQuestion(1)
         })
         .catch(error => console.log('Error', error.message))
@@ -275,22 +268,12 @@ export default {
   data () {
     return {
       // currentOptions: this.currentQuestion.options,
-      hinttext: '',
       cQ: 0,
-      hintloss: '',
       currTestQuest: [],
-      memo: SCHEMA,
-      memolist: false,
-      calendar: false,
       visible: false,
       currTestAnsw: [],
       memotext: '',
-      difficulty: 50,
-      accept: false,
-      date: '2020/24/12',
-      known: false,
       interval: 0,
-      progress: 0.01,
       time_allowed: 0,
       time_taken: 0,
       time_step: 0,

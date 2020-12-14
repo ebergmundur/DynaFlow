@@ -1,28 +1,28 @@
 <template>
+  <q-page class="flex flex-center q-pa-xs ">
+    <div class="q-pa-md row items-start q-gutter-md justify-center">
+      <div class="mainlist col-lg-6 col-md-8 col-sm ">
+        <q-toolbar>
+          <q-toolbar-title>
+            {{ testname }} -
+            {{ formatDate(testdate) }}
 
-  <div class="q-pa-md row items-start q-gutter-md justify-center">
-    <div class="mainlist col-lg-6 col-md-8 col-sm ">
-      <q-toolbar>
-        <q-toolbar-title>
-          {{ testname }} -
-          {{ formatDate(testdate) }}
-
-          <span class="" style="float: right">
+            <span class="" style="float: right">
           {{ totpoints }} af {{ optpoints }} = {{ Math.round((totpoints / optpoints) * 100) }}%
           </span>
-        </q-toolbar-title>
-      </q-toolbar>
-      <q-list bordered class="rounded-borders">
-        <q-expansion-item
-          v-for="(item, index) in currTestAnsw"
-          :key="index"
-          :class="iscorrect( item.result)"
-          expand-separator
-          :label="item.question.virtname"
-          class=""
-        >
-          <q-card-section style="background-color: white;" class="row">
-            <div class="col-6">
+          </q-toolbar-title>
+        </q-toolbar>
+        <q-list bordered class="rounded-borders">
+          <q-expansion-item
+            v-for="(item, index) in currTestAnsw"
+            :key="index"
+            :class="iscorrect( item.result)"
+            expand-separator
+            :label="item.question.virtname"
+            class=""
+          >
+            <q-card-section style="background-color: white;" class="row">
+              <div class="col-6">
             <span v-for="(opt, idx) in item.question.options"
                   :key="idx"
             >
@@ -31,66 +31,67 @@
                   class="float-left"
                 >
                   <strong>Þitt svar:</strong> {{ opt.answer }}<br>
-                  <strong> {{item.points_given}} stig </strong>
+                  <strong> {{ item.points_given }} stig </strong>
                 </span>
             </span>
-              <span v-if="item.result === 0">
+                <span v-if="item.result === 0">
                           <strong>Spurningu sleppt</strong><br>
-                  <strong> {{item.points_given}} stig </strong>
+                  <strong> {{ item.points_given }} stig </strong>
                         </span>
-            </div>
+              </div>
 
-            <div class="col-6 ">
+              <div class="col-6 ">
             <span v-for="(memo, innx) in item.question.memos"
                   :key="innx"
             >
               <strong>{{ formatDate(memo.created_date) }}:</strong> {{ memo.memo }}<br>
             </span>
-            </div>
+              </div>
 
-          </q-card-section>
-        </q-expansion-item>
-      </q-list>
+            </q-card-section>
+          </q-expansion-item>
+        </q-list>
 
-      <!--      <q-card-->
-      <!--        v-for="(item, index) in myJson.answers"-->
-      <!--        :key="index"-->
+        <!--      <q-card-->
+        <!--        v-for="(item, index) in myJson.answers"-->
+        <!--        :key="index"-->
+        <!--      >-->
+        <!--        <q-toolbar class="q-dark">-->
+        <!--          {{ item.question.name }}-->
+        <!--        </q-toolbar>-->
+        <!--        <q-card-section>-->
+        <!--          &lt;!&ndash;          //{{ item.result }}&ndash;&gt;-->
+        <!--          {{ item.options_ids }}-->
+        <!--          <q-card-section-->
+        <!--            v-for="(opt, idx) in item.question.options"-->
+        <!--            :key="idx"-->
+        <!--          >-->
+        <!--            {{ opt.id }}: {{ opt.answer }}-->
+        <!--          </q-card-section>-->
+        <!--        </q-card-section>-->
+
+        <!--      </q-card>-->
+      </div>
+      <!--    MAIN CARDS-->
+
+      <!--    BOTTOM LIST OF QUESTIONS-->
+      <!--    <div class="questlist ">-->
+      <!--      &lt;!&ndash;      <q-page-sticky expand position="bottom" class="questlist ">&ndash;&gt;-->
+      <!--      <q-btn-toggle-->
+      <!--        v-model="questNum"-->
+      <!--        :options="questionsNumbersList"-->
+      <!--        size="sm"-->
       <!--      >-->
-      <!--        <q-toolbar class="q-dark">-->
-      <!--          {{ item.question.name }}-->
-      <!--        </q-toolbar>-->
-      <!--        <q-card-section>-->
-      <!--          &lt;!&ndash;          //{{ item.result }}&ndash;&gt;-->
-      <!--          {{ item.options_ids }}-->
-      <!--          <q-card-section-->
-      <!--            v-for="(opt, idx) in item.question.options"-->
-      <!--            :key="idx"-->
-      <!--          >-->
-      <!--            {{ opt.id }}: {{ opt.answer }}-->
-      <!--          </q-card-section>-->
-      <!--        </q-card-section>-->
-
-      <!--      </q-card>-->
+      <!--        &lt;!&ndash;        @input="setQuestion"&ndash;&gt;-->
+      <!--      </q-btn-toggle>-->
+      <!--      &lt;!&ndash;      </q-page-sticky>&ndash;&gt;-->
+      <!--    </div>-->
     </div>
-    <!--    MAIN CARDS-->
-
-    <!--    BOTTOM LIST OF QUESTIONS-->
-<!--    <div class="questlist ">-->
-<!--      &lt;!&ndash;      <q-page-sticky expand position="bottom" class="questlist ">&ndash;&gt;-->
-<!--      <q-btn-toggle-->
-<!--        v-model="questNum"-->
-<!--        :options="questionsNumbersList"-->
-<!--        size="sm"-->
-<!--      >-->
-<!--        &lt;!&ndash;        @input="setQuestion"&ndash;&gt;-->
-<!--      </q-btn-toggle>-->
-<!--      &lt;!&ndash;      </q-page-sticky>&ndash;&gt;-->
-<!--    </div>-->
-  </div>
+  </q-page>
 </template>
 
 <script>
-import { axiosBase } from 'src/api/axios-base'
+import { getAPI } from 'src/api/axios-base'
 import store from 'src/store'
 import { date } from 'quasar'
 
@@ -226,8 +227,9 @@ export default {
     if (exam > 0) {
       alert('MOUNTED REVIEW')
     }
-    axiosBase.get({
+    getAPI({
       url: '/api/review/76/?format=json',
+      method: 'get',
       headers: { Authorization: `Bearer ${access}` }
     })
       .then(response => {

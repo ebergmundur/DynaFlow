@@ -4,6 +4,35 @@ from .models import Question, Questionnaire, QuestionGroupRelation, Questionnair
 from person.models import PersonUser
 from rest_framework import serializers
 
+
+
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('username', 'password', 'email', 'first_name', 'last_name',)
+        extra_kwargs = {'user__password': {'write_only': True}}
+
+    def create(self, validated_data):
+        print(validated_data)
+        password = validated_data.pop('password')
+        name = validated_data.pop('first_name')
+        name = name.split( ' ')
+
+        user = User(**validated_data)
+        user.set_password(password)
+        user.email = validated_data.pop('email')
+        user.first_name = name[0]
+        user.last_name = name[1]
+        user.save()
+
+        new_person = PersonUser.objects.create(
+                user = user
+        )
+        new_person.save()
+
+        return user
+
 class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -64,8 +93,11 @@ class PersonSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'fullname',
+            'first_name',
+            'last_name',
             'username',
             'isadmin',
+            'email',
         ]
 
 

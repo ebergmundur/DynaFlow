@@ -237,7 +237,7 @@
 </template>
 
 <script>
-import { axiosBase } from 'src/api/axios-base'
+import { getAPI } from 'src/api/axios-base'
 import store from 'src/store'
 import { date } from 'quasar'
 const access = store.getters.token
@@ -327,8 +327,9 @@ export default {
         known: this.known,
         curr_question: this.currentQuestion.id
       }
-      axiosBase.post({
+      getAPI({
         url: '/api/memos/',
+        method: 'post',
         headers: { Authorization: `Bearer ${access}` },
         data: formdata
       }).catch(error => console.log('Error', error.message))
@@ -355,8 +356,9 @@ export default {
         postpone: this.postpone
       }
 
-      axiosBase.post({
+      getAPI({
         url: '/api/answer/',
+        method: 'post',
         data: formdata,
         headers: { Authorization: `Bearer ${access}` }
       })
@@ -459,9 +461,10 @@ export default {
     if (exam > 0) {
       alert('MOUNTED REVIEW')
     }
-    axiosBase.get({
+    getAPI({
       url: '/api/questionn/76/?format=json',
-      headers: { Authorization: `Bearer ${access}` }
+      headers: { Authorization: `Bearer ${access}` },
+      method: 'get'
     })
       .then(response => {
         console.log(response.data)

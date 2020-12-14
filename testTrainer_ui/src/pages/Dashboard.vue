@@ -1,54 +1,55 @@
 <template>
-  <div class="q-pa-md row items-start q-gutter-md justify-center">
-    <div class="mainlist col-lg-6 col-md-8 col-sm ">
+  <q-page class="justify-center">
+    <div class="q-pa-lg-md q-mt-md">
+      <div class="row q-gutter-md justify-center col">
 
-      <q-card>
-        <q-card-section>
-                <q-toolbar>
-        <q-toolbar-title>
-          Mælaborð
-        </q-toolbar-title>
-      </q-toolbar>
+        <q-card class="col-lg-6">
+          <q-card-section>
+            <q-toolbar>
+              <q-toolbar-title>
+                Mælaborð
+              </q-toolbar-title>
+            </q-toolbar>
 
-          <q-list>
-            <q-item
-              v-for="(exam, index) in exams"
-              :key="index"
-            >
-              <q-item-section>
-                <q-item-label>{{ exam.name }}</q-item-label>
-                <q-item-label caption lines="2">
-                  {{ formatDate(exam.created_date) }}
+            <q-list>
+              <q-item
+                v-for="(exam, index) in exams"
+                :key="index"
+              >
+                <q-item-section>
+                  <q-item-label>{{ exam.name }}</q-item-label>
+                  <q-item-label caption lines="2">
+                    {{ formatDate(exam.created_date) }}
 
-                </q-item-label>
-              </q-item-section>
+                  </q-item-label>
+                </q-item-section>
 
-              <q-item-section side top>
-                <q-item-label caption>{{ exam.results.given_points }}</q-item-label>
-                <q-item-label caption>{{ exam.results.optional_points }}</q-item-label>
-                <!--                <q-icon name="star" color="yellow"/>-->
-              </q-item-section>
+                <q-item-section side top>
+                  <q-item-label caption>{{ exam.results.given_points }}</q-item-label>
+                  <q-item-label caption>{{ exam.results.optional_points }}</q-item-label>
+                  <!--                <q-icon name="star" color="yellow"/>-->
+                </q-item-section>
 
-            </q-item>
+              </q-item>
 
-          </q-list>
+            </q-list>
 
-        </q-card-section>
-        <q-card-section class="q-pa-none echarts">
-        <IEcharts :option="barChartOption" :resizable="true" />
-      </q-card-section>
-    </q-card>
-
+          </q-card-section>
+          <q-card-section class="q-pa-none echarts">
+            <IEcharts :option="barChartOption" :resizable="true"/>
+          </q-card-section>
+        </q-card>
+      </div>
     </div>
-  </div>
+  </q-page>
 </template>
 
 <script>
-// import axios from 'axios'
 import { date } from 'quasar'
 import store from 'src/store'
 import IEcharts from 'vue-echarts-v3/src/full.js'
-import { axiosBase } from 'src/api/axios-base'
+import { getAPI } from 'src/api/axios-base'
+// import axios from 'axios'
 
 export default {
   name: 'Dashboard',
@@ -98,7 +99,8 @@ export default {
   },
   mounted () {
     const access = store.getters.token // attempt to obtain new access token by running 'refreshToken' action
-    axiosBase.get({
+    getAPI({
+      method: 'get',
       headers: { Authorization: `Bearer ${access}` }, // the new access token is attached to the authorization header
       url: '/api/dashboard/'
     })
@@ -140,9 +142,9 @@ export default {
 
 <style scoped>
 .echarts {
-    width: 100%;
-    height: 400px;
-  }
+  width: 100%;
+  height: 400px;
+}
 </style>
 <!--Categories-->
 

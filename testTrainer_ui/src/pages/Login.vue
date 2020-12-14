@@ -1,4 +1,5 @@
 <template>
+  <q-page class="flex flex-center q-pa-xs ">
   <div class="q-pa-md row items-start q-gutter-md">
     <q-card
       class="my-card bg-grey-1 absolute-center col-xs-12 col-xs-12 col-md-6 col-xl-4 col-lg-4"
@@ -12,13 +13,18 @@
         <div class="row items-center wrap q-gutter-md">
           <h2 v-if="wrongCred">Wrong credentials entered!. Please enter your correct details.</h2>
           <!--          <form v-on:submit.prevent="loginUser">-->
-          <div class="row col">
 
-            <q-input v-model="username" type="text" class="col" label="Notendanafn"/>
-          </div>
-          <div class="row col">
-            <q-input class="col" id="pass" type="password" v-model="password" label="Lykilorð"/>
-          </div>
+            <q-input v-model="username" type="text" class="col-11" label="Notendanafn">
+                                <template v-slot:before>
+                    <q-icon class="fa fa-user-alt"/>
+                  </template>
+                </q-input>
+
+            <q-input class="col-11" id="pass" type="password" v-model="password" label="Lykilorð">
+                                <template v-slot:before>
+                    <q-icon class="fa fa-key"/>
+                  </template>
+                </q-input>
 
           <!--          </form>-->
         </div>
@@ -39,7 +45,7 @@
       </q-card-actions>
     </q-card>
   </div>
-
+  </q-page>
 </template>
 
 <script>
@@ -64,7 +70,7 @@ export default {
       })
         .then(() => {
           this.wrongCred = false
-          this.$router.push({ name: 'dashboard' })
+          this.$router.push({ name: 'userinfo' })
         })
         .catch(err => {
           console.log(err)

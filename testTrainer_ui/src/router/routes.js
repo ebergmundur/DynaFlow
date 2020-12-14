@@ -18,7 +18,7 @@ const routes = [
     path: '/question',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('components/Question.vue') }
+      { path: '', component: () => import('pages/Question.vue') }
     ],
     meta: {
       requiresLogged: false
@@ -39,7 +39,7 @@ const routes = [
     path: '/createtest',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('components/CreatePractice.vue') }
+      { path: '', component: () => import('pages/CreatePractice.vue') }
     ],
     meta: {
       requiresLogged: false
@@ -49,7 +49,7 @@ const routes = [
     path: '/testreal',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('components/Testpage') }
+      { path: '', component: () => import('pages/Testpage') }
     ],
     meta: {
       requiresLogged: false
@@ -59,7 +59,7 @@ const routes = [
     path: '/testpractice',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', name: 'testpage', component: () => import('components/Testpage') }
+      { path: '', name: 'testpage', component: () => import('pages/Testpage') }
     ],
     meta: {
       requiresLogged: false
@@ -70,7 +70,7 @@ const routes = [
     props: { exam: 1 },
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', name: 'review', component: () => import('components/Review') }
+      { path: '', name: 'review', component: () => import('pages/Review') }
     ],
     meta: {
       requiresLogged: false
@@ -80,7 +80,7 @@ const routes = [
     path: '/flipcard',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', name: 'flipcard', component: () => import('components/Flipcard') }
+      { path: '', name: 'flipcard', component: () => import('pages/Flipcard') }
     ],
     meta: {
       requiresLogged: false
@@ -90,7 +90,7 @@ const routes = [
     path: '/dashboard',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', name: 'dashboard', component: () => import('components/Dashboard') }
+      { path: '', name: 'dashboard', component: () => import('pages/Dashboard') }
     ],
     meta: {
       requiresLogged: false
@@ -100,7 +100,7 @@ const routes = [
     path: '/userinfo',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', name: 'userinfo', component: () => import('components/User') }
+      { path: '', name: 'userinfo', component: () => import('pages/User') }
     ],
     meta: {
       requiresLogged: false
@@ -110,7 +110,7 @@ const routes = [
     path: '/login',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', name: 'login', component: () => import('components/Login') }
+      { path: '', name: 'login', component: () => import('pages/Login') }
     ],
     meta: {
       requiresLogged: false
@@ -120,7 +120,7 @@ const routes = [
     path: '/register',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', name: 'register', component: () => import('components/Register') }
+      { path: '', name: 'register', component: () => import('pages/Register') }
     ],
     meta: {
       requiresLogged: false
@@ -130,7 +130,7 @@ const routes = [
     path: '/logout',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', name: 'logout', component: () => import('components/Logout') }
+      { path: '', name: 'logout', component: () => import('pages/Logout') }
     ],
     meta: {
       requiresLogged: false

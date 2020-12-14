@@ -24,6 +24,18 @@ class PersonUser(models.Model):
 
     @property
     def isadmin(self):
-        return self.user.is_superuser
+        return self.user.is_staff
+
+    @property
+    def email(self):
+        return self.user.email
+
+    @property
+    def first_name(self):
+        return self.user.first_name
+
+    @property
+    def last_name(self):
+        return self.user.last_name
 
 

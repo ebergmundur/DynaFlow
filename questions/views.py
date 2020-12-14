@@ -5,29 +5,21 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .serializers import OptionSerializer, QuestionSerializer, QuestionMemoSerializer, QuestionAnswerSerializer, \
-    GroupSerializer, CategorySerializer, QuestionnaireSerializer, RevieweSerializer, PersonSerializer
+    GroupSerializer, CategorySerializer, QuestionnaireSerializer, RevieweSerializer, PersonSerializer, UserSerializer
 from .models import Option, Question, Questionnaire, QuestionGroupRelation, QuestionnaireGroupRelation, Group, Category, \
     TestMemo, TestAnswers
 from person.models import PersonUser
 
 
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework import generics
 
 
-
-# View for 'Mods' model
-class ModsView(generics.RetrieveAPIView):
-    permission_classes = (IsAuthenticated,)  # checks if user is authenticated to view the model objects
-
-    def get_queryset(self):
-        return Category.objects.all()  # return all model objects
-
-    def get(self, request, *args, **kwargs):  # GET request handler for the model
-        queryset = self.get_queryset()
-        serializer = CategorySerializer(queryset, many=True)
-        return Response(serializer.data)
+class UserCreate(generics.CreateAPIView):
+    queryset = PersonUser.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (AllowAny, )
 
 
 class QuestionViewSet(viewsets.ModelViewSet):
@@ -118,12 +110,16 @@ class UserViewSet(viewsets.ModelViewSet):
 #     serializer_class = QuestionAnswerSerializer
 
 
-@api_view(['GET'])
+def logout(request):
+    return Response(status=status.HTTP_201_CREATED)
+
+
+@api_view(['POST'])
 def userdata(request):
 
-    print(request)
-    if request.method == 'GET':
-        user = PersonUser.objects.filter(user__username__gt='')
+    print(request.user)
+    if request.method == 'POST':
+        user = PersonUser.objects.filter(user__username=request.user)
         serializer = PersonSerializer(user[0], many=False)
         return Response(serializer.data)
 

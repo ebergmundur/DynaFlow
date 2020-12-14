@@ -45,18 +45,20 @@ router.register(r'userset', question_views.UserViewSet)
 urlpatterns = [
                   path('admin/', admin.site.urls),
                   path('admin/doc/', include('django.contrib.admindocs.urls')),
+                  path('userdata/', question_views.userdata, name='userdata' ),
                   path('api/', include(router.urls)),
                   path('api/memos/', question_views.memo_add),
                   path('api/answer/', question_views.answer_add),
-                  path('api/userdata/', question_views.userdata),
                   path('api/questionnaiere/', question_views.practice_test),
                   path('api/handin/', question_views.practice_hand_in),
                   path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+                  path('api/token/logout/', question_views.logout, name='logout'),
+                  path('api/registeruser/', question_views.UserCreate.as_view(), name='user_register'),
                   path('register/', TokenObtainPairView.as_view(), name='token_register'),
                   # Submit your refresh token to this path to obtain a new access token
                   path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
                   # Return 'Mods' model objects
-                  path('mods/', question_views.ModsView.as_view(), name='mods_view'),
+                  # path('mods/', question_views.ModsView.as_view(), name='mods_view'),
                   path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
                   path('baton/', include('baton.urls')),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
