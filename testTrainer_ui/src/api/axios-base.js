@@ -1,7 +1,7 @@
 import axios from 'axios'
 import store from 'src/store'
 
-const APIUrl = 'https://einars-macbook-pro.local:8000'
+const APIUrl = 'https://api.enam.is'
 
 const axiosBase = axios.create({
   baseURL: APIUrl,
