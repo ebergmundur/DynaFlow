@@ -1,6 +1,7 @@
 from django.db import models
 from base.models import Base
 from django.contrib.auth.models import User
+import datetime
 from django.utils.functional import cached_property
 
 
@@ -39,12 +40,34 @@ class PersonUser(models.Model):
     def last_name(self):
         return self.user.last_name
 
+    @property
+    def open(self):
+        try:
+            latestpayment = self.payment_set.latest('period_end')
+            if latestpayment.open:
+                return True
+        except:
+            return False
+
+    @property
+    def until(self):
+        try:
+            latestpayment = self.payment_set.latest('period_end')
+            return latestpayment.period_end
+        except:
+            return False
+
 
 class Payment(models.Model):
     person = models.ForeignKey(PersonUser, on_delete=models.CASCADE)
-    created_date = models.DateTimeField(auto_now_add=True)
-    period_start = models.DateTimeField(blank=True, null=True)
-    period_end = models.DateTimeField(blank=True, null=True)
+    created_date = models.DateField(auto_now_add=True)
+    period_start = models.DateField(blank=True, null=True)
+    period_end = models.DateField(blank=True, null=True)
     payment_verified = models.BooleanField(default=False)
     amount = models.SmallIntegerField(default=0)
 
+    @property
+    def open(self):
+        if self.period_end <= datetime.date.today():
+            return True
+        return False

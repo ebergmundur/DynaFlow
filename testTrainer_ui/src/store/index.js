@@ -20,6 +20,9 @@ const store = new Vuex.Store({
     userFirstName: localStorage.getItem('user_first_name') || null,
     userLastName: localStorage.getItem('user_last_name') || null,
     userEmail: localStorage.getItem('user_email') || null,
+    userOpen: localStorage.getItem('open') || null,
+    userIsadmin: localStorage.getItem('isadmin') || null,
+    userEndDay: localStorage.getItem('endday') || null,
     currentTest: '',
     APIData: '' // received data from the backend API is stored here.
   },
@@ -43,8 +46,14 @@ const store = new Vuex.Store({
       localStorage.setItem('user_email', payload)
       state.userEmail = payload
     },
-    setUserName (state, payload) {
-      state.userName = payload
+    setUserOpen (state, payload) {
+      state.userOpen = payload
+    },
+    setUserIsadmin (state, payload) {
+      state.userIsadmin = payload
+    },
+    setUserEndDay (state, payload) {
+      state.userEndDay = payload
     },
     setQuestion (state, payload) {
       state.currentQuestion = payload
@@ -63,15 +72,21 @@ const store = new Vuex.Store({
       state.refreshToken = refresh
       state.userName = username
     },
-    updateLocalUserStorage (state, { firstname, lastname, email, id }) {
+    updateLocalUserStorage (state, { firstname, lastname, email, id, open, until, isadmin }) {
       localStorage.setItem('user_first_name', firstname)
       localStorage.setItem('user_last_name', lastname)
       localStorage.setItem('user_email', email)
       localStorage.setItem('user_id', id)
+      localStorage.setItem('open', open)
+      localStorage.setItem('endday', until)
+      localStorage.setItem('isadmin', isadmin)
       state.userFirstName = firstname
       state.userLastName = lastname
       state.userEmail = email
-      state.userId = id
+      state.userOpen = open.open
+      state.userEndDay = open.until
+      state.userIsadmin = isadmin
+      state.userIsadmin = isadmin
     },
     updateAccess (state, access) {
       state.accessToken = access
@@ -129,7 +144,11 @@ const store = new Vuex.Store({
               localStorage.removeItem('user_first_name')
               localStorage.removeItem('user_last_name')
               localStorage.removeItem('user_email')
+              localStorage.removeItem('open')
+              localStorage.removeItem('isadmin')
               localStorage.removeItem('user_id')
+              localStorage.removeItem('open')
+              localStorage.removeItem('endday')
               context.commit('destroyToken')
             })
             .catch(err => {
@@ -139,7 +158,11 @@ const store = new Vuex.Store({
               localStorage.removeItem('user_first_name')
               localStorage.removeItem('user_last_name')
               localStorage.removeItem('user_email')
+              localStorage.removeItem('open')
+              localStorage.removeItem('isadmin')
               localStorage.removeItem('user_id')
+              localStorage.removeItem('open')
+              localStorage.removeItem('endday')
               context.commit('destroyToken')
               resolve(err)
             })
@@ -203,7 +226,10 @@ const store = new Vuex.Store({
         lastName: state.userLastName,
         userid: state.userId,
         username: state.userName,
-        email: state.userEmail
+        email: state.userEmail,
+        isadmin: state.userIsadmin,
+        open: state.userOpen,
+        until: state.userEndDay
       }
     },
     currTimeAllowed: state => {

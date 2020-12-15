@@ -98,6 +98,8 @@ class PersonSerializer(serializers.ModelSerializer):
             'username',
             'isadmin',
             'email',
+            'open',
+            'until',
         ]
 
 

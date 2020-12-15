@@ -104,7 +104,7 @@ export default {
       data: { username: this.user },
       method: 'post',
       headers: { Authorization: `Bearer ${access}` }, // the new access token is attached to the authorization header
-      url: '/userdata/'
+      url: '/api/userinfo/'
     })
       .then(response => {
         // console.log(response)
@@ -112,6 +112,9 @@ export default {
         store.commit('setUserFirstName', response.data.first_name)
         store.commit('setUserLastName', response.data.last_name)
         store.commit('setUserEmail', response.data.email)
+        store.commit('setUserEndDay', response.data.until)
+        store.commit('setUserOpen', response.data.open)
+        store.commit('setUserIsadmin', response.data.isadmin)
       })
   }
   // this.loggedIn = store.getters.loggedIn

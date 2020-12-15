@@ -36,6 +36,7 @@ router.register(r'review', question_views.ReviewViewSet)
 router.register(r'dashboard', question_views.DahboardViewSet)
 router.register(r'flipcard', question_views.FlipcardViewSet)
 router.register(r'userset', question_views.UserViewSet)
+# router.register(r'userdata', question_views.userdata)
 # router.register(r'answewr', question_views.QuestionAnswerViewSet)
 # router.register(r'groups', question_views.GroupViewSet)
 
@@ -45,9 +46,9 @@ router.register(r'userset', question_views.UserViewSet)
 urlpatterns = [
                   path('admin/', admin.site.urls),
                   path('admin/doc/', include('django.contrib.admindocs.urls')),
-                  path('userdata/', question_views.userdata, name='userdata' ),
                   path('api/', include(router.urls)),
                   path('api/memos/', question_views.memo_add),
+                  path('api/userinfo/', question_views.userdata, name='userdata' ),
                   path('api/answer/', question_views.answer_add),
                   path('api/questionnaiere/', question_views.practice_test),
                   path('api/handin/', question_views.practice_hand_in),
