@@ -98,7 +98,7 @@ class OptionAdmin(TabbedTranslationAdmin):
     ]
 
 
-class OptionInline(TranslationStackedInline):
+class OptionInline(TranslationTabularInline):
     model = Option
     fk_name = 'question_ref'
     extra = 1
@@ -152,7 +152,7 @@ class OptionInline(TranslationStackedInline):
     fieldsets = [
         (u'', {
             'fields': (
-                'name',
+                # 'name',
                 'answer',
                 'correct',
                 'image',
@@ -183,6 +183,7 @@ class OptionInline(TranslationStackedInline):
         #     # 'classes': ('tab-fs-optnote',),
         # }),
         (u'Aðilar', {
+            # TODO prófa að fela
             'fields': (
                 'owner',
                 'modified_by',
@@ -217,6 +218,7 @@ class QuestionAdmin(TabbedTranslationAdmin):
                 'single_selection',
                 'points',
                 'question',
+                'category',
                 'hint_cost',
                 'hint',
                 'image',
