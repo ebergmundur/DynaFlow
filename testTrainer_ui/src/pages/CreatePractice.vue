@@ -150,6 +150,14 @@ export default {
         headers: { Authorization: `Bearer ${access}` },
         data: formdata
       })
+        .then(() => {
+          this.wrongCred = false
+          this.$router.push({ name: 'userinfo' })
+        })
+        .catch(err => {
+          console.log(err)
+          this.wrongCred = true // if the credentials were wrong set wrongCred to true
+        })
     },
     manualSet () {
       this.given_time_limit = false
