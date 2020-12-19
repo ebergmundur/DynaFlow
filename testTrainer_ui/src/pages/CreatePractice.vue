@@ -6,13 +6,13 @@
       <q-card-section>
         <div class="text-h4">Búa til æfingapróf</div>
         <q-separator/>
-        <q-input
-          v-model="examname"
-          placeholder="Heiti prófs, ef ekkert er slegið inn fær prófið dagsetningu sem heiti"
-        label="Nefna próf"
-        >
+<!--        <q-input-->
+<!--          v-model="examname"-->
+<!--          placeholder="Heiti prófs, ef ekkert er slegið inn fær prófið dagsetningu sem heiti"-->
+<!--        label="Nefna próf"-->
+<!--        >-->
 
-        </q-input>
+<!--        </q-input>-->
         <div class="text-h6 q-mt-md">Flokkar</div>
 <!--        cats_count: {{ cats_count }},<br>-->
 <!--{{question_count}}-->
@@ -141,7 +141,8 @@ export default {
         timed: this.given_time_limit,
         only_failed: this.only_failed,
         omit_known: this.omit_known,
-        examname: this.examname
+        examname: this.examname,
+        user: store.getters.getUserName
       }
       // console.log(formdata)
       getAPI({
@@ -152,7 +153,7 @@ export default {
       })
         .then(() => {
           this.wrongCred = false
-          this.$router.push({ name: 'userinfo' })
+          this.$router.push({ name: 'testpractice' })
         })
         .catch(err => {
           console.log(err)

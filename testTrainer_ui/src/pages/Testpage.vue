@@ -402,7 +402,7 @@ export default {
       this.currPoints = this.currentQuestion.points - this.currentQuestion.hint_cost
     },
     openUrl () {
-      window.open('https://127.0.0.1:8000/admin/questions/question/' + this.currentQuestion.id, '_blank')
+      window.open('https://api.enam.is/admin/questions/question/' + this.currentQuestion.id, '_blank')
     },
     openMemos () {
       this.memolist = true
@@ -458,17 +458,19 @@ export default {
     }
   },
   mounted () {
-    if (exam > 0) {
-      alert('MOUNTED REVIEW')
-    }
+    // if (exam > 0) {
+    //   alert('MOUNTED REVIEW')
+    // }
+
+    const username = store.getters.getUserName
+
     getAPI({
-      url: '/api/questionn/76/?format=json',
-      headers: { Authorization: `Bearer ${access}` },
-      method: 'get'
+      url: '/api/questionnaiere/?user=' + username,
+      headers: { Authorization: `Bearer ${access}` }
     })
       .then(response => {
         console.log(response.data)
-        this.myJson = JSON.parse(JSON.stringify(response.data))
+        this.myJson = JSON.parse(JSON.stringify(response.data[0]))
         this.totalQuestions = this.myJson.question_collection.length
         var i
         var qs = []

@@ -1,8 +1,8 @@
 <template>
-  <q-page class="flex flex-center q-pa-xs ">
-    <div class="q-pa-md row items-start q-gutter-md justify-center">
-      <div class="mainlist col-lg-6 col-md-8 col-sm ">
-        <q-toolbar>
+  <q-page class="flex  q-pa-lg ">
+    <div class="row justify-center col">
+      <div class="mainlist col-lg-4 col-md-8 col-sm-12 ">
+        <q-toolbar class="q-dark">
           <q-toolbar-title>
             {{ testname }} -
             {{ formatDate(testdate) }}
@@ -12,7 +12,7 @@
           </span>
           </q-toolbar-title>
         </q-toolbar>
-        <q-list bordered class="rounded-borders">
+        <q-list bordered class="zrounded-borders questlist ">
           <q-expansion-item
             v-for="(item, index) in currTestAnsw"
             :key="index"
@@ -21,7 +21,7 @@
             :label="item.question.virtname"
             class=""
           >
-            <q-card-section style="background-color: white;" class="row">
+            <q-card-section style="background-color: white;" class="row quest-options">
               <div class="col-6">
             <span v-for="(opt, idx) in item.question.options"
                   :key="idx"
@@ -51,41 +51,7 @@
             </q-card-section>
           </q-expansion-item>
         </q-list>
-
-        <!--      <q-card-->
-        <!--        v-for="(item, index) in myJson.answers"-->
-        <!--        :key="index"-->
-        <!--      >-->
-        <!--        <q-toolbar class="q-dark">-->
-        <!--          {{ item.question.name }}-->
-        <!--        </q-toolbar>-->
-        <!--        <q-card-section>-->
-        <!--          &lt;!&ndash;          //{{ item.result }}&ndash;&gt;-->
-        <!--          {{ item.options_ids }}-->
-        <!--          <q-card-section-->
-        <!--            v-for="(opt, idx) in item.question.options"-->
-        <!--            :key="idx"-->
-        <!--          >-->
-        <!--            {{ opt.id }}: {{ opt.answer }}-->
-        <!--          </q-card-section>-->
-        <!--        </q-card-section>-->
-
-        <!--      </q-card>-->
       </div>
-      <!--    MAIN CARDS-->
-
-      <!--    BOTTOM LIST OF QUESTIONS-->
-      <!--    <div class="questlist ">-->
-      <!--      &lt;!&ndash;      <q-page-sticky expand position="bottom" class="questlist ">&ndash;&gt;-->
-      <!--      <q-btn-toggle-->
-      <!--        v-model="questNum"-->
-      <!--        :options="questionsNumbersList"-->
-      <!--        size="sm"-->
-      <!--      >-->
-      <!--        &lt;!&ndash;        @input="setQuestion"&ndash;&gt;-->
-      <!--      </q-btn-toggle>-->
-      <!--      &lt;!&ndash;      </q-page-sticky>&ndash;&gt;-->
-      <!--    </div>-->
     </div>
   </q-page>
 </template>
@@ -287,34 +253,26 @@ export default {
 </script>
 
 <style scoped lang="sass">
+
 .quest-options
-  border: 1px solid #8d8c8c
-  padding: 5px
-  margin: 5px 0
-  background-color: #eaeaea
+  padding: 5px 25px
 
 .questlist
-  padding: 10px 20px
-  width: 100%
-  position: absolute
-  bottom: 50px
-  margin: 0 auto
-  background-color: #9ab2d0
-  min-height: 40px
-  overflow: scroll
-  text-align: center
+  background-color: #fdfdfd
+  .q-expansion-item
+    border-bottom: 1px solid #bcbcbc
 
 .mainlist
   text-align: left
 
 .correct
-  background-color: #e7f3da
+  border-left: 6px solid #559f02
 
 .postponed
-  background-color: #faf5a8
+  border-left: 6px solid #ece563
 
 .wrong
-  background-color: #f3c7c7
+  border-left: 6px solid #dd3333
 
 .redborder
   border: 1px solid red

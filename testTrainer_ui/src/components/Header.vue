@@ -12,23 +12,21 @@
           </q-avatar>
         </q-route-tab>
 
-        <q-route-tab v-if="loggedIn" to="/createtest" label="Æfingar"/>
-        <q-route-tab v-if="loggedIn" to="/testpractice" label="Æfing"/>
+        <q-route-tab v-if="loggedIn" to="/createtest" label="Æfing"/>
+        <q-route-tab v-if="loggedIn" to="/testpractice" label="Æ"/>
         <q-route-tab v-if="loggedIn" to="/testreal" label="Próf"/>
         <q-route-tab v-if="loggedIn" to="/review" label="Niðurstöður"/>
         <q-route-tab v-if="loggedIn" to="/flipcard" label="Flettikort"/>
         <q-route-tab v-if="loggedIn" to="/dashboard" label="Mælaborð"/>
 
         <q-route-tab v-if="!loggedIn" to="/login" label="Login" class="no-wrap">
-
-          <q-icon v-if="!loggedIn" class="fa fa-lock nowrap q-ml-sm"/>
+          <q-icon v-if="!loggedIn" class="fa fa-user-alt nowrap q-ml-sm"/>
         </q-route-tab>
-        <q-route-tab v-if="!loggedIn" to="/register" icon="lock_open" label="Register"/>
+        <q-route-tab v-if="!loggedIn" to="/register" icon="user" label="Register"/>
         <q-route-tab v-if="loggedIn" to="/userinfo" :label=user.firstName>
-          <q-icon v-if="loggedIn" class="fa fa-lock-open nowrap q-ml-sm"/>
+          <q-icon v-if="loggedIn" class="fa fa-user-alt nowrap q-ml-sm"/>
         </q-route-tab>
         <q-route-tab v-if="loggedIn" to="/logout" label="Logout"/>
-
       </q-tabs>
     </div>
 

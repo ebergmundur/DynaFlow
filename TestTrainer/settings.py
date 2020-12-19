@@ -128,6 +128,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_jwt',
     'rest_framework_simplejwt.token_blacklist',
+    'django_wysiwyg',
+    'ckeditor',
 ]
 
 MIDDLEWARE = [
@@ -283,9 +285,10 @@ MEDIA_URL = '/media/'
 
 
 BATON = {
-    'SITE_HEADER': 'TestTrainer',
-    'SITE_TITLE': 'TestTrainer Admin',
-    'INDEX_TITLE': 'TestTrainer Admin',
+    'SITE_HEADER': 'Enám',
+    'SITE_TITLE': 'Enám ritstjórn',
+    'INDEX_TITLE': 'Enám ritstjórn',
+
     'ENABLE_IMAGES_PREVIEW': True,
     'CHANGELIST_FILTERS_IN_MODAL': True,
 }

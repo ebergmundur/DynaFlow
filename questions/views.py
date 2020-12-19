@@ -1,3 +1,5 @@
+import datetime
+
 from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.decorators import api_view
@@ -63,6 +65,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
 
 class QuestionnaireViewSet(viewsets.ModelViewSet):
+
     """
     API endpoint that allows groups to be viewed or edited.
     """
@@ -234,71 +237,105 @@ def practice_test(request):
     """
 
     if request.method == 'GET':
+
         # memos = TestAnswers.objects.filter(curr_question=request)
-        practice = Questionnaire.objects.all()
+        owner = PersonUser.objects.get(user__username=request.user)
+        practice = Questionnaire.objects.filter(owner=owner).order_by('-created_date')[0:10]
         serializer = QuestionnaireSerializer(practice, many=True)
         return Response(serializer.data)
 
     if request.method == 'POST':
         # serializer = QuestionnaireSerializer(data=request.data)
         data = request.data
+        nuna = datetime.datetime.now().strftime('%Y-%m-%d %H:%M', )
 
+        user = PersonUser.objects.get(user__username=data['user'])
+        print(user)
+        print(user.id)
         # print(data)
+
         obj = Questionnaire.objects.create(
-            owner_id=1,
+            owner=user,
             timed=data['timed'],
-            name=data['examname'],
+            name=nuna,
             time_allowed=data['time_allowed'],
             omit_known=data['omit_known'],
             only_failed=data['only_failed'],
             question_collection_str=str(data['question_collection_str']),
         )
+        obj.save()
 
         i = 0  # index of array refers to Category id
-        # print(data['question_collection'])
+        print(data['question_collection'])
         for q in data['question_collection']:
-            # print(q)
             if q == None:
                 q = 0
             if q > 0:
                 category = Category.objects.get(id=i)
-                # print(category.name)
-                # print('actual q: ', q)
-                questions = category.question.all().order_by('?')
-                # print(questions.count())
+                print(category.name)
+                print('actual q: ', q)
+                questions = category.question_set.all().order_by('?')
+                print(questions.count())
                 quest_counter = 0
                 for question in questions:
                     # print('quest_counter ', quest_counter)
                     if quest_counter < q:
                         if data['omit_known'] == False and data['only_failed'] == False:
-                            # print('normal')
+                            print('normal')
                             obj.question_collection.add(question)
                             quest_counter += 1
                         else:
-                            if data['omit_known'] == True:
-                                # print('known')
-                                answers = TestAnswers.objects.filter(
-                                    tesing_user_id=1,
-                                    curr_question=question.id,
-                                    known=True
-                                )
-                                if len(answers) == 0:
-                                    obj.question_collection.add(question)
-                                    quest_counter += 1
 
-                            if data['only_failed'] == True:
-                                # print('only_failed')
-                                previous_results = TestAnswers.objects.filter(
-                                    user_id=1,
-                                    question=question.id,
-                                    result__gt=0
-                                )
-                                if len(previous_results) == 0:
+                            known_flag = False
+
+                            prev_answers = TestAnswers.objects.filter(
+                                tesing_user=user,
+                                curr_question=question.id,
+                            )
+                            print(prev_answers)
+                            """
+                            If student wants to omit questions marked with -known- flag we have to test each optional 
+                            question for the flag 
+                            And if he only wants questions failed we also check
+                            """
+
+                            if len(prev_answers) > 0:
+                                question_i = 0
+                                question_results = 0
+                                for a in prev_answers:
+                                    if data['omit_known'] == True:
+                                        if a.known == True:
+                                            known_flag = True
+                                            # break
+                                    if data['only_failed'] == True:
+                                        question_results += a.results
+                                        question_i += 1
+                                if question_results < 1 & known_flag == False:
                                     obj.question_collection.add(question)
                                     quest_counter += 1
+                            else:
+                                obj.question_collection.add(question)
+                                quest_counter += 1
+
+
+
+                                # obj.question_collection.add(question)
+                                # quest_counter += 1
+
+                            # if data['only_failed'] == True:
+                            #     print('only_failed')
+                            #     previous_results = TestAnswers.objects.filter(
+                            #         user_id=user.id,
+                            #         question=question.id,
+                            #         result__gt=0
+                            #     )
+                            #
+                            # if len(previous_results) == 0:
+                            #     obj.question_collection.add(question)
+                            #     quest_counter += 1
 
             i = i + 1
-        ok = obj.save()
+        obj.save()
 
         # if serializer.is_valid():
         #     serializer.save()
