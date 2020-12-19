@@ -240,7 +240,7 @@ def practice_test(request):
 
         # memos = TestAnswers.objects.filter(curr_question=request)
         owner = PersonUser.objects.get(user__username=request.user)
-        practice = Questionnaire.objects.filter(owner=owner).order_by('-created_date')[0:10]
+        practice = Questionnaire.objects.filter(owner=owner).order_by('-created_date')[0:1]
         serializer = QuestionnaireSerializer(practice, many=True)
         return Response(serializer.data)
 
