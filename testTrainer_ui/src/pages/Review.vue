@@ -194,7 +194,7 @@ export default {
       alert('MOUNTED REVIEW')
     }
     getAPI({
-      url: '/api/review/76/?format=json',
+      url: '/api/review/',
       method: 'get',
       headers: { Authorization: `Bearer ${access}` }
     })
