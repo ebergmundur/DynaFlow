@@ -10,14 +10,17 @@ dateparser==0.7.4
 Django==3.0.1
 django-admin-interface==0.12.2
 django-baton==1.9.2
+django-ckeditor==6.0.0
 django-colorfield==0.3.0
 django-cors-headers==3.5.0
 django-filter==2.3.0
 django-flat-responsive==2.0
 django-flat-theme==1.1.4
+django-js-asset==1.2.2
 django-modeltranslation==0.15
 django-sslserver==0.22
 django-stubs==1.7.0
+django-wysiwyg==0.8.0
 djangorestframework==3.12.2
 djangorestframework-jwt==1.11.0
 djangorestframework-simplejwt==4.6.0
