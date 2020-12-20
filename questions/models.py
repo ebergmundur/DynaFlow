@@ -39,11 +39,12 @@ class Category(Base):
 class Question(Base):
     question = models.TextField(blank=True)
     category = models.ForeignKey(Category, on_delete=models.PROTECT, default=1)
+    exam_question = models.BooleanField(default=False)
     image = models.ImageField(blank=True, null=True, upload_to='questionImage')
     owner = models.ForeignKey(PersonUser, on_delete=models.PROTECT, related_name="question_question_owner", related_query_name="question_owner")
     timed = models.BooleanField(default=False)
     time_allowed = models.SmallIntegerField(default=120, help_text="Sekúndur")
-    single_selection = models.BooleanField(default=False)
+    single_selection = models.BooleanField(default=True)
     points = models.SmallIntegerField(default=5)
     hint = models.TextField(blank=True)
     hint_cost = models.SmallIntegerField(default=3)

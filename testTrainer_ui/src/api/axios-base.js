@@ -1,12 +1,9 @@
 import axios from 'axios'
 import store from 'src/store'
 
-// var APIUrl = 'https://einars-macbook-pro.local:8000'
+// var APIUrl = 'https://api.enam.is'
 
-// if (window.location.hostname !== 'einars-macbook-pro.local') {
-//   // console.log('enamserver')
-var APIUrl = 'https://api.enam.is'
-// }
+var APIUrl = 'https://einars-macbook-pro.local:8000'
 
 console.log(window.location.hostname)
 

@@ -146,7 +146,7 @@ export default {
       this.showDate = false
     },
     openUrl () {
-      window.open('https://127.0.0.1:8000/admin/questions/question/' + this.currentQuestion.id, '_blank')
+      window.open('https://api.enam.is/admin/questions/question/' + this.currentQuestion.id, '_blank')
     },
     openMemos () {
       this.memolist = true
@@ -190,9 +190,9 @@ export default {
     }
   },
   mounted () {
-    if (exam > 0) {
-      alert('MOUNTED REVIEW')
-    }
+    // if (exam > 0) {
+    //   alert('MOUNTED REVIEW')
+    // }
     getAPI({
       url: '/api/review/',
       method: 'get',
