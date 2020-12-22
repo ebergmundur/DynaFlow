@@ -1,18 +1,26 @@
 <template>
-  <q-page class="justify-center">
+  <q-page class="justify-center"
+          @focusin.native="activateNavigation"
+          @focusout.native="deactivateNavigation"
+          @keydown.native="keyprocess"
+  >
     <div class="q-pa-lg-md q-mt-md ">
-      <div class="row q-gutter-md justify-center col ">
+      <div class="row q-gutter-md justify-center col"
+      >
 
         <q-slide-item
+          id="sledinn"
           @left="onLeft"
           @right="onRight"
           @top="onTop"
           @bottom="onBottom"
+          @click="flipcard"
           left-color="transparent"
           right-color="transparent"
           top-color="transparent"
           bottom-color="transparent"
           class="flip-card"
+          style="width: 300px; height: 460px;"
         >
           <!--      @click="flippit"-->
 
@@ -29,75 +37,74 @@
             <q-icon name="back"/>
           </template>
 
-          <q-item class="q-pa-none flip-card" style="width: 300px; height: 500px;">
-            <div class="flip-card-inner ">
+          <q-scroll-area
+            horizontal
+            ref="scrollArea"
+            class=""
+            position=300
+            style="height: 460px; max-width: 300px; overflow: visible;"
+          >
+            <q-item
+              class="q-pa-none flip-card justify-center"
+              style="width: 900px; height: 400px; margin-top: 30px;"
+            >
+              <div
+                id="thecard"
+                class="flip-card-inner"
+                v-bind="props1"
+                :class="flippclass"
 
-              <div class="col q-pa-none flip-card-front">
-                <q-toolbar class="q-dark q-ma-none" style="background-color: #616161;">
-                  <q-toolbar-title>
-                    Flettikort
-                  </q-toolbar-title>
-                </q-toolbar>
-                <div class="row items-center no-wrap">
+              >
 
-                  <div class="col-12 q-pa-md scroll">
-                    <div class="">{{ currentQuestion.question }}</div>
-                    {{ currentQuestion.description }}
+                <div class="col q-pa-none flip-card-front">
+                  <q-toolbar class="q-dark q-ma-none" style="background-color: #616161;">
+                    <q-toolbar-title>
+                      Spurning
+                    </q-toolbar-title>
+                  </q-toolbar>
+                  <div class="row content-center xtext-justify " style="height: 90%;">
+
+                    <div class="col-12 q-pa-md scroll">
+                      <div class="">{{ currentQuestion.question }}</div>
+                      {{ currentQuestion.description }}
+                    </div>
+
                   </div>
+                </div>
 
+                <div class="flip-card-back">
+                  <q-toolbar class="q-dark q-ma-none" style="background-color: #616161;">
+                    <q-toolbar-title>
+                      Svar
+                    </q-toolbar-title>
+                  </q-toolbar>
+
+                  <div class="row content-center" style="height: 90%;">
+                    <div
+                      v-for="opt in currentOptions"
+                      :key="opt.id"
+                      class="col-12 q-pa-md scroll"
+                    >
+                      <div v-if="opt.correct" class="content-center">
+                        {{ opt.answer }}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div class="flip-card-back">
-                <q-toolbar class="q-dark q-ma-none" style="background-color: #616161;">
-                  <q-toolbar-title>
-                    Flettikort
-                  </q-toolbar-title>
-                </q-toolbar>
-                <div class="col-12 q-pa-md ">
-                  <div class="">{{ currentQuestion.question }}</div>
-                </div>
-                <div class="col-12 text-left">
-                  <div
-                    v-for="opt in currentOptions"
-                    :key="opt.id"
-                    class="quest-options"
-                  >
-                    <q-radio
-                      v-if="currentQuestion.single_selection"
-                      :name="opt.question_ref.toString()"
-                      :label="opt.answer"
-                      value="false"
-                      :val="opt.id"
-                      v-model="currTestAnsw"
-                      @input="setAnswerChecked"
-                    />
-                    <q-checkbox
-                      v-if="!currentQuestion.single_selection"
-                      :name="opt.question_ref.toString()"
-                      :label="opt.answer"
-                      value="false"
-                      :val="opt.id"
-                      v-model="currTestAnsw"
-                      @input="setAnswerChecked"
-                    />
-                    {{ opt.correct }}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </q-item>
+            </q-item>
+          </q-scroll-area>
         </q-slide-item>
         <q-separator></q-separator>
 
         <div class="col-2 col-lg-offset-5 align-center text-center redborder">
           <div class="row col">
-            <div class="col-12">Merkja „kann vel“</div>
+            <div class="col-12">Merkja „kann vel“ {{frontside}}</div>
           </div>
           <div class="row col-12">
             <div class="col-3 redborder" style="float: left;">Fyrri</div>
-            <div class="col-6 redborder" style="float: left;"></div>
+            <div class="col-6 redborder" style="float: left;">{{ navigationActive }}</div>
             <div class="col-3 redborder" style="float: right;">Svar</div>
           </div>
           <div class="row col">
@@ -117,6 +124,10 @@ import { getAPI } from 'src/api/axios-base'
 
 const access = store.getters.token // attempt to obtain new access token by running 'refreshToken' action
 
+// const card = document.getElementById('thecard')
+
+// const sledinn = document.getElementById('sledinn')
+
 export default {
   name: 'Question',
   computed: {
@@ -128,6 +139,17 @@ export default {
     },
     currentOptions () {
       return store.getters.currQest.payload.options
+    },
+    props1 () {
+      return this.toggle1 === true
+        ? {
+          class: 'flip-card-inner',
+          style: 'width: 0px; margin-right: 300px; color: transparent;'
+        }
+        : {
+          class: 'flip-card-inner',
+          style: 'width: 300px;'
+        }
     }
   },
   methods: {
@@ -146,92 +168,79 @@ export default {
       // Question.setAnswerChecked()
       this.currPoints = this.question.points
       this.questNum = index + 1
+      this.flippclass = 'flippover'
+      this.position = 300
+      this.$refs.scrollArea.setScrollPosition(this.position, 200)
     },
-    setAnswerChecked (e) {
-      var i = 0
-      for (i = 0; i < this.currentOptions.length; i++) {
-        console.log(this.currentOptions[i].id)
-        if (this.currentOptions[i].id === e) {
-          if (this.currentOptions[i].correct === true) {
-            alert('Húrra')
-          } else {
-            alert('Hálfviti')
-          }
-        }
-      }
+    activateNavigation () {
+      this.navigationActive = true
     },
-    onMemoSubmit (e) {
-      const formdata = {
-        difficulty: this.difficulty,
-        memo: this.memotext,
-        known: this.known,
-        curr_question: this.currentQuestion.id
-      }
-      getAPI({
-        method: 'post',
-        headers: { Authorization: `Bearer ${access}` },
-        url: '/api/memos/',
-        data: formdata
-      })
+
+    deactivateNavigation () {
+      this.navigationActive = false
     },
-    onAnswerSubmit (e) {
-      const formdata = {
-        time_allowed: this.time_allowed,
-        time_taken: parseInt(this.time_taken),
-        options_ids: this.currTestQuest.toString(),
-        curr_question: this.currentQuestion.id
-      }
-      getAPI({
-        method: 'post',
-        headers: { Authorization: `Bearer ${access}` },
-        url: '/api/answer/',
-        data: formdata
-      })
-    },
-    onMemoReset () {
-      this.memotext = ''
-      this.difficulty = 50
-      this.accept = false
-      this.calendar = false
-      this.showDate = false
-    },
-    hint () {
-      this.hinttext = this.currentQuestion.hint
-      this.hintloss = this.currentQuestion.points - this.currentQuestion.hint_cost
-    },
-    openMemos () {
-      this.memolist = true
-    },
-    showCal () {
-      this.calendar = true
-      this.showDate = !this.showDate
-    },
-    formatDate (d) {
-      return date.formatDate(d, 'YYYY-MM-DD')
-    },
-    formatOptions () {
-      if (this.currentQuestion.single_selection) {
-        return 'radio'
+    flipcard () {
+      if (this.flippclass === 'flipp') {
+        this.flippclass = 'flippover'
+        this.frontside = true
       } else {
-        return 'checkbox'
+        this.flippclass = 'flipp'
+        this.frontside = false
+      }
+    },
+    keyprocess (e) {
+      if (e.keyCode === 32) {
+        // console.log('spacebar')
+        // console.log(card)
+        this.flipcard()
+        // this.onRight()
+      } else if (e.keyCode === 39) {
+        console.log('right')
+        // console.log(e.keyCode)
+        if (this.position === 600) {
+          this.position = 300
+        } else {
+          this.position = 600
+        }
+        this.$refs.scrollArea.setScrollPosition(this.position, 200)
+        if (!this.frontside) {
+          this.flippit()
+        }
+      } else if (e.keyCode === 38) {
+        console.log('top')
+        console.log(e.keyCode)
+        // sledinn.onTop()
+      } else if (e.keyCode === 37) {
+        console.log('left')
+        // console.log(e.keyCode)
+        if (this.position >= 300) {
+          this.position = 0
+        } else {
+          this.position = 300
+        }
+        this.$refs.scrollArea.setScrollPosition(this.position, 200)
+        // sledinn.onBottom()
+      } else if (e.keyCode === 40) {
+        console.log('bottom')
+        console.log(e.keyCode)
       }
     },
     finalize (reset) {
       this.time = setTimeout(() => {
         reset()
-      }, 1000)
+      }, 500)
     },
     onLeft ({ reset }) {
       this.$q.notify('Left action triggered. Resetting in 1 second.')
       this.finalize(reset)
     },
     onRight ({ reset }) {
-      document.getElementsByClassName('flip-card-inner').className += ' flipp'
-      this.$q.notify('Right action triggered. Resetting in 1 second.')
+      this.flippit()
+      // this.$q.notify('Right action triggered. Resetting in 1 second.')
       // console.log(flippers)
       // flippers.childNodes[0]
       // document.getElementsByClassName('flip-card-inner').childNodes[1].className += ' flipp'
-      this.finalize(reset)
+      // this.finalize(reset)
     },
     onBottom ({ reset }) {
       this.$q.notify('Bottom action triggered. Resetting in 1 second.')
@@ -245,15 +254,15 @@ export default {
     //   i.setAttribute('style', 'transform: rotateY(180deg)')
     // },
     flippit () {
-      console.log('flippit')
+      // console.log('flippit')
       getAPI({
         method: 'get',
         headers: { Authorization: `Bearer ${access}` },
-        url: '/api/flipcard/?format=json'
+        url: '/api/flipcard/'
       })
         .then(response => {
           this.myJson = JSON.parse(JSON.stringify(response.data))
-          console.log(this.myJson)
+          // console.log(this.myJson)
           this.setQuestion(1)
         })
         .catch(error => console.log('Error', error.message))
@@ -261,24 +270,27 @@ export default {
   },
   mounted () {
     this.flippit()
+    window.addEventListener('keyup', this.keyprocess)
   },
   beforeDestroy () {
     clearTimeout(this.timer)
+    window.removeEventListener('keydown', this.handleKeyUp)
   },
   data () {
     return {
       // currentOptions: this.currentQuestion.options,
       cQ: 0,
-      currTestQuest: [],
-      visible: false,
-      currTestAnsw: [],
-      memotext: '',
-      interval: 0,
+      navigationActive: false,
+      // cancel: 0,
+      toggle1: false,
       time_allowed: 0,
       time_taken: 0,
       time_step: 0,
       time: null,
-      tesing_user: 1
+      tesing_user: 1,
+      flippclass: '',
+      position: 0,
+      frontside: true
     }
   }
 }
@@ -292,6 +304,11 @@ export default {
   padding: 5px;
   margin: 5px 0;
   background-color: #eaeaea;
+}
+
+div.q-slide-item:focus {
+  border: 1px solid crimson;
+  background-color: pink;
 }
 
 /* The flip card container - set the width and height to whatever you want. We have added the border property to demonstrate that the flip itself goes out of the box on hover (remove perspective if you don't want the 3D effect */
@@ -314,13 +331,17 @@ export default {
 }
 
 /*Do an horizontal flip when you move the mouse over the flip box container*/
-.flip-card:hover .flip-card-inner {
-  transform: rotateY(180deg);
-}
+/*.flip-card:hover .flip-card-inner {*/
+/*  transform: rotateY(180deg);*/
+/*}*/
 
 /*Do an horizontal flip when you move the mouse over the flip box container */
 .flipp {
   transform: rotateY(180deg);
+}
+
+.flippover {
+  transform: rotateY(-0deg);
 }
 
 /* Position the front and back side */
