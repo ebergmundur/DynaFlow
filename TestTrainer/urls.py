@@ -32,8 +32,8 @@ router.register(r'options', question_views.OptionViewSet)
 router.register(r'groups', question_views.GroupViewSet)
 router.register(r'category', question_views.CategoryViewSet)
 # router.register(r'questionn', question_views.QuestionnaireViewSet)
-router.register(r'review', question_views.ReviewViewSet)
-router.register(r'dashboard', question_views.DahboardViewSet)
+# router.register(r'reviewset', question_views.ReviewViewSet)
+# router.register(r'dashboard', question_views.DahboardViewSet)
 router.register(r'flipcard', question_views.FlipcardViewSet)
 router.register(r'userset', question_views.UserViewSet)
 # router.register(r'userdata', question_views.userdata)
@@ -50,6 +50,8 @@ urlpatterns = [
                   path('api/memos/', question_views.memo_add),
                   path('api/userinfo/', question_views.userdata, name='userdata' ),
                   path('api/answer/', question_views.answer_add),
+                  path('api/review/', question_views.review),
+                  path('api/dashboarddata/', question_views.dashboard),
                   path('api/questionnaiere/', question_views.practice_test),
                   path('api/handin/', question_views.practice_hand_in),
                   path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),

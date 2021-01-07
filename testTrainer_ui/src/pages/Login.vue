@@ -11,7 +11,7 @@
       </q-toolbar>
       <q-card-section>
         <div class="row items-center wrap q-gutter-md">
-          <h2 v-if="wrongCred">Wrong credentials entered!. Please enter your correct details.</h2>
+          <h4 v-if="wrongCred">Notendanafn, lykilorð eða hvorttveggja stenst ekki skoðun.</h4>
           <!--          <form v-on:submit.prevent="loginUser">-->
 
             <q-input v-model="username" type="text" class="col-11" label="Notendanafn">
@@ -70,7 +70,7 @@ export default {
       })
         .then(() => {
           this.wrongCred = false
-          this.$router.push({ name: 'userinfo' })
+          this.$router.push({ path: '/' })
         })
         .catch(err => {
           console.log(err)

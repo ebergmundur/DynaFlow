@@ -1,17 +1,20 @@
 <template>
-  <q-page class="flex  q-pa-lg ">
-    <div class="row justify-center col">
-      <div class="mainlist col-lg-4 col-md-8 col-sm-12 ">
+  <q-page class="flex flex-center">
+    <q-card flat
+            class="pagecard"
+    >
         <q-toolbar class="q-dark">
           <q-toolbar-title>
-            {{ testname }} -
-            {{ formatDate(testdate) }}
+            {{ testname }}
+
+<!--            {{ formatDate(testdate) }}-->
 
             <span class="" style="float: right">
           {{ totpoints }} af {{ optpoints }} = {{ Math.round((totpoints / optpoints) * 100) }}%
           </span>
           </q-toolbar-title>
         </q-toolbar>
+      <q-card-section>
         <q-list bordered class="zrounded-borders questlist ">
           <q-expansion-item
             v-for="(item, index) in currTestAnsw"
@@ -51,8 +54,8 @@
             </q-card-section>
           </q-expansion-item>
         </q-list>
-      </div>
-    </div>
+        </q-card-section>
+    </q-card>
   </q-page>
 </template>
 
@@ -102,42 +105,6 @@ export default {
     }
   },
   methods: {
-    // setQuestion (e) {
-    //   var index = 0
-    //   if (e > -1) {
-    //     index = e - 1
-    //   } else {
-    //     index = 0
-    //   }
-    //   this.hinttext = ''
-    //   this.editingIndex = index
-    //   this.question = JSON.parse(JSON.stringify(this.myJson.answers[index]))
-    //   index.commit({ type: 'setQuestion', payload: this.question })
-    //   // index.commit({ type: 'setTestQuestion', payload: [] })
-    //   // Question.setAnswerChecked()
-    //   this.currPoints = this.question.points
-    //   this.questNum = index + 1
-    // },
-    // setAnswerChecked (e) {
-    //   if (this.currentQuestion.id !== this.cQ) {
-    //     this.cQ = this.currentQuestion.id
-    //     this.currTestAnsw = []
-    //     // this.progress = 0.001
-    //   }
-    // },
-    // onMemoSubmit (e) {
-    //   const formdata = {
-    //     difficulty: this.difficulty,
-    //     memo: this.memotext,
-    //     known: this.known,
-    //     curr_question: this.currentQuestion.id
-    //   }
-    //   axios({
-    //     method: 'post',
-    //     url: 'http://einars-macbook-pro.local:8000/api/memos/',
-    //     data: formdata
-    //   })
-    // },
     onMemoReset () {
       this.memotext = ''
       this.difficulty = 50
@@ -193,9 +160,14 @@ export default {
     // if (exam > 0) {
     //   alert('MOUNTED REVIEW')
     // }
+
+    // console.log(store.getters.getUserInfo)
     getAPI({
       url: '/api/review/',
-      method: 'get',
+      method: 'post',
+      data: {
+        username: store.getters.getUserInfo.username
+      },
       headers: { Authorization: `Bearer ${access}` }
     })
       .then(response => {
@@ -211,8 +183,8 @@ export default {
 
         for (i = 0; i < this.totalQuestions; i++) {
           // console.log(this.myJson.answers[i])
-          this.totpoints = this.totpoints + this.myJson.answers[i].points_given
-          this.optpoints = this.optpoints + this.myJson.answers[i].points
+          this.totpoints = this.totpoints + this.currTestAnsw[i].points_given
+          this.optpoints = this.optpoints + this.currTestAnsw[i].points
 
           qs.push({
             label: i + 1,

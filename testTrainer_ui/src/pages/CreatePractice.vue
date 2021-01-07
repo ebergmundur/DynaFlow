@@ -1,21 +1,17 @@
 <template>
-  <q-page class="flex flex-center q-pa-xs ">
-  <div class="q-pa-md row items-start q-gutter-md">
-    <q-card bordered
-            class="my-card bg-grey-1 absolute-center col-xs-10 col-sm-10 col-md-10 col-xl-6 col-lg-6">
-      <q-card-section>
-        <div class="text-h4">Búa til æfingapróf</div>
-        <q-separator/>
-<!--        <q-input-->
-<!--          v-model="examname"-->
-<!--          placeholder="Heiti prófs, ef ekkert er slegið inn fær prófið dagsetningu sem heiti"-->
-<!--        label="Nefna próf"-->
-<!--        >-->
+  <q-page class="flex flex-center">
+    <q-card flat
+            class="pagecard"
+    >
 
-<!--        </q-input>-->
+      <q-toolbar class="q-dark">
+        <q-toolbar-title>
+          Búa til æfingapróf
+        </q-toolbar-title>
+      </q-toolbar>
+      <q-card-section>
+
         <div class="text-h6 q-mt-md">Flokkar</div>
-<!--        cats_count: {{ cats_count }},<br>-->
-<!--{{question_count}}-->
         <q-field
           v-for="(data, index) in myJson"
           :key="index"
@@ -33,32 +29,11 @@
           />
         </q-field>
 
-        <!--        <q-checkbox-->
-        <!--          v-for="(data, index) in myJson"-->
-        <!--          :key="index"-->
-        <!--          :label="data.name + ' ' + data.q_count"-->
-        <!--          value="false"-->
-        <!--          :val="data.id"-->
-        <!--          v-model="cats"-->
-        <!--          @input="setCategoryChecked"-->
-        <!--          style="border: 1px solid red; width: 100%; float: none;"-->
-        <!--        />-->
-        <!--            {{ data.questions }}-->
+        <div class="text-h6">Fjöldi spurninga í æfingu {{ question_count }}</div>
 
-        <div class="text-h6" >Fjöldi spurninga í æfingu {{ question_count }}</div>
-<!--        <q-slider-->
-<!--          v-model="question_count"-->
-<!--          :min="0"-->
-<!--          :max="150"-->
-<!--          label-->
-<!--        />-->
-        <div >
-<!--        <q-checkbox-->
-<!--            label=" Nota tímamörk spurninga"-->
-<!--            v-model="given_time_limit"-->
-<!--          /> <span>: {{time_limit}} mínútur</span>-->
-          Nota tímamörk spurninga  {{time_limit}} mín.
-          eða setja eigin tíma: {{manualTime}} mín.
+        <div>
+          Nota tímamörk spurninga {{ time_limit }} mín.
+          eða setja eigin tíma: {{ manualTime }} mín.
           <q-slider
             v-model="manualTime"
             :min="0"
@@ -68,12 +43,12 @@
           />
         </div>
         <div>
-        <q-checkbox
+          <q-checkbox
             label="Sleppa „kann vel“"
             value="false"
             v-model="omit_known"
           />
-        <q-checkbox
+          <q-checkbox
             label="Aðeins spurningar sem ég hef svarað rangt"
             value="false"
             v-model="only_failed"
@@ -81,7 +56,7 @@
         </div>
       </q-card-section>
       <!--      {{groups}} // {{cats}}-->
-    <q-separator/>
+      <q-separator/>
       <q-card-actions>
         <q-btn
           @click="onPracticeSubmit"
@@ -91,7 +66,6 @@
         </q-btn>
       </q-card-actions>
     </q-card>
-  </div>
   </q-page>
 </template>
 
@@ -167,7 +141,9 @@ export default {
       var i = 0
       var t = 0
       for (i = 0; i < this.cats_count.length; i++) {
-        if (this.cats_count[i] > 0) { t = t + (this.cats_count[i] * 1) }
+        if (this.cats_count[i] > 0) {
+          t = t + (this.cats_count[i] * 1)
+        }
       }
       this.question_count = t
       this.count_time_limit()

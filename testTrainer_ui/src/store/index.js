@@ -23,12 +23,16 @@ const store = new Vuex.Store({
     userOpen: localStorage.getItem('open') || null,
     userIsadmin: localStorage.getItem('isadmin') || null,
     userEndDay: localStorage.getItem('endday') || null,
+    timeTotal: localStorage.getItem('timetotal') || 0,
     currentTest: '',
     APIData: '' // received data from the backend API is stored here.
   },
   mutations: {
     setTimeAllowed (state, payload) {
       state.timeAllowed = payload
+    },
+    setTimeTotal (state, payload) {
+      localStorage.setItem('timetotal', payload)
     },
     setUserId (state, payload) {
       localStorage.setItem('user_id', payload)
@@ -169,6 +173,9 @@ const store = new Vuex.Store({
         })
       }
     },
+    setTotalTime (context, time) {
+      context.commit('setTimeTotal', time)
+    },
     loginUser (context, credentials) {
       return new Promise((resolve, reject) => {
         // send the username and password to the backend API:
@@ -195,6 +202,9 @@ const store = new Vuex.Store({
     }
   },
   getters: {
+    getTimeTotal (state) {
+      return state.timeTotal
+    },
     token (state) {
       return state.accessToken
     },

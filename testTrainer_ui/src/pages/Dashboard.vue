@@ -1,46 +1,43 @@
 <template>
-  <q-page class="justify-center">
-    <div class="q-pa-lg-md q-mt-md">
-      <div class="row q-gutter-md justify-center col">
+  <q-page class="flex flex-center">
+    <q-card flat
+            class="pagecard"
+    >
+      <q-toolbar class="q-dark">
+        <q-toolbar-title>
+          Mælaborð - meðaltal {{averagescore}}
+        </q-toolbar-title>
+      </q-toolbar>
+      <!--          <q-card-section>-->
 
-        <q-card class="col-lg-6">
-          <q-card-section>
-            <q-toolbar>
-              <q-toolbar-title>
-                Mælaborð
-              </q-toolbar-title>
-            </q-toolbar>
+      <!--            <q-list>-->
+      <!--              <q-item-->
+      <!--                v-for="(exam, index) in exams"-->
+      <!--                :key="index"-->
+      <!--              >-->
+      <!--                <q-item-section>-->
+      <!--                  <q-item-label>{{ exam.name }}</q-item-label>-->
+      <!--                  <q-item-label caption lines="2">-->
+      <!--                    {{ formatDate(exam.created_date) }}-->
 
-            <q-list>
-              <q-item
-                v-for="(exam, index) in exams"
-                :key="index"
-              >
-                <q-item-section>
-                  <q-item-label>{{ exam.name }}</q-item-label>
-                  <q-item-label caption lines="2">
-                    {{ formatDate(exam.created_date) }}
+      <!--                  </q-item-label>-->
+      <!--                </q-item-section>-->
 
-                  </q-item-label>
-                </q-item-section>
+      <!--                <q-item-section side top>-->
+      <!--                  <q-item-label caption>{{ exam.results.given_points }}</q-item-label>-->
+      <!--                  <q-item-label caption>{{ exam.results.optional_points }}</q-item-label>-->
+      <!--                  &lt;!&ndash;                <q-icon name="star" color="yellow"/>&ndash;&gt;-->
+      <!--                </q-item-section>-->
 
-                <q-item-section side top>
-                  <q-item-label caption>{{ exam.results.given_points }}</q-item-label>
-                  <q-item-label caption>{{ exam.results.optional_points }}</q-item-label>
-                  <!--                <q-icon name="star" color="yellow"/>-->
-                </q-item-section>
+      <!--              </q-item>-->
 
-              </q-item>
+      <!--            </q-list>-->
 
-            </q-list>
-
-          </q-card-section>
-          <q-card-section class="q-pa-none echarts">
-            <IEcharts :option="barChartOption" :resizable="true"/>
-          </q-card-section>
-        </q-card>
-      </div>
-    </div>
+      <!--          </q-card-section>-->
+      <q-card-section class="q-pa-none echarts">
+        <IEcharts :option="barChartOption" :resizable="true"/>
+      </q-card-section>
+    </q-card>
   </q-page>
 </template>
 
@@ -50,42 +47,47 @@ import store from 'src/store'
 import IEcharts from 'vue-echarts-v3/src/full.js'
 import { getAPI } from 'src/api/axios-base'
 // import axios from 'axios'
+const access = store.getters.token
 
 export default {
   name: 'Dashboard',
   data () {
     return {
       exams: '',
+      access: null,
+      username: null,
+      averagescore: 0,
       barChartOption: {
+        width: '70%',
         grid: {
-          bottom: '25%'
+          bottom: '15%'
         },
-        legend: {},
+        legend: {
+          type: 'scroll',
+          orient: 'vertical',
+          right: 0
+        },
         tooltip: {},
         dataset: {
-          // dimensions: ['product', '2015', '2016', '2017'],
-          dimensions: [],
+          dimensions: ['prof', '2015', '2016', '2017'],
           source: [
-            // { product: 'Matcha Latte', 2015: 43.3, 2016: 85.8, 2017: 93.7 },
-            // { product: 'Milk Tea', 2015: 83.1, 2016: 73.4, 2017: 55.1 },
-            // { product: 'Cheese Cocoa', 2015: 86.4, 2016: 65.2, 2017: 82.5 },
-            // { product: 'Walnut Brownie', 2015: 72.4, 2016: 53.9, 2017: 39.1 }
+            { prof: 'Próf', 2015: 43.3, 2016: 85.8, 2017: 93.7 }
           ]
         },
         xAxis: {
+          // data: ['2015', '2016', '2017'],
           type: 'category',
           axisLabel: {
             rotate: 45
           }
+
         },
-        yAxis: {},
+        yAxis: {
+          // data: [43.3, 85.8, 93.7]
+        },
         // Declare several bar series, each will be mapped
         // to a column of dataset.source by default.
-        series: [
-          // { type: 'bar' },
-          // { type: 'bar' },
-          // { type: 'bar' }
-        ]
+        series: []
       }
     }
   },
@@ -97,42 +99,44 @@ export default {
       return date.formatDate(d, 'YYYY-MM-DD HH:mm')
     }
   },
+  beforeCreate () {
+    this.access = store.getters.token // attempt to obtain new access token by running 'refreshToken' action
+    this.username = store.getters.getUserInfo.username
+  },
+  created () {
+  },
   mounted () {
-    const access = store.getters.token // attempt to obtain new access token by running 'refreshToken' action
     getAPI({
-      method: 'get',
-      headers: { Authorization: `Bearer ${access}` }, // the new access token is attached to the authorization header
-      url: '/api/dashboard/'
-    })
+      url: '/api/dashboarddata/',
+      method: 'post',
+      data: {
+        username: store.getters.getUserInfo.username
+      },
+      headers: { Authorization: `Bearer ${access}` }
+    }
+    )
       .then(response => {
         this.exams = JSON.parse(JSON.stringify(response.data))
 
-        this.barChartOption.dataset.legend = {}
-        // this.barChartOption.legend = { 73: '73', 74: '74', 75: '75' }
-        // this.barChartOption.dataset.dimensions = ['prof', '73', '74', '75']
-        this.barChartOption.dataset.source = [
-          { prof: 'PRÓF' }
-        ]
-        this.barChartOption.series = []
-
+        this.barChartOption.dataset.source = [{ prof: 'Próf' }]
         this.barChartOption.dataset.dimensions = ['prof']
-        // this.barChartOption.dataset.source = []
+
+        var avrgscore = 0
         var i = 0
         for (i = 0; i < this.exams.length; i++) {
-          // console.log(this.exams[i].id)
-          var kkey = this.exams[i].name
-          var testname = this.exams[i].name
-          this.barChartOption.dataset.dimensions.push(testname)
-          this.barChartOption.legend[kkey] = this.exams[i].name
-          this.barChartOption.dataset.source[0][kkey] = parseInt(this.exams[i].final_results * 10000) / 100
+          const kkey = this.exams[i].name
+          const testscore = parseInt(this.exams[i].final_results * 10000) / 1000
+          avrgscore = avrgscore + testscore
+
+          this.barChartOption.dataset.dimensions.push(kkey)
+          this.barChartOption.dataset.source[0][kkey.toString()] = testscore
           this.barChartOption.series.push({ type: 'bar' })
         }
 
-        // parseInt(item.options_ids * 1) == opt.id
-        // console.log('legend')
-        // console.log(this.barChartOption.legend)
-        // console.log('dataset.dimensions')
-        // console.log(this.barChartOption.dataset.dimensions)
+        this.averagescore = parseInt((avrgscore / this.exams.length) * 100) / 100
+
+        // this.barChartOption.series.push({ type: 'line' })
+        // console.log('this.barChartOption')
         // console.log(this.barChartOption.dataset.source[0])
       })
       .catch(error => console.log('Error', error.message))

@@ -7,7 +7,8 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .serializers import OptionSerializer, QuestionSerializer, QuestionMemoSerializer, QuestionAnswerSerializer, \
-    GroupSerializer, CategorySerializer, QuestionnaireSerializer, RevieweSerializer, PersonSerializer, UserSerializer
+    GroupSerializer, CategorySerializer, QuestionnaireSerializer, RevieweSerializer, PersonSerializer, UserSerializer, \
+    DashboardSerializer
 from .models import Option, Question, Questionnaire, QuestionGroupRelation, QuestionnaireGroupRelation, Group, Category, \
     TestMemo, TestAnswers
 from person.models import PersonUser
@@ -85,8 +86,26 @@ class ReviewViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = Questionnaire.objects.all().order_by('?')
+    queryset = Questionnaire.objects.filter(owner_id=1).order_by('-created_date')
     serializer_class = RevieweSerializer
+
+
+@api_view(['POST'])
+def dashboard(request):
+    print(request.data)
+    if request.method == 'POST':
+        queryset = Questionnaire.objects.filter(owner__user__username=request.data['username']).order_by('created_date')
+        serializer = DashboardSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+
+@api_view(['POST'])
+def review(request):
+    if request.method == 'POST':
+        queryset = Questionnaire.objects.filter(owner__user__username=request.data['username']).order_by('-created_date')[0]
+        serializer = RevieweSerializer(queryset)
+        return Response(serializer.data)
 
 
 class UserViewSet(viewsets.ModelViewSet):

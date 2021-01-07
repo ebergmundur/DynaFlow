@@ -21,19 +21,19 @@ const routes = [
       { path: '', component: () => import('pages/Question.vue') }
     ],
     meta: {
-      requiresLogged: false
+      requiresLogged: true
     }
   },
-  {
-    path: '/collect',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [
-      { path: '', component: () => import('components/CollectQuestions.vue') }
-    ],
-    meta: {
-      requiresLogged: false
-    }
-  },
+  // {
+  //   path: '/collect',
+  //   component: () => import('layouts/MainLayout.vue'),
+  //   children: [
+  //     { path: '', component: () => import('components/CollectQuestions.vue') }
+  //   ],
+  //   meta: {
+  //     requiresLogged: false
+  //   }
+  // },
 
   {
     path: '/createtest',
@@ -42,7 +42,7 @@ const routes = [
       { path: '', component: () => import('pages/CreatePractice.vue') }
     ],
     meta: {
-      requiresLogged: false
+      requiresLogged: true
     }
   },
   {
@@ -52,7 +52,7 @@ const routes = [
       { path: '', component: () => import('pages/Testpage') }
     ],
     meta: {
-      requiresLogged: false
+      requiresLogged: true
     }
   },
   {
@@ -62,7 +62,7 @@ const routes = [
       { path: '', name: 'testpractice', component: () => import('pages/Testpage') }
     ],
     meta: {
-      requiresLogged: false
+      requiresLogged: true
     }
   },
   {
@@ -73,7 +73,7 @@ const routes = [
       { path: '', name: 'review', component: () => import('pages/Review') }
     ],
     meta: {
-      requiresLogged: false
+      requiresLogged: true
     }
   },
   {
@@ -83,7 +83,7 @@ const routes = [
       { path: '', name: 'flipcard', component: () => import('pages/Flipcard') }
     ],
     meta: {
-      requiresLogged: false
+      requiresLogged: true
     }
   },
   {
@@ -93,7 +93,7 @@ const routes = [
       { path: '', name: 'dashboard', component: () => import('pages/Dashboard') }
     ],
     meta: {
-      requiresLogged: false
+      requiresLogged: true
     }
   },
   {
@@ -103,7 +103,7 @@ const routes = [
       { path: '', name: 'userinfo', component: () => import('pages/User') }
     ],
     meta: {
-      requiresLogged: false
+      requiresLogged: true
     }
   },
   {

@@ -1,33 +1,69 @@
 <template>
-  <q-header elevated class="bg-primary text-white row" height-hint="198">
-    <div class="q-gutter-y-sm q-gutter-x-sm">
+  <q-header elevated class="ebbg-primary text-white row" >
+    <div class="q-gutter-y-sm q-gutter-x-sm col">
       <q-tabs
         align="left"
         inline-label
-        dense
+        class="float-left tabbar"
       >
-        <q-route-tab to="/" label="">
-          <q-avatar class="q-ma-md">
-            <img src="../assets/enam-logo.svg">
+        <q-route-tab to="/" label="" name="root">
+<!--          E nám-->
+          <q-avatar class="">
+            <img src="../assets/enam-logo.svg" style="height: 40px; margin: 0;">
           </q-avatar>
         </q-route-tab>
 
         <q-route-tab v-if="loggedIn" to="/createtest" label="Æfing"/>
-        <q-route-tab v-if="loggedIn" to="/testpractice" label="Æ"/>
         <q-route-tab v-if="loggedIn" to="/testreal" label="Próf"/>
-        <q-route-tab v-if="loggedIn" to="/review" label="Niðurstöður"/>
         <q-route-tab v-if="loggedIn" to="/flipcard" label="Flettikort"/>
-        <q-route-tab v-if="loggedIn" to="/dashboard" label="Mælaborð"/>
-
-        <q-route-tab v-if="!loggedIn" to="/login" label="Login" class="no-wrap">
-          <q-icon v-if="!loggedIn" class="fa fa-user-alt nowrap q-ml-sm"/>
-        </q-route-tab>
-        <q-route-tab v-if="!loggedIn" to="/register" icon="user" label="Register"/>
-        <q-route-tab v-if="loggedIn" to="/userinfo" :label=user.firstName>
-          <q-icon v-if="loggedIn" class="fa fa-user-alt nowrap q-ml-sm"/>
-        </q-route-tab>
-        <q-route-tab v-if="loggedIn" to="/logout" label="Logout"/>
+        <q-route-tab v-if="!loggedIn" to="/about" label="Um vefinn"/>
       </q-tabs>
+      <!--        <q-icon v-if="loggedIn" class="fa fa-user-alt nowrap q-ml-sm"/>-->
+
+      <q-tabs
+        align="right"
+        inline-label
+        class="float-right tabbar"
+        stretch
+      >
+        <q-route-tab v-if="!loggedIn" name="login" to="/login" label="Innskrá" @click="tab = 'login'" />
+        <q-route-tab v-if="!loggedIn" name="register" to="/register" label="Nýskrá" @click="tab = 'register'" />
+        <q-btn-dropdown
+          auto-close
+          stretch
+          flat
+          name="more"
+          label="Mitt svæði"
+          style="float: right;"
+          v-if="loggedIn"
+        >
+          <q-list>
+            <q-item clickable @click="tab = 'more'">
+              <q-route-tab v-if="loggedIn" to="/userinfo" label="Áskrift"/>
+            </q-item>
+
+            <q-item clickable @click="tab = 'more'">
+              <q-route-tab v-if="loggedIn" @click="tab = 'more'" to="/dashboard" label="Mælaborð"/>
+            </q-item>
+
+            <q-item clickable @click="tab = 'more'">
+              <q-route-tab v-if="loggedIn" to="/logout" label="Logout"/>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
+      </q-tabs>
+
+      <!--        <q-route-tab v-if="loggedIn" to="/dashboard" label="Mælaborð"/>-->
+
+      <!--        <q-route-tab v-if="!loggedIn" to="/login" label="Login" class="no-wrap">-->
+      <!--          <q-icon v-if="!loggedIn" class="fa fa-user-alt nowrap q-ml-sm"/>-->
+      <!--        </q-route-tab>-->
+      <!--        <q-route-tab v-if="!loggedIn" to="/register" icon="user" label="Register"/>-->
+      <!--        <q-route-tab v-if="loggedIn" to="/userinfo" :label=user.firstName>-->
+      <!--          <q-icon v-if="loggedIn" class="fa fa-user-alt nowrap q-ml-sm"/>-->
+      <!--        </q-route-tab>-->
+      <!--        <q-route-tab v-if="loggedIn" to="/logout" label="Logout"/>-->
+
     </div>
 
     <!--        <div class="nav-bar">-->
@@ -58,10 +94,11 @@ import { getAPI } from 'src/api/axios-base'
 export default {
   name: 'Header',
   components: {
-    //   Clock
+    // Clock
   },
   data () {
     return {
+      tab: 'root'
       // loggedIn: false,
       // user: ''
 
@@ -73,7 +110,11 @@ export default {
       return store.getters.loggedIn
     },
     user () {
-      return store.getters.getUserInfo
+      if (this.loggedIn) {
+        return store.getters.getUserInfo
+      } else {
+        return null
+      }
     }
 
     // firstName () {
@@ -122,6 +163,12 @@ export default {
 
 </script>
 
-<style scoped>
+<style scoped lang="sass">
+
+.tabbar
+  height: 60px
+
+.ebbg-primary
+  background: linear-gradient(to right, $primary, $secondary)
 
 </style>

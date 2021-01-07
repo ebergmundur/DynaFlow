@@ -7,4 +7,19 @@
   background-color: pink
 
 .basebackground
-  background-color: #efefef
+  background-color: #ffffff
+
+
+.pagecard
+  position: absolute
+  top: 30px
+  @media screen and (min-width: $breakpoint-md)
+    width: 70%
+    //background-color: #f1c0ff
+  @media screen and (max-width: $breakpoint-md)
+    width: 80%
+    //background-color: #c2ffc0
+  @media screen and (max-width: $breakpoint-xs)
+    top: 5px
+    width: 100%
+    //background-color: #c0d2ff

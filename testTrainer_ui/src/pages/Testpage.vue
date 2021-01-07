@@ -1,5 +1,5 @@
 <template>
-  <div class="tpage q-pa-md row items-start q-gutter-md scroll">
+  <q-page class="flex flex-center">
 
     <q-dialog v-model="testFinished">
       <q-card>
@@ -74,7 +74,7 @@
 
     <!--MEMOS-->
     <q-dialog v-model="memolist" position="right">
-      <q-card  class="memowing">
+      <q-card class="memowing">
         <q-card-section class="row items-center q-pb-none col-lg-8">
           <div class="text-h6">Minnismiðar</div>
           <q-space/>
@@ -92,14 +92,15 @@
               <q-card-section>
                 <div class="row items-center no-wrap">
                   <div class="col">
-                    <div class="text-h6">{{formatDate(data.created_date)}}</div>
+                    <div class="text-h6">{{ formatDate(data.created_date) }}</div>
                     <div>
                       <q-toggle v-model="data.known" label="Kann vel " class=" q-ma-sm" disable/>
                       <q-toggle v-model="data.postpone" label="Geymd" class=" q-ma-sm" disable/>
                     </div>
                     <div class="text-subtitle2">
                       Þyngd: {{ data.difficulty }}
-                      <q-linear-progress size="14px" :value="data.difficulty/15" color="red" track-color="orange" class="q-mt-sm"/>
+                      <q-linear-progress size="14px" :value="data.difficulty/15" color="red" track-color="orange"
+                                         class="q-mt-sm"/>
                     </div>
                   </div>
                 </div>
@@ -112,47 +113,31 @@
       </q-card>
     </q-dialog>
 
-    <q-card bordered
-            class="my-card bg-grey-1 col-xs-12 col-sm-12 col-md-10 col-lg-6 q-my-xs-lg q-my-sm-lg q-mx-xs-none"
+<!--    <div class="row col redborder">-->
+    <q-card flat
+            class="pagecard"
             v-model='currentQuestion'
             v-if="currentQuestion"
     >
-      <!--            style="max-height: 80vh; width: 40%;"-->
-      <q-toolbar class="q-dark" style="background-color: #616161;">
+      <q-toolbar class="q-dark">
         <q-toolbar-title>
-          {{ questNum }} / {{ totalQuestions }} | {{ myJson.name }}  // {{totaltime}} // {{questTime}}
+
+          {{ totaltime }}
+
+          <!--          <q-btn-->
+          <!--            color="blue"-->
+          <!--            @click="openUrl"-->
+          <!--            label="E"-->
+          <!--          />-->
+
+          <div style="float: right;"> spurning {{ questNum }} af
+            {{ totalQuestions }} | {{ questTime }}
+          </div>
         </q-toolbar-title>
         <div class="col-auto">
 
           <!--          <q-toggle v-model="postpone" value="false" label="Sleppa " class=" q-ma-sm"/>-->
 
-          <q-btn label="Minnismiðar" icon="">
-            <q-menu cover auto-close>
-              <q-list>
-                <q-btn
-                  v-if="currentQuestion.memos.length > 0"
-                  @click="openMemos"
-                  color="orange"
-                  style="width: 100%"
-                >
-                  Minnismiðar {{ currentQuestion.memos.length }}
-                </q-btn>
-                <br>
-                <q-btn
-                  color="green"
-                  @click="memo = true"
-                  style="width: 100%"
-                >
-                  Nýr minnismiði
-                </q-btn>
-              </q-list>
-            </q-menu>
-          </q-btn>
-          <q-btn
-            color="blue"
-            @click="openUrl"
-            label="E"
-          />
         </div>
       </q-toolbar>
       <q-card-section class="row col">
@@ -200,46 +185,77 @@
         <!--        <q-linear-progress rounded size="20px" :value="progress" color="red" class="q-mt-sm"/>-->
       </q-card-section>
       <q-separator/>
-      <q-card-actions>
-                  <q-toggle v-model="known" value="false" label="Kann vel " class=" q-ma-sm"/>
-          <q-toggle v-model="postpone" value="false" label="Geyma" class=" q-ma-sm"/>
+      <q-card-actions class="">
+        <q-checkbox v-model="known" value="false" label="Kann vel " class=" q-ma-sm"/>
+        <q-checkbox v-model="postpone" value="false" label="Geyma" class=" q-ma-sm"/>
 
         <div class="text-h5 ">
           {{ currPoints }} stig &nbsp;
           <!--          <span q-red>{{hintloss}}</span>&nbsp;-->
         </div>
+
         <q-btn
           v-if="currentQuestion.hint.length"
           @click="hint">„Tips“ {{ currentQuestion.hint_cost }} stig
         </q-btn>
-
-        <q-btn
-          @click="onAnswerSubmit"
-          color="green"
-        >
-          Svara
+        &nbsp;
+        <q-btn label="Minnismiðar" icon="">
+          <q-menu cover auto-close>
+            <q-list>
+              <q-btn
+                v-if="currentQuestion.memos.length > 0"
+                @click="openMemos"
+                color="orange"
+                style="width: 100%"
+              >
+                Minnismiðar {{ currentQuestion.memos.length }}
+              </q-btn>
+              <br>
+              <q-btn
+                color="green"
+                @click="memo = true"
+                style="width: 100%"
+              >
+                Nýr minnismiði
+              </q-btn>
+            </q-list>
+          </q-menu>
         </q-btn>
 
+        <div style="position: absolute; right: 15px;" class="">
+
+          <q-btn
+            @click="onAnswerSubmit"
+            color="positive"
+          >
+            Svara
+          </q-btn>
+        </div>
       </q-card-actions>
     </q-card>
+<!--      </div>-->
 
-    <div class="questlist">
-      <q-btn-toggle
-        v-model="questNum"
-        :options="questionsNumbersList"
-        size="sm"
-        @input="setQuestion"
-      >
-      </q-btn-toggle>
+    <div class="row questlist content-center ">
+
+      <div class="content-center col ">
+        <q-btn-toggle
+          v-model="questNum"
+          :options="questionsNumbersList"
+          size="sm"
+          @input="setQuestion"
+        >
+        </q-btn-toggle>
+      </div>
     </div>
 
-  </div>
+  </q-page>
 </template>
 
 <script>
 import { getAPI } from 'src/api/axios-base'
 import store from 'src/store'
 import { date } from 'quasar'
+
 const access = store.getters.token
 
 var exam = 0
@@ -274,7 +290,7 @@ export default {
       postpone: false,
       maximizedToggle: true,
       totalQuestions: 0,
-      totaltime: null,
+      // totaltime: null,
       questStartTime: null,
       questTime: null
     }
@@ -292,8 +308,8 @@ export default {
   },
   methods: {
     timers () {
-      this.totaltime = date.formatDate(Date.now() - this.startTime, 'HH:mm:ss').toString()
-      this.questTime = date.formatDate(Date.now() - this.questStartTime, 'HH:mm:ss').toString()
+      this.totaltime = date.formatDate(Date.now() - store.getters.getTimeTotal, 'HH:mm:ss').toString()
+      this.questTime = date.formatDate(Date.now() - this.questStartTime, 'mm:ss').toString()
     },
     setQuestion (e) {
       var index = 0
@@ -365,7 +381,7 @@ export default {
 
       this.questionsNumbersList[this.questNum - 1].answer = this.currTestAnsw
       this.questionsNumbersList[this.questNum - 1].answered = true
-      this.questionsNumbersList[this.questNum - 1].color = 'positive'
+      this.questionsNumbersList[this.questNum - 1].color = '$primary'
       this.known = false
 
       var answers = 0
@@ -417,38 +433,8 @@ export default {
     showTooltip (e) {
       console.log(e)
     },
-    formatOptions () {
-      if (this.currentQuestion.single_selection) {
-        return 'radio'
-      } else {
-        return 'checkbox'
-      }
-      // },
-      // questionsNumbers (id) {
-      //   var i
-      //   var qs = []
-      //   for (i = 0; i < this.myJson.question_collection.length; i++) {
-      //     // console.log(this.myJson.question_collection[i].name)
-      //     qs.push({
-      //       label: i + 1,
-      //       value: i,
-      //       slot: this.myJson.question_collection[i].name,
-      //       answered: false
-      //     })
-      //   }
-      //   // console.log(qs)
-      //   this.questionsNumbersList = qs
-    },
     timerCount () {
       this.time_allowed = this.currentQuestion.time_allowed // 10 // til að stytta
-      // this.time_step = 1 / this.time_allowed
-      // this.time_taken = this.progress * this.time_allowed
-      // if (this.progress > 1.0) {
-      //   // alert('Tíminn búinn')
-      //   this.progress = 0.001
-      // } else {
-      //   this.progress = this.progress + this.time_step
-      // }
     },
     reviewTest () {
       this.testFinished = false
@@ -506,7 +492,8 @@ export default {
       alert('CREATED REVIEW')
     }
     this.clock = setInterval(this.timers, 1000)
-    this.startTime = Date.now()
+    // this.startTime = Date.now()
+    this.$store.dispatch('setTotalTime', Date.now())
   }
 }
 
@@ -517,21 +504,21 @@ export default {
 .memowing
   width: 400px
 
-.my-card
-  margin: 5% auto
-  @media screen and (max-width: $breakpoint-xs)
-    margin-top: 10px
-    margin-bottom: 30px
-    margin-right: 5px
-    margin-left: 8px
+//.my-card
+//  margin: 5% auto
+//  @media screen and (max-width: $breakpoint-xs)
+//    margin-top: 10px
+//    margin-bottom: 30px
+//    margin-right: 5px
+//    margin-left: 8px
 
 .tpage
   @media screen and (max-width: $breakpoint-xs)
-    //padding-top: 130px
-    //padding-bottom: 230px
+//padding-top: 130px
+//padding-bottom: 230px
 
 .quest-options
-  border: 1px solid #8d8c8c
+  border: 1px solid #d0d0d0
   padding: 5px
   margin: 5px 0
   background-color: #eaeaea
@@ -541,9 +528,9 @@ export default {
   width: 100%
   position: fixed
   bottom: 0px
-  margin: 0 0 50px -32px
-  background-color: #9ab2d0
-  min-height: 40px
+  margin: 0px
+  background-color: $primary
+  //min-height: 40px
   overflow: scroll
   text-align: center
 

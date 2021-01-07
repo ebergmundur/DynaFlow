@@ -189,6 +189,26 @@ class QuestionnaireSerializer(serializers.ModelSerializer):
         ]
 
 
+class DashboardSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Questionnaire
+        fields = [
+            'id',
+            'owner',
+            'name',
+            'timed',
+            'time_allowed',
+            'omit_known',
+            'results',
+            'final_results',
+            'only_failed',
+            # 'question_collection_str',
+            'q_count',
+            'created_date',
+        ]
+
+
 class QuestionAnswerSerializer(serializers.ModelSerializer):
     # tesing_user = PersonSerializer(many=False)
     question = QuestionSerializer(many=False)

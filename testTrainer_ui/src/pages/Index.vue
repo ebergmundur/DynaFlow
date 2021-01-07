@@ -1,95 +1,246 @@
 <template>
-  <q-page class="justify-center">
-    <div class="q-pa-lg-md q-mt-md">
-      <div class="row q-gutter-md justify-center col">
-        <q-card class="logo-card col-lg-8 q-pa-md col-md-8 col-sm-10 ">
-          <q-card-section>
+  <q-page class="flex flex-center ebbg-primary" >
+    <!--    <div class="row q-pa-md">-->
+    <div class="col">
+
+      <q-carousel
+
+        v-model="slide"
+        transition-prev="fade"
+        transition-next="fade"
+        :autoplay="autoplay"
+        infinite
+        @mouseenter="autoplay = false"
+        @mouseleave="autoplay = true"
+        swipeable
+        animated
+        control-color="white"
+        navigation
+        padding
+        arrows
+        class="ebbg-primary"
+      >
+
+        <q-carousel-slide name="welcome" class="column no-wrap flex-center">
+          <!--          <q-icon name="class" size="56px" />-->
+          <div class="q-mt-md text-center">
             <img
               alt="Enám logo"
               src="../assets/enam-logo.svg"
-              style="height: 160px; width: auto; alignment: left; float: left;">
-            <div class="text-h3 q-pa-xl text-center">Velkomin á E-náms vefinn</div>
-          </q-card-section>
-        </q-card>
-      </div>
-      <q-separator class="q-ma-md"/>
+              style="height: 140px; width: auto; alignment: left; float: none; margin: 0 0 0 0;">
+            <div class="text-h3 text-center">Velkomin á E nám</div>
+            <div style="max-width: 600px;">
+              <p></p>
+              <p class="splashtext">E-nám er vettvangur þar sem nemendur geta æft sig fyrir próf.</p>
 
-      <div class="row justify-center col-lg-8 q-gutter-md ">
+            </div>
+          </div>
+        </q-carousel-slide>
 
-          <q-card class="top-card col-lg-4 col-md-8 col-sm-10">
-            <q-card-section>
-              <div class="text-h5">Velkomin</div>
-            </q-card-section>
-            <q-card-section class="q-pt-none wrap">
-              E-nám er vettvangur þar sem nemendur geta æft sig fyrir próf.
-              Dustaðu rykið af þekkingu þinni og spreyttu þig á stuttum æfingum eða heilum prófum.
-              Flettikort þjálfa minnið og hraða.
+        <q-carousel-slide name="welcome2" class="column no-wrap flex-center">
+          <!--          <q-icon name="class" size="56px" />-->
+          <div class="q-mt-md text-center">
+            <img
+              alt="Enám logo"
+              src="../assets/enam-logo.svg"
+              style="height: 140px; width: auto; alignment: left; float: none; margin: 0 0 0 0;">
+            <div class="text-h3 text-center">Velkomin á E nám</div>
+            <div style="max-width: 600px;">
+              <p></p>
+              <p class="splashtext">Dustaðu rykið af þekkingu þinni og spreyttu þig á stuttum æfingum eða heilum prófum.
+                Flettikort þjálfa minnið og hraða.</p>
+            </div>
+          </div>
+        </q-carousel-slide>
+        <q-carousel-slide name="welcome3" class="column no-wrap flex-center">
+          <!--          <q-icon name="class" size="56px" />-->
+          <div class="q-mt-md text-center">
+            <img
+              alt="Enám logo"
+              src="../assets/enam-logo.svg"
+              style="height: 140px; width: auto; alignment: left; float: none; margin: 0 0 0 0;">
+            <div class="text-h3 text-center">Velkomin á E nám</div>
+            <div style="max-width: 600px;">
+              <p></p>
 
-            </q-card-section>
-          </q-card>
+              <p class="splashtext"> Búðu til æfingapróf af heppilegri lengd, getur valið fjölda spurninga í hverjum efnisflokk fyrir sig
+                svo
+                æfingin henti þér á þínum stað í náminu.</p>
+            </div>
+          </div>
+        </q-carousel-slide>
+        <q-carousel-slide name="welcome4" class="column no-wrap flex-center">
+          <!--          <q-icon name="class" size="56px" />-->
+          <div class="q-mt-md text-center">
+            <img
+              alt="Enám logo"
+              src="../assets/enam-logo.svg"
+              style="height: 140px; width: auto; alignment: left; float: none; margin: 0 0 0 0;">
+            <div class="text-h3 text-center">Velkomin á E nám</div>
+            <div style="max-width: 600px;">
+              <p></p>
 
-          <q-card class="top-card col-lg-4 col-md-8 col-sm-10">
-            <q-card-section>
-              <div class="text-h5">Leiðbeiningar</div>
-            </q-card-section>
-            <q-card-section class="q-pt-none wrap">
-              Búðu til æfingapróf af heppilegri lengd, getur valið fjölda spurninga í hverjum efnisflokk fyrir sig svo æfingin henti þér á þínum stað í náminu.
-              Próf eru af fullri lengd og ekki hægt að gera hlé, svo það er ráðlegt að hafa tímann fyrir sér þegar sú leið er valin.
-            </q-card-section>
-          </q-card>
-      </div>
+              <p class="splashtext">
+                Próf eru af fullri lengd og ekki hægt að gera hlé, svo það er ráðlegt að hafa tímann fyrir sér þegar sú
+                leið
+                er valin.</p>
+            </div>
+          </div>
+        </q-carousel-slide>
 
-      <q-separator class="q-ma-md"/>
-
-      <div class="row q-gutter-md justify-center col-lg-8  q-px-lg col ">
-
-        <q-card class="col-lg-2 col-md-4 col-sm-10 ">
-          <q-card-section class="text-center">
-            <q-icon name="class" size="160px" class="card-icon"/>
+        <q-carousel-slide name="style" class="column no-wrap flex-center">
+          <q-icon name="class" size="124px"/>
+          <div class="q-mt-md text-center">
+            <!--            <q-icon name="class" size="160px" class="card-icon"/>-->
             <div class="text-h6">Mælaborð</div>
-            <div class="text-subtitle2">0% lokið</div>
-          </q-card-section>
-          <q-card-section class="q-pt-none text-justify">
-            Yfirlit yfir árangur í æfingum og prófum. Hægt að skoða eftir efnisflokkum líka.
-            Svo getur þú farið yfir minnisatriði við spurningar og skoðað betur.
-          </q-card-section>
-        </q-card>
+            <!--            <div class="text-subtitle2">0% lokið</div>-->
+            <div style="max-width: 600px;">
+              <p class="splashtext">
 
-        <q-card class="col-lg-2 col-md-4 col-sm-10">
-          <q-card-section class="text-center">
-            <q-icon name="flip" size="160px" class="card-icon"/>
+              Yfirlit yfir árangur í æfingum og prófum. Hægt að skoða eftir efnisflokkum líka.
+              Svo getur þú farið yfir minnisatriði við spurningar og skoðað betur.
+              </p>
+            </div>
+          </div>
+        </q-carousel-slide>
+
+        <q-carousel-slide name="flip" class="column no-wrap flex-center">
+          <q-icon name="flip" size="124px"/>
+          <div class="q-mt-md text-center">
+            <!--            <q-icon name="flip" size="160px" class="card-icon"/>-->
             <div class="text-h6">Flettikort</div>
-            <div class="text-subtitle2">14% lokið</div>
-          </q-card-section>
-          <q-card-section class="q-pt-none text-justify">
-            Spurningar af handahófi, svarmöguleikar ekki sýndir strax til að þjálfa hugann án stuðnings. Gefið
-            rétt/rangt engin tímamörk en hægt að sjá fjölda svara og tíma sem lota tók.
-          </q-card-section>
-        </q-card>
+            <div style="max-width: 600px;">
+              <p class="splashtext">
 
-        <q-card class="col-lg-2 col-md-4 col-sm-10">
-          <q-card-section class="text-center">
-            <q-icon name="flaky" size="160px" class="card-icon"/>
+              Spurningar af handahófi, svarmöguleikar ekki sýndir strax til að þjálfa hugann án stuðnings. Gefið
+              rétt/rangt engin tímamörk en hægt að sjá fjölda svara og tíma sem lota tók.
+              </p>
+            </div>
+          </div>
+        </q-carousel-slide>
+
+        <q-carousel-slide name="layers" class="column no-wrap flex-center">
+          <q-icon name="flaky" size="124px"/>
+          <div class="q-mt-md text-center">
+            <!--             <q-icon name="flaky" size="160px" class="card-icon"/>-->
             <div class="text-h6">Æfingar</div>
-            <div class="text-subtitle2">14% lokið</div>
-          </q-card-section>
-          <q-card-section class="q-pt-none text-justify">
-            Í æfingum getur þú sett saman tiltekinn fjölda spurninga úr þeim flokki eða flokkum sem þú vilt æfa þig í.
-          </q-card-section>
-        </q-card>
+            <div style="max-width: 600px;">
+              <p class="splashtext">
 
-        <q-card class="col-lg-2  col-md-4 col-sm-10">
-          <q-card-section class="text-center">
-            <q-icon name="school" size="160px" class="card-icon"/>
+              Í æfingum getur þú sett saman tiltekinn fjölda spurninga úr þeim flokki eða flokkum sem þú vilt æfa þig í.
+              </p>
+            </div>
+          </div>
+        </q-carousel-slide>
+
+        <q-carousel-slide name="map" class="column no-wrap flex-center">
+          <q-icon name="school" size="124px"/>
+          <div class="q-mt-md text-center">
+            <!--            <q-icon name="school" size="160px" class="card-icon"/>-->
             <div class="text-h6">Próf</div>
-            <div class="text-subtitle2">4% lokið</div>
-          </q-card-section>
-          <q-card-section class="q-pt-none text-justify">
-            Próf eru eins og vænta má með sama sniði og raunverulegt próf, spurningar úr öllum flokkum og skýr tímamörk.
-          </q-card-section>
-        </q-card>
-      </div>
+            <div style="max-width: 600px;">
+              <p class="splashtext">
+              Próf eru eins og vænta má með sama sniði og raunverulegt próf, spurningar úr öllum flokkum og skýr
+              tímamörk.
+              </p>
+            </div>
+          </div>
+        </q-carousel-slide>
+
+      </q-carousel>
+
+      <!--      <div class="row q-gutter-md justify-center col">-->
+      <!--        <q-card class="logo-card col-lg-8 q-pa-md col-md-8 col-sm-10 ">-->
+      <!--          <q-card-section>-->
+      <!--            <img-->
+      <!--              alt="Enám logo"-->
+      <!--              src="../assets/enam-logo.svg"-->
+      <!--              style="height: 160px; width: auto; alignment: left; float: left;">-->
+      <!--            <div class="text-h3 q-pa-xl text-center">Velkomin á E-náms vefinn</div>-->
+      <!--          </q-card-section>-->
+      <!--        </q-card>-->
+      <!--      </div>-->
+      <!--      <q-separator class="q-ma-md"/>-->
+
+      <!--      <div class="row justify-center col-lg-8 q-gutter-md ">-->
+
+      <!--        <q-card class="top-card col-lg-4 col-md-8 col-sm-10">-->
+      <!--          <q-card-section>-->
+      <!--            <div class="text-h5">Velkomin</div>-->
+      <!--          </q-card-section>-->
+      <!--          <q-card-section class="q-pt-none wrap">-->
+      <!--            E-nám er vettvangur þar sem nemendur geta æft sig fyrir próf.-->
+      <!--            Dustaðu rykið af þekkingu þinni og spreyttu þig á stuttum æfingum eða heilum prófum.-->
+      <!--            Flettikort þjálfa minnið og hraða.-->
+
+      <!--          </q-card-section>-->
+      <!--        </q-card>-->
+
+      <!--        <q-card class="top-card col-lg-4 col-md-8 col-sm-10">-->
+      <!--          <q-card-section>-->
+      <!--            <div class="text-h5">Leiðbeiningar</div>-->
+      <!--          </q-card-section>-->
+      <!--          <q-card-section class="q-pt-none wrap">-->
+      <!--            Búðu til æfingapróf af heppilegri lengd, getur valið fjölda spurninga í hverjum efnisflokk fyrir sig svo-->
+      <!--            æfingin henti þér á þínum stað í náminu.-->
+      <!--            Próf eru af fullri lengd og ekki hægt að gera hlé, svo það er ráðlegt að hafa tímann fyrir sér þegar sú leið-->
+      <!--            er valin.-->
+      <!--          </q-card-section>-->
+      <!--        </q-card>-->
+      <!--      </div>-->
+
+      <!--      <q-separator class="q-ma-md"/>-->
+
+      <!--      <div class="row q-gutter-md justify-center col-lg-8  q-px-lg col ">-->
+
+      <!--        <q-card class="col-lg-2 col-md-4 col-sm-10 ">-->
+      <!--          <q-card-section class="text-center">-->
+      <!--            <q-icon name="class" size="160px" class="card-icon"/>-->
+      <!--            <div class="text-h6">Mælaborð</div>-->
+      <!--            <div class="text-subtitle2">0% lokið</div>-->
+      <!--          </q-card-section>-->
+      <!--          <q-card-section class="q-pt-none text-justify">-->
+      <!--            Yfirlit yfir árangur í æfingum og prófum. Hægt að skoða eftir efnisflokkum líka.-->
+      <!--            Svo getur þú farið yfir minnisatriði við spurningar og skoðað betur.-->
+      <!--          </q-card-section>-->
+      <!--        </q-card>-->
+
+      <!--        <q-card class="col-lg-2 col-md-4 col-sm-10">-->
+      <!--          <q-card-section class="text-center">-->
+      <!--            <q-icon name="flip" size="160px" class="card-icon"/>-->
+      <!--            <div class="text-h6">Flettikort</div>-->
+      <!--            <div class="text-subtitle2">14% lokið</div>-->
+      <!--          </q-card-section>-->
+      <!--          <q-card-section class="q-pt-none text-justify">-->
+      <!--            Spurningar af handahófi, svarmöguleikar ekki sýndir strax til að þjálfa hugann án stuðnings. Gefið-->
+      <!--            rétt/rangt engin tímamörk en hægt að sjá fjölda svara og tíma sem lota tók.-->
+      <!--          </q-card-section>-->
+      <!--        </q-card>-->
+
+      <!--        <q-card class="col-lg-2 col-md-4 col-sm-10">-->
+      <!--          <q-card-section class="text-center">-->
+      <!--            <q-icon name="flaky" size="160px" class="card-icon"/>-->
+      <!--            <div class="text-h6">Æfingar</div>-->
+      <!--            <div class="text-subtitle2">14% lokið</div>-->
+      <!--          </q-card-section>-->
+      <!--          <q-card-section class="q-pt-none text-justify">-->
+      <!--            Í æfingum getur þú sett saman tiltekinn fjölda spurninga úr þeim flokki eða flokkum sem þú vilt æfa þig í.-->
+      <!--          </q-card-section>-->
+      <!--        </q-card>-->
+
+      <!--        <q-card class="col-lg-2  col-md-4 col-sm-10">-->
+      <!--          <q-card-section class="text-center">-->
+      <!--            <q-icon name="school" size="160px" class="card-icon"/>-->
+      <!--            <div class="text-h6">Próf</div>-->
+      <!--            <div class="text-subtitle2">4% lokið</div>-->
+      <!--          </q-card-section>-->
+      <!--          <q-card-section class="q-pt-none text-justify">-->
+      <!--            Próf eru eins og vænta má með sama sniði og raunverulegt próf, spurningar úr öllum flokkum og skýr tímamörk.-->
+      <!--          </q-card-section>-->
+      <!--        </q-card>-->
+      <!--      </div>-->
     </div>
+    <!--    </div>-->
   </q-page>
 </template>
 
@@ -98,7 +249,9 @@ export default {
   data () {
     return {
       name: 'Index',
-      lorem: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+      slide: 'welcome',
+      autoplay: 3500,
+      lorem: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque voluptatem totam, architecto cupiditate officia rerum, error dignissimos praesentium libero ab nemo.'
     }
   }
 }
@@ -116,4 +269,11 @@ export default {
 .card-icon
   color: #6d91b7
 
+.ebbg-primary
+  background: linear-gradient(to right, $primary, $secondary)
+  min-height: 500px
+  color: #f3f3f3
+
+.splashtext
+  font-size: large
 </style>
