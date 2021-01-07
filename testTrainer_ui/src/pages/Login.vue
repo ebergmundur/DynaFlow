@@ -11,7 +11,12 @@
       </q-toolbar>
       <q-card-section>
         <div class="row items-center wrap q-gutter-md">
-          <h4 v-if="wrongCred">Notendanafn, lykilorð eða hvorttveggja stenst ekki skoðun.</h4>
+          <h4 v-if="wrongCred">Notendanafn, lykilorð eða hvorttveggja stenst ekki skoðun.
+
+            <a href="/#/logout" >Logout</a>
+
+          </h4>
+
           <!--          <form v-on:submit.prevent="loginUser">-->
 
             <q-input v-model="username" type="text" class="col-11" label="Notendanafn">
@@ -70,7 +75,7 @@ export default {
       })
         .then(() => {
           this.wrongCred = false
-          this.$router.push({ path: '/' })
+          this.$router.push({ path: '/dashboard' })
         })
         .catch(err => {
           console.log(err)
