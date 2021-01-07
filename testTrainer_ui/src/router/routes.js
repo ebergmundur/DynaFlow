@@ -21,7 +21,7 @@ const routes = [
       { path: '', component: () => import('pages/Question.vue') }
     ],
     meta: {
-      requiresLogged: true
+      requiresLogged: false
     }
   },
   // {
@@ -42,7 +42,7 @@ const routes = [
       { path: '', component: () => import('pages/CreatePractice.vue') }
     ],
     meta: {
-      requiresLogged: true
+      requiresLogged: false
     }
   },
   {
@@ -52,7 +52,7 @@ const routes = [
       { path: '', component: () => import('pages/Testpage') }
     ],
     meta: {
-      requiresLogged: true
+      requiresLogged: false
     }
   },
   {
@@ -62,7 +62,7 @@ const routes = [
       { path: '', name: 'testpractice', component: () => import('pages/Testpage') }
     ],
     meta: {
-      requiresLogged: true
+      requiresLogged: false
     }
   },
   {
@@ -73,7 +73,7 @@ const routes = [
       { path: '', name: 'review', component: () => import('pages/Review') }
     ],
     meta: {
-      requiresLogged: true
+      requiresLogged: false
     }
   },
   {
@@ -83,7 +83,7 @@ const routes = [
       { path: '', name: 'flipcard', component: () => import('pages/Flipcard') }
     ],
     meta: {
-      requiresLogged: true
+      requiresLogged: false
     }
   },
   {
@@ -93,7 +93,7 @@ const routes = [
       { path: '', name: 'dashboard', component: () => import('pages/Dashboard') }
     ],
     meta: {
-      requiresLogged: true
+      requiresLogged: false
     }
   },
   {
@@ -103,7 +103,7 @@ const routes = [
       { path: '', name: 'userinfo', component: () => import('pages/User') }
     ],
     meta: {
-      requiresLogged: true
+      requiresLogged: false
     }
   },
   {
