@@ -164,6 +164,7 @@ class Questionnaire(Base):
     question_collection_str = models.CharField(max_length=200, blank=True)
     omit_known = models.BooleanField(default=False, blank=True)
     only_failed = models.BooleanField(default=False, blank=True)
+    practice = models.BooleanField(default=True)
 
 
     def __str__(self):
