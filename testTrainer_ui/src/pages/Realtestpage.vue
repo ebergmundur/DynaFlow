@@ -1,5 +1,5 @@
 <template>
-  <q-page class="flex flex-center">
+  <q-page class="flex flex-center pinkbackground">
 
     <q-dialog v-model="testFinished">
       <q-card>
@@ -115,14 +115,14 @@
 
 <!--    <div class="row col redborder">-->
     <q-card flat
-            class="pagecard"
+            class="pagecard pinkbackground"
             v-model='currentQuestion'
             v-if="currentQuestion"
     >
       <q-toolbar class="q-dark">
         <q-toolbar-title>
 
-          {{ totaltime }}
+          Alvörupróf |{{ totaltime }} | {{currentQuestion.category}}
 
           <!--          <q-btn-->
           <!--            color="blue"-->
@@ -186,8 +186,8 @@
       </q-card-section>
       <q-separator/>
       <q-card-actions class="">
-        <q-checkbox v-model="known" value="false" label="Kann vel " class=" q-ma-sm"/>
-        <q-checkbox v-model="postpone" value="false" label="Geyma" class=" q-ma-sm"/>
+<!--        <q-checkbox v-model="known" value="false" label="Kann vel " class=" q-ma-sm"/>-->
+<!--        <q-checkbox v-model="postpone" value="false" label="Geyma" class=" q-ma-sm"/>-->
 
         <div class="text-h5 ">
           {{ currPoints }} stig &nbsp;
@@ -290,7 +290,7 @@ export default {
       postpone: false,
       maximizedToggle: true,
       totalQuestions: 0,
-      // totaltime: null,
+      totaltime: null,
       questStartTime: null,
       questTime: null
     }
@@ -431,7 +431,7 @@ export default {
       return date.formatDate(d, 'YYYY-MM-DD')
     },
     showTooltip (e) {
-      console.log(e)
+      // console.log(e)
     },
     timerCount () {
       this.time_allowed = this.currentQuestion.time_allowed // 10 // til að stytta
@@ -451,11 +451,11 @@ export default {
     const username = store.getters.getUserName
 
     getAPI({
-      url: '/api/questionnaiere/?user=' + username,
+      url: '/api/realtest/?user=' + username,
       headers: { Authorization: `Bearer ${access}` }
     })
       .then(response => {
-        console.log(response.data)
+        // console.log(response.data)
         this.myJson = JSON.parse(JSON.stringify(response.data[0]))
         this.totalQuestions = this.myJson.question_collection.length
         var i
