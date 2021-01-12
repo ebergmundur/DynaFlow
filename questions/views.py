@@ -13,8 +13,6 @@ from .models import Option, Question, Questionnaire, QuestionGroupRelation, Ques
     TestMemo, TestAnswers
 from person.models import PersonUser
 
-
-from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework import generics
 
@@ -22,7 +20,7 @@ from rest_framework import generics
 class UserCreate(generics.CreateAPIView):
     queryset = PersonUser.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (AllowAny, )
+    # permission_classes = (AllowAny, )
 
 
 class QuestionViewSet(viewsets.ModelViewSet):
@@ -66,7 +64,6 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
 
 class QuestionnaireViewSet(viewsets.ModelViewSet):
-
     """
     API endpoint that allows groups to be viewed or edited.
     """
@@ -99,11 +96,11 @@ def dashboard(request):
         return Response(serializer.data)
 
 
-
 @api_view(['POST'])
 def review(request):
     if request.method == 'POST':
-        queryset = Questionnaire.objects.filter(owner__user__username=request.data['username']).order_by('-created_date')[0]
+        queryset = \
+        Questionnaire.objects.filter(owner__user__username=request.data['username']).order_by('-created_date')[0]
         serializer = RevieweSerializer(queryset)
         return Response(serializer.data)
 
@@ -131,8 +128,9 @@ class UserViewSet(viewsets.ModelViewSet):
 #     memo = TestAnswers.objects.all()
 #     serializer_class = QuestionAnswerSerializer
 
-
+@api_view(['GET'])
 def logout(request):
+    print(request)
     return Response(status=status.HTTP_201_CREATED)
 
 
@@ -147,7 +145,6 @@ def userdata(request):
 
 @api_view(['POST'])
 def memo_add(request):
-
     if request.method == 'POST':
         # serializer = QuestionMemoSerializer(data=request.data)
         data = request.data
@@ -256,7 +253,6 @@ def practice_test(request):
     """
 
     if request.method == 'GET':
-
         # memos = TestAnswers.objects.filter(curr_question=request)
         owner = PersonUser.objects.get(user__username=request.user)
         practice = Questionnaire.objects.filter(owner=owner).order_by('-created_date')[0:1]
@@ -336,8 +332,6 @@ def practice_test(request):
                                 obj.question_collection.add(question)
                                 quest_counter += 1
 
-
-
                                 # obj.question_collection.add(question)
                                 # quest_counter += 1
 
@@ -359,6 +353,60 @@ def practice_test(request):
         # if serializer.is_valid():
         #     serializer.save()
         return Response(status=status.HTTP_201_CREATED)
+        # return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET', 'POST'])
+def real_test(request):
+    """
+    List all code snippets, or create a new snippet.
+    """
+
+    if request.method == 'GET':
+        # memos = TestAnswers.objects.filter(curr_question=request)
+        owner = PersonUser.objects.get(user__username=request.user)
+        practice = Questionnaire.objects.filter(owner=owner).order_by('-created_date')[0:1]
+        serializer = QuestionnaireSerializer(practice, many=True)
+        return Response(serializer.data)
+
+    if request.method == 'POST':
+
+        total_questions = 60
+        questions_all = []
+        # serializer = QuestionnaireSerializer(data=request.data)
+        data = request.data
+        nuna = datetime.datetime.now().strftime('%Y-%m-%d %H:%M', )
+
+        user = PersonUser.objects.get(user__username=data['user'])
+
+        obj = Questionnaire.objects.create(
+            owner=user,
+            timed=data['timed'],
+            name=nuna,
+            time_allowed=data['time_allowed'],
+            omit_known=False,
+            only_failed=False,
+        )
+        obj.save()
+
+        categories = Category.objects.all()
+
+        q_in_cat = total_questions / categories.count()
+
+        for cat in categories:
+            cat_quest = Question.objects.filter(category=cat)[q_in_cat]
+
+            questions_all.append(list(cat_quest))
+
+        obj.question_collection = questions_all
+        obj.save()
+
+        serializer = QuestionnaireSerializer(obj, many=True)
+        return Response(serializer.data)
+
+        # if serializer.is_valid():
+        #     serializer.save()
+        # return Response(status=status.HTTP_201_CREATED)
         # return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
