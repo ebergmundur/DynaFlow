@@ -15,6 +15,16 @@ const routes = [
     }
   },
   {
+    path: '/about',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/About') }
+    ],
+    meta: {
+      requiresLogged: false
+    }
+  },
+  {
     path: '/question',
     component: () => import('layouts/MainLayout.vue'),
     children: [
@@ -49,7 +59,7 @@ const routes = [
     path: '/testreal',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/Testpage') }
+      { path: '', name: 'testreal', component: () => import('pages/Realtestpage') }
     ],
     meta: {
       requiresLogged: false
@@ -65,6 +75,7 @@ const routes = [
       requiresLogged: false
     }
   },
+
   {
     path: '/review',
     props: { exam: 1 },

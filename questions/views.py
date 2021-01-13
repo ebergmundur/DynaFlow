@@ -362,6 +362,8 @@ def real_test(request):
     List all code snippets, or create a new snippet.
     """
 
+    print(request.method)
+
     if request.method == 'GET':
         # memos = TestAnswers.objects.filter(curr_question=request)
         owner = PersonUser.objects.get(user__username=request.user)
@@ -372,7 +374,6 @@ def real_test(request):
     if request.method == 'POST':
 
         total_questions = 60
-        questions_all = []
         # serializer = QuestionnaireSerializer(data=request.data)
         data = request.data
         nuna = datetime.datetime.now().strftime('%Y-%m-%d %H:%M', )
@@ -386,22 +387,24 @@ def real_test(request):
             time_allowed=data['time_allowed'],
             omit_known=False,
             only_failed=False,
+            practice=False,
         )
         obj.save()
 
         categories = Category.objects.all()
 
-        q_in_cat = total_questions / categories.count()
+        q_in_cat = int(total_questions / categories.count())
 
         for cat in categories:
-            cat_quest = Question.objects.filter(category=cat)[q_in_cat]
+            cat_quest = Question.objects.filter(category=cat).order_by('?')[0:q_in_cat]
+            for q in cat_quest:
+                print(q.category, q)
+                obj.question_collection.add(q)
 
-            questions_all.append(list(cat_quest))
+        print(obj)
 
-        obj.question_collection = questions_all
         obj.save()
-
-        serializer = QuestionnaireSerializer(obj, many=True)
+        serializer = QuestionnaireSerializer(obj, many=False)
         return Response(serializer.data)
 
         # if serializer.is_valid():

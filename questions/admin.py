@@ -286,8 +286,9 @@ class CategoryAdmin(TabbedTranslationAdmin):
 
 @admin.register(Questionnaire)
 class QuestionnaireAdmin(TabbedTranslationAdmin):
-    list_display = ('name', 'owner', 'q_count', 'results' )
+    list_display = ('name', 'practice', 'owner', 'q_count', 'results' )
     filter_horizontal = ['question_collection']
+    list_editable = ['practice']
 
 
 # @admin.register(QuestionGroupRelation)

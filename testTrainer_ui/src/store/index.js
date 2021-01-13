@@ -1,8 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { axiosBase } from 'src/api/axios-base'
-// import axios from 'axios'
-// import axios from 'axios'
 
 Vue.use(Vuex)
 
@@ -137,10 +135,12 @@ const store = new Vuex.Store({
           })
       })
     },
-    logoutUser (context) {
+    logoutUser (context, payload) {
+      console.log('LOGGING OUT')
       if (context.getters.loggedIn) {
         return new Promise((resolve, reject) => {
           axiosBase.get('/api/token/logout/')
+          // axiosBase.get('/api-auth/logout/')
             .then(response => {
               localStorage.removeItem('access_token')
               localStorage.removeItem('refresh_token')
@@ -154,6 +154,7 @@ const store = new Vuex.Store({
               localStorage.removeItem('open')
               localStorage.removeItem('endday')
               context.commit('destroyToken')
+              console.log('LOGGED OUT A')
             })
             .catch(err => {
               localStorage.removeItem('access_token')
@@ -169,17 +170,34 @@ const store = new Vuex.Store({
               localStorage.removeItem('endday')
               context.commit('destroyToken')
               resolve(err)
+              console.log('LOGGED OUT B')
             })
         })
+      } else {
+        localStorage.removeItem('access_token')
+        localStorage.removeItem('refresh_token')
+        localStorage.removeItem('username')
+        localStorage.removeItem('user_first_name')
+        localStorage.removeItem('user_last_name')
+        localStorage.removeItem('user_email')
+        localStorage.removeItem('open')
+        localStorage.removeItem('isadmin')
+        localStorage.removeItem('user_id')
+        localStorage.removeItem('open')
+        localStorage.removeItem('endday')
+        context.commit('destroyToken')
+        console.log('LOGGED OUT D')
       }
     },
     setTotalTime (context, time) {
       context.commit('setTimeTotal', time)
     },
     loginUser (context, credentials) {
+      console.log('LOGGING IN')
       return new Promise((resolve, reject) => {
         // send the username and password to the backend API:
         axiosBase.post('/api/token/', {
+        // axiosBase.post('/api-auth/login/', {
           username: credentials.username,
           password: credentials.password
         })

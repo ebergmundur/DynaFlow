@@ -1,5 +1,5 @@
 <template>
-  <q-page class="flex flex-center pinkbackground">
+  <q-page class="flex flex-center">
 
     <q-dialog v-model="testFinished">
       <q-card>
@@ -12,7 +12,6 @@
         </q-toolbar>
         <q-card-section class="scroll">
           Viltu fara í gegnum svörin núna?
-
           <q-btn
             @click="reviewTest"
           >
@@ -23,113 +22,15 @@
       </q-card>
     </q-dialog>
 
-    <q-dialog v-model="memo">
-      <q-card>
-        <q-toolbar>
-          <q-avatar>
-            <img src="../assets/enam-logo.svg">
-          </q-avatar>
-
-          <q-toolbar-title><span class="text-weight-bold">E-nám</span> minnismiðar</q-toolbar-title>
-
-          <q-btn flat round dense icon="close" v-close-popup/>
-        </q-toolbar>
-
-        <!--        style="max-height: 70vh; width: 30vw;"-->
-        <q-card-section class="scroll">
-
-          <h6 class=" q-ma-sm">{{ currentQuestion.virtname }}</h6>
-          <q-form
-            @submit="onMemoSubmit"
-            @reset="onMemoReset"
-            class="q-gutter-md"
-          >
-            <div class="q-pa-md q-ma-sm">
-
-              Þyngd: {{ difficulty / 10 }}
-              <q-slider
-                v-model="difficulty"
-                :step="10"
-              />
-            </div>
-
-            <div class="q-pa-md q-ma-xs">
-              <q-input
-                v-model="memotext"
-                filled
-                type="textarea"
-              />
-            </div>
-            <q-toggle v-model="known" label="Kann vel " class=" q-ma-sm"/>
-            <!--            <span v-if="showDate">{{ formDate }}</span><br>-->
-            <!--            <q-date v-if="showDate" v-model="date" minimal/>-->
-            <div>
-              <q-btn label="Skrá" type="submit" color="primary"/>
-              <q-btn label="Hreinsa" type="reset" color="primary" flat class="q-ml-sm"/>
-            </div>
-          </q-form>
-        </q-card-section>
-      </q-card>
-    </q-dialog>
-
-    <!--MEMOS-->
-    <q-dialog v-model="memolist" position="right">
-      <q-card class="memowing">
-        <q-card-section class="row items-center q-pb-none col-lg-8">
-          <div class="text-h6">Minnismiðar</div>
-          <q-space/>
-          <q-btn icon="close" flat round dense v-close-popup/>
-        </q-card-section>
-        <q-card-section>
-          <div class="q-pa-md items-start q-gutter-md col">
-
-            <q-card
-              flat bordered
-              class="my-card bg-grey-1 scroll col"
-              v-for="(data) in currentQuestion.memos"
-              :key="data.id"
-            >
-              <q-card-section>
-                <div class="row items-center no-wrap">
-                  <div class="col">
-                    <div class="text-h6">{{ formatDate(data.created_date) }}</div>
-                    <div>
-                      <q-toggle v-model="data.known" label="Kann vel " class=" q-ma-sm" disable/>
-                      <q-toggle v-model="data.postpone" label="Geymd" class=" q-ma-sm" disable/>
-                    </div>
-                    <div class="text-subtitle2">
-                      Þyngd: {{ data.difficulty }}
-                      <q-linear-progress size="14px" :value="data.difficulty/15" color="red" track-color="orange"
-                                         class="q-mt-sm"/>
-                    </div>
-                  </div>
-                </div>
-                <div class="text-subtitle2 q-mt-sm">Minnistatriði</div>
-                {{ data.memo }}
-              </q-card-section>
-            </q-card>
-          </div>
-        </q-card-section>
-      </q-card>
-    </q-dialog>
-
 <!--    <div class="row col redborder">-->
     <q-card flat
-            class="pagecard pinkbackground"
+            class="pagecard"
             v-model='currentQuestion'
             v-if="currentQuestion"
     >
       <q-toolbar class="q-dark">
         <q-toolbar-title>
-
-          Alvörupróf |{{ totaltime }} | {{currentQuestion.category}}
-
-          <!--          <q-btn-->
-          <!--            color="blue"-->
-          <!--            @click="openUrl"-->
-          <!--            label="E"-->
-          <!--          />-->
-
+          Próf |{{ totaltime }} |  {{currentQuestion.category.name }}
           <div style="float: right;"> spurning {{ questNum }} af
             {{ totalQuestions }} | {{ questTime }}
           </div>
@@ -186,44 +87,7 @@
       </q-card-section>
       <q-separator/>
       <q-card-actions class="">
-<!--        <q-checkbox v-model="known" value="false" label="Kann vel " class=" q-ma-sm"/>-->
-<!--        <q-checkbox v-model="postpone" value="false" label="Geyma" class=" q-ma-sm"/>-->
-
-        <div class="text-h5 ">
-          {{ currPoints }} stig &nbsp;
-          <!--          <span q-red>{{hintloss}}</span>&nbsp;-->
-        </div>
-
-        <q-btn
-          v-if="currentQuestion.hint.length"
-          @click="hint">„Tips“ {{ currentQuestion.hint_cost }} stig
-        </q-btn>
-        &nbsp;
-        <q-btn label="Minnismiðar" icon="">
-          <q-menu cover auto-close>
-            <q-list>
-              <q-btn
-                v-if="currentQuestion.memos.length > 0"
-                @click="openMemos"
-                color="orange"
-                style="width: 100%"
-              >
-                Minnismiðar {{ currentQuestion.memos.length }}
-              </q-btn>
-              <br>
-              <q-btn
-                color="green"
-                @click="memo = true"
-                style="width: 100%"
-              >
-                Nýr minnismiði
-              </q-btn>
-            </q-list>
-          </q-menu>
-        </q-btn>
-
-        <div style="position: absolute; right: 15px;" class="">
-
+        <div style="position: absolute; right: 15px; bottom: -35px;" >
           <q-btn
             @click="onAnswerSubmit"
             color="positive"
@@ -451,17 +315,23 @@ export default {
     const username = store.getters.getUserName
 
     getAPI({
-      url: '/api/realtest/?user=' + username,
+      url: '/api/realtest/',
+      method: 'post',
+      data: {
+        user: username,
+        timed: true,
+        time_allowed: 3600
+      },
       headers: { Authorization: `Bearer ${access}` }
     })
       .then(response => {
         // console.log(response.data)
-        this.myJson = JSON.parse(JSON.stringify(response.data[0]))
+        this.myJson = JSON.parse(JSON.stringify(response.data))
         this.totalQuestions = this.myJson.question_collection.length
         var i
         var qs = []
         for (i = 0; i < this.totalQuestions; i++) {
-          console.log(this.myJson.question_collection[i].name)
+          // console.log(this.myJson.question_collection[i].name)
           qs.push({
             label: i + 1,
             value: i + 1,
@@ -472,7 +342,7 @@ export default {
             answer: 0
           })
         }
-        console.log(qs)
+        // console.log(qs)
         this.questionsNumbersList = qs
         store.commit({ type: 'setTimeAllowed', payload: this.myJson.time_allowed + 0 })
         this.setQuestion(1)

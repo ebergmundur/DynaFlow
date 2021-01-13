@@ -136,6 +136,7 @@ class QuestionSerializer(serializers.ModelSerializer):
     options = OptionSerializer(many=True)
     memos = QuestionMemoSerializer(many=True)
     owner = PersonSerializer(many=False)
+    category = CategorySerializer(many=False)
 
     class Meta:
         model = Question
@@ -153,6 +154,7 @@ class QuestionSerializer(serializers.ModelSerializer):
             'single_selection',
             'points',
             'hint_cost',
+            'category',
             # 'group_correct',
             # 'group_false',
             'hint',
@@ -186,6 +188,7 @@ class QuestionnaireSerializer(serializers.ModelSerializer):
             'question_collection_str',
             'q_count',
             'created_date',
+            'practice',
         ]
 
 
@@ -206,6 +209,7 @@ class DashboardSerializer(serializers.ModelSerializer):
             # 'question_collection_str',
             'q_count',
             'created_date',
+            'practice',
         ]
 
 

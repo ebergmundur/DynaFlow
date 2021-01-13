@@ -1,5 +1,5 @@
 <template>
-  <q-page class="flex flex-center ebbg-primary" >
+  <q-page class="flex flex-center " >
     <!--    <div class="row q-pa-md">-->
     <div class="col">
 
@@ -18,7 +18,7 @@
         navigation
         padding
         arrows
-        class="ebbg-primary"
+        class=""
       >
 
         <q-carousel-slide name="welcome" class="column no-wrap flex-center">
@@ -26,7 +26,7 @@
           <div class="q-mt-md text-center">
             <img
               alt="Enám logo"
-              src="../assets/enam-logo.svg"
+              src="../assets/DokktNam.svg"
               style="height: 140px; width: auto; alignment: left; float: none; margin: 0 0 0 0;">
             <div class="text-h3 text-center">Velkomin á E nám</div>
             <div style="max-width: 600px;">
@@ -42,7 +42,7 @@
           <div class="q-mt-md text-center">
             <img
               alt="Enám logo"
-              src="../assets/enam-logo.svg"
+              src="../assets/DokktNam.svg"
               style="height: 140px; width: auto; alignment: left; float: none; margin: 0 0 0 0;">
             <div class="text-h3 text-center">Velkomin á E nám</div>
             <div style="max-width: 600px;">
@@ -57,7 +57,7 @@
           <div class="q-mt-md text-center">
             <img
               alt="Enám logo"
-              src="../assets/enam-logo.svg"
+              src="../assets/DokktNam.svg"
               style="height: 140px; width: auto; alignment: left; float: none; margin: 0 0 0 0;">
             <div class="text-h3 text-center">Velkomin á E nám</div>
             <div style="max-width: 600px;">
@@ -74,7 +74,7 @@
           <div class="q-mt-md text-center">
             <img
               alt="Enám logo"
-              src="../assets/enam-logo.svg"
+              src="../assets/DokktNam.svg"
               style="height: 140px; width: auto; alignment: left; float: none; margin: 0 0 0 0;">
             <div class="text-h3 text-center">Velkomin á E nám</div>
             <div style="max-width: 600px;">
@@ -154,7 +154,7 @@
       <!--          <q-card-section>-->
       <!--            <img-->
       <!--              alt="Enám logo"-->
-      <!--              src="../assets/enam-logo.svg"-->
+      <!--              src="../assets/DokktNam.svg"-->
       <!--              style="height: 160px; width: auto; alignment: left; float: left;">-->
       <!--            <div class="text-h3 q-pa-xl text-center">Velkomin á E-náms vefinn</div>-->
       <!--          </q-card-section>-->
@@ -260,7 +260,7 @@ export default {
 <style lang="sass" scoped>
 
 .logo-card
-  background-color: #335a73
+  background-color: #ffffff
   color: whitesmoke
 
 .logo-card h3

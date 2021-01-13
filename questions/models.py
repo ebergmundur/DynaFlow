@@ -29,7 +29,7 @@ class Category(Base):
         verbose_name = "flokkur",
         verbose_name_plural = "flokkar"
 
-    @property
+    @cached_property
     def q_count(self):
         return self.question_set.count
         # return QuestionGroupRelation.objects.filter(group=self.id).count()
@@ -60,7 +60,7 @@ class Question(Base):
     class Meta:
         verbose_name = "spurning",
         verbose_name_plural = "spurningar"
-        ordering = ['?']
+        # ordering = ['?']
 
     @property
     def options(self):
@@ -70,13 +70,13 @@ class Question(Base):
     def virtname(self):
         return self.__str__
 
-    @property
+    @cached_property
     def answer_count(self):
         return self.options.count()
 
-    @property
-    def groups(self):
-        return self.questiongrouprelation_set.all()
+    # @property
+    # def groups(self):
+    #     return self.questiongrouprelation_set.all()
 
     @property
     def memos(self):

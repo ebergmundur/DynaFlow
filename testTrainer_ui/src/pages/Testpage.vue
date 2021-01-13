@@ -122,7 +122,7 @@
       <q-toolbar class="q-dark">
         <q-toolbar-title>
 
-          {{ totaltime }}
+          {{ totaltime }} | {{currentQuestion.category.name }}
 
           <!--          <q-btn-->
           <!--            color="blue"-->
@@ -431,7 +431,7 @@ export default {
       return date.formatDate(d, 'YYYY-MM-DD')
     },
     showTooltip (e) {
-      console.log(e)
+      // console.log(e)
     },
     timerCount () {
       this.time_allowed = this.currentQuestion.time_allowed // 10 // til að stytta
@@ -455,13 +455,13 @@ export default {
       headers: { Authorization: `Bearer ${access}` }
     })
       .then(response => {
-        console.log(response.data)
+        // console.log(response.data)
         this.myJson = JSON.parse(JSON.stringify(response.data[0]))
         this.totalQuestions = this.myJson.question_collection.length
         var i
         var qs = []
         for (i = 0; i < this.totalQuestions; i++) {
-          console.log(this.myJson.question_collection[i].name)
+          // console.log(this.myJson.question_collection[i].name)
           qs.push({
             label: i + 1,
             value: i + 1,
@@ -472,7 +472,7 @@ export default {
             answer: 0
           })
         }
-        console.log(qs)
+        // console.log(qs)
         this.questionsNumbersList = qs
         store.commit({ type: 'setTimeAllowed', payload: this.myJson.time_allowed + 0 })
         this.setQuestion(1)
