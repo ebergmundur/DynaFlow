@@ -9,7 +9,6 @@ const store = new Vuex.Store({
   state: {
     currentQuestion: 'CurrentQuestionInSession',
     testQuestion: [],
-    timeAllowed: 150000,
     accessToken: localStorage.getItem('access_token') || null, // makes sure the user is logged in even after
     // refreshing the page
     refreshToken: localStorage.getItem('refresh_token') || null,
@@ -22,15 +21,27 @@ const store = new Vuex.Store({
     userIsadmin: localStorage.getItem('isadmin') || null,
     userEndDay: localStorage.getItem('endday') || null,
     timeTotal: localStorage.getItem('timetotal') || 0,
+    testTimeTotal: localStorage.getItem('testtimetotal') || 0,
+    timeAllowed: localStorage.getItem('timeallowed') || 0,
+    testTimeAllowed: localStorage.getItem('testtimeallowed') || 0,
     currentTest: '',
     APIData: '' // received data from the backend API is stored here.
   },
   mutations: {
+    setTestTimeAllowed (state, payload) {
+      state.testTimeAllowed = payload
+    },
     setTimeAllowed (state, payload) {
       state.timeAllowed = payload
     },
     setTimeTotal (state, payload) {
       localStorage.setItem('timetotal', payload)
+      state.timeTotal = payload
+    },
+    setTestTimeTotal (state, payload) {
+      console.log('testtimetotal')
+      localStorage.setItem('testtimetotal', payload)
+      state.testTimeTotal = payload
     },
     setUserId (state, payload) {
       localStorage.setItem('user_id', payload)
@@ -140,11 +151,15 @@ const store = new Vuex.Store({
       if (context.getters.loggedIn) {
         return new Promise((resolve, reject) => {
           axiosBase.get('/api/token/logout/')
-          // axiosBase.get('/api-auth/logout/')
+            // axiosBase.get('/api-auth/logout/')
             .then(response => {
               localStorage.removeItem('access_token')
               localStorage.removeItem('refresh_token')
               localStorage.removeItem('username')
+              localStorage.removeItem('testtimetotal')
+              localStorage.removeItem('testtimeallowed')
+              localStorage.removeItem('timetotal')
+              localStorage.removeItem('timeallowed')
               localStorage.removeItem('user_first_name')
               localStorage.removeItem('user_last_name')
               localStorage.removeItem('user_email')
@@ -160,6 +175,10 @@ const store = new Vuex.Store({
               localStorage.removeItem('access_token')
               localStorage.removeItem('refresh_token')
               localStorage.removeItem('username')
+              localStorage.removeItem('testtimetotal')
+              localStorage.removeItem('testtimeallowed')
+              localStorage.removeItem('timetotal')
+              localStorage.removeItem('timeallowed')
               localStorage.removeItem('user_first_name')
               localStorage.removeItem('user_last_name')
               localStorage.removeItem('user_email')
@@ -177,6 +196,10 @@ const store = new Vuex.Store({
         localStorage.removeItem('access_token')
         localStorage.removeItem('refresh_token')
         localStorage.removeItem('username')
+        localStorage.removeItem('testtimetotal')
+        localStorage.removeItem('testtimeallowed')
+        localStorage.removeItem('timetotal')
+        localStorage.removeItem('timeallowed')
         localStorage.removeItem('user_first_name')
         localStorage.removeItem('user_last_name')
         localStorage.removeItem('user_email')
@@ -192,12 +215,18 @@ const store = new Vuex.Store({
     setTotalTime (context, time) {
       context.commit('setTimeTotal', time)
     },
+    setTestTimeTotal (context, time) {
+      context.commit('setTestTimeTotal', time)
+    },
+    setTestTimeAllowed (context, time) {
+      context.commit('setTestTimeAllowed', time)
+    },
     loginUser (context, credentials) {
       console.log('LOGGING IN')
       return new Promise((resolve, reject) => {
         // send the username and password to the backend API:
         axiosBase.post('/api/token/', {
-        // axiosBase.post('/api-auth/login/', {
+          // axiosBase.post('/api-auth/login/', {
           username: credentials.username,
           password: credentials.password
         })
@@ -220,6 +249,15 @@ const store = new Vuex.Store({
     }
   },
   getters: {
+    getTimeAllowed (state) {
+      return state.timeAllowed
+    },
+    getTestTimeAllowed (state) {
+      return state.testTimeAllowed
+    },
+    getTestTimeTotal (state) {
+      return state.testTimeTotal
+    },
     getTimeTotal (state) {
       return state.timeTotal
     },
@@ -233,9 +271,9 @@ const store = new Vuex.Store({
       return state.currentQuestion
     },
     currTestQest:
-  state => {
-    return state.testQuestion
-  },
+      state => {
+        return state.testQuestion
+      },
     getUserName (state) {
       return state.userName
     },
@@ -267,10 +305,10 @@ const store = new Vuex.Store({
         return 150000
       }
     }
-  // ,
-  // setSelected: state => {
-  //   return actions.setSelectedAnswer()
-  // }
+    // ,
+    // setSelected: state => {
+    //   return actions.setSelectedAnswer()
+    // }
   }
 })
 

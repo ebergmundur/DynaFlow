@@ -61,8 +61,6 @@
               />
             </div>
             <q-toggle v-model="known" label="Kann vel " class=" q-ma-sm"/>
-            <!--            <span v-if="showDate">{{ formDate }}</span><br>-->
-            <!--            <q-date v-if="showDate" v-model="date" minimal/>-->
             <div>
               <q-btn label="Skrá" type="submit" color="primary"/>
               <q-btn label="Hreinsa" type="reset" color="primary" flat class="q-ml-sm"/>
@@ -113,7 +111,7 @@
       </q-card>
     </q-dialog>
 
-<!--    <div class="row col redborder">-->
+    <!--    <div class="row col redborder">-->
     <q-card flat
             class="pagecard"
             v-model='currentQuestion'
@@ -122,7 +120,7 @@
       <q-toolbar class="q-dark">
         <q-toolbar-title>
 
-          {{ totaltime }} | {{currentQuestion.category.name }}
+          {{ totaltime }} | {{ currentQuestion.category.name }}
 
           <!--          <q-btn-->
           <!--            color="blue"-->
@@ -233,7 +231,7 @@
         </div>
       </q-card-actions>
     </q-card>
-<!--      </div>-->
+    <!--      </div>-->
 
     <div class="row questlist content-center ">
 
@@ -258,7 +256,6 @@ import { date } from 'quasar'
 
 const access = store.getters.token
 
-var exam = 0
 export default {
   data () {
     return {
@@ -290,17 +287,16 @@ export default {
       postpone: false,
       maximizedToggle: true,
       totalQuestions: 0,
-      // totaltime: null,
+      totaltime: 0,
+      timeTotal: 0,
       questStartTime: null,
-      questTime: null
+      questTime: null,
+      spinnegal: true
     }
   },
   computed: {
     currentQuestion () {
       return store.getters.currQest.payload
-    },
-    formDate () {
-      return date.formatDate(this.date, 'YYYY-MM-DD')
     },
     currentOptions () {
       return store.getters.currQest.payload.options
@@ -308,7 +304,7 @@ export default {
   },
   methods: {
     timers () {
-      this.totaltime = date.formatDate(Date.now() - store.getters.getTimeTotal, 'HH:mm:ss').toString()
+      this.totaltime = date.formatDate(Date.now() - this.timeTotal, 'HH:mm:ss').toString()
       this.questTime = date.formatDate(Date.now() - this.questStartTime, 'mm:ss').toString()
     },
     setQuestion (e) {
@@ -322,18 +318,16 @@ export default {
       this.editingIndex = index
       this.question = JSON.parse(JSON.stringify(this.myJson.question_collection[index]))
       store.commit({ type: 'setQuestion', payload: this.question })
-      // index.commit({ type: 'setTestQuestion', payload: [] })
-      // Question.setAnswerChecked()
       this.currPoints = this.question.points
       this.questNum = index + 1
 
       this.questStartTime = Date.now()
+      this.timeTotal = store.getters.getTimeTotal
     },
     setAnswerChecked (e) {
       if (this.currentQuestion.id !== this.cQ) {
         this.cQ = this.currentQuestion.id
         this.currTestAnsw = []
-        // this.progress = 0.001
       }
     },
     onMemoSubmit (e) {
@@ -356,14 +350,10 @@ export default {
           this.questionsNumbersList[this.questNum - 1].answered = true
           this.questionsNumbersList[this.questNum - 1].color = 'warning'
           this.questionsNumbersList[this.questNum - 1]['toggle-color'] = 'negative'
-          // console.log(this.questionsNumbersList)
-          // this.setQuestion(this.questNum + 1)
         }
       }
 
       var formdata = {
-        // time_allowed: this.time_allowed,
-        // time_taken: parseInt(this.time_taken),
         options_ids: this.currTestAnsw.toString(),
         curr_question: parseInt(this.currentQuestion.id),
         test_practice: parseInt(this.myJson.id),
@@ -444,10 +434,6 @@ export default {
     }
   },
   mounted () {
-    // if (exam > 0) {
-    //   alert('MOUNTED REVIEW')
-    // }
-
     const username = store.getters.getUserName
 
     getAPI({
@@ -472,28 +458,18 @@ export default {
             answer: 0
           })
         }
-        // console.log(qs)
+        this.startTime = Date.now()
+        this.$store.dispatch('setTotalTime', Date.now())
         this.questionsNumbersList = qs
-        store.commit({ type: 'setTimeAllowed', payload: this.myJson.time_allowed + 0 })
         this.setQuestion(1)
       })
       .catch(error => console.log('Error', error.message))
-
-    // this.myJson = JSON.parse(JSON.stringify(json))
-    // this.interval = setInterval(() => {
-    //   this.timerCount()
-    // }, 1000)
   },
   updated () {
     this.setAnswerChecked()
   },
   created () {
-    if (exam > 0) {
-      alert('CREATED REVIEW')
-    }
     this.clock = setInterval(this.timers, 1000)
-    // this.startTime = Date.now()
-    this.$store.dispatch('setTotalTime', Date.now())
   }
 }
 

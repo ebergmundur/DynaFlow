@@ -1,5 +1,5 @@
 <template>
-  <q-header elevated class="ebbg-primary text-white row" >
+  <q-header elevated class="ebbg-primary text-white row">
     <div class="q-gutter-y-sm q-gutter-x-sm col">
       <q-tabs
         align="left"
@@ -7,13 +7,14 @@
         class="float-left tabbar"
       >
         <q-route-tab to="/" label="" name="root">
-<!--          E nám-->
+          <!--          E nám-->
           <q-avatar class="">
             <img src="../assets/enam-logo.svg" style="height: 40px; margin: 0;">
           </q-avatar>
         </q-route-tab>
 
         <q-route-tab v-if="loggedIn" to="/createtest" label="Æfing"/>
+<!--        <q-route-tab v-if="loggedIn" to="/testpractice" label="Próf"/>-->
         <q-route-tab v-if="loggedIn" to="/testreal" label="Próf"/>
         <q-route-tab v-if="loggedIn" to="/flipcard" label="Flettikort"/>
         <q-route-tab v-if="!loggedIn" to="/about" label="Um vefinn"/>
@@ -26,8 +27,9 @@
         class="float-right tabbar"
         stretch
       >
-        <q-route-tab v-if="!loggedIn" name="login" to="/login" label="Innskrá" @click="tab = 'login'" />
-        <q-route-tab v-if="!loggedIn" name="register" to="/register" label="Nýskrá" @click="tab = 'register'" />
+        <q-route-tab v-if="!loggedIn" name="login" to="/login" label="Innskrá" @click="tab = 'login'"/>
+        <q-route-tab v-if="!loggedIn" name="register" to="/register" label="Nýskrá" @click="tab = 'register'"/>
+<!--        <q-route-tab to="/logout" label="L"/>-->
         <q-btn-dropdown
           auto-close
           stretch
@@ -44,6 +46,10 @@
 
             <q-item clickable @click="tab = 'more'">
               <q-route-tab v-if="loggedIn" @click="tab = 'more'" to="/dashboard" label="Mælaborð"/>
+            </q-item>
+
+            <q-item clickable @click="tab = 'more'">
+              <q-route-tab v-if="loggedIn" to="/about" label="Um vefinn"/>
             </q-item>
 
             <q-item clickable @click="tab = 'more'">
@@ -131,30 +137,26 @@ export default {
     // this.user = index.getters.getUserName
   },
   mounted () {
-    // if (!store.getters.getUserName) {
-    const access = store.getters.token
-    // axios({
-    //   data: { username: this.user },
-    //   method: 'post',
-    //   headers: { Authorization: `Bearer ${access}` }, // the new access token is attached to the authorization header
-    //   url: 'https://einars-macbook-pro.local:8000/userdata/'
-    // })
-    getAPI({
-      data: { username: this.user },
-      method: 'post',
-      headers: { Authorization: `Bearer ${access}` }, // the new access token is attached to the authorization header
-      url: '/api/userinfo/'
-    })
-      .then(response => {
-        // console.log(response)
-        store.commit('setUserId', response.data.id)
-        store.commit('setUserFirstName', response.data.first_name)
-        store.commit('setUserLastName', response.data.last_name)
-        store.commit('setUserEmail', response.data.email)
-        store.commit('setUserEndDay', response.data.until)
-        store.commit('setUserOpen', response.data.open)
-        store.commit('setUserIsadmin', response.data.isadmin)
+    if (this.loggedIn) {
+      const access = store.getters.token
+
+      getAPI({
+        data: { username: this.user },
+        method: 'post',
+        headers: { Authorization: `Bearer ${access}` }, // the new access token is attached to the authorization header
+        url: '/api/userinfo/'
       })
+        .then(response => {
+          // console.log(response)
+          store.commit('setUserId', response.data.id)
+          store.commit('setUserFirstName', response.data.first_name)
+          store.commit('setUserLastName', response.data.last_name)
+          store.commit('setUserEmail', response.data.email)
+          store.commit('setUserEndDay', response.data.until)
+          store.commit('setUserOpen', response.data.open)
+          store.commit('setUserIsadmin', response.data.isadmin)
+        })
+    }
   }
   // this.loggedIn = store.getters.loggedIn
   // this.user = store.getters.getUserName

@@ -1,6 +1,14 @@
 <template>
   <q-page class="flex flex-center">
 
+          <div v-if="spinnegal">
+        <q-spinner-bars
+          color="primary"
+          size="8em"
+        />
+        <q-tooltip :offset="[0, 8]">QSpinnerBars</q-tooltip>
+      </div>
+
     <q-dialog v-model="testFinished">
       <q-card>
         <q-toolbar>
@@ -127,7 +135,7 @@ export default {
   data () {
     return {
       // currentOptions: this.currentQuestion.options,
-      name: 'Testpage',
+      name: 'Realtestpage',
       testFinished: false,
       hinttext: '',
       cQ: 0,
@@ -144,7 +152,6 @@ export default {
       date: '2020/24/12',
       interval: 0,
       progress: 0.01,
-      time_allowed: 0,
       time_taken: 0,
       time_step: 0,
       tesing_user: 1,
@@ -154,9 +161,12 @@ export default {
       postpone: false,
       maximizedToggle: true,
       totalQuestions: 0,
-      totaltime: null,
+      time_allowed: 0,
+      totaltime: 0,
+      timeTotal: 0,
       questStartTime: null,
-      questTime: null
+      questTime: null,
+      spinnegal: true
     }
   },
   computed: {
@@ -172,7 +182,7 @@ export default {
   },
   methods: {
     timers () {
-      this.totaltime = date.formatDate(Date.now() - store.getters.getTimeTotal, 'HH:mm:ss').toString()
+      this.totaltime = date.formatDate(this.timeTotal - Date.now(), 'HH:mm:ss').toString()
       this.questTime = date.formatDate(Date.now() - this.questStartTime, 'mm:ss').toString()
     },
     setQuestion (e) {
@@ -186,18 +196,16 @@ export default {
       this.editingIndex = index
       this.question = JSON.parse(JSON.stringify(this.myJson.question_collection[index]))
       store.commit({ type: 'setQuestion', payload: this.question })
-      // index.commit({ type: 'setTestQuestion', payload: [] })
-      // Question.setAnswerChecked()
       this.currPoints = this.question.points
       this.questNum = index + 1
 
       this.questStartTime = Date.now()
+      this.timeTotal = store.getters.getTestTimeTotal
     },
     setAnswerChecked (e) {
       if (this.currentQuestion.id !== this.cQ) {
         this.cQ = this.currentQuestion.id
         this.currTestAnsw = []
-        // this.progress = 0.001
       }
     },
     onMemoSubmit (e) {
@@ -220,14 +228,10 @@ export default {
           this.questionsNumbersList[this.questNum - 1].answered = true
           this.questionsNumbersList[this.questNum - 1].color = 'warning'
           this.questionsNumbersList[this.questNum - 1]['toggle-color'] = 'negative'
-          // console.log(this.questionsNumbersList)
-          // this.setQuestion(this.questNum + 1)
         }
       }
 
       var formdata = {
-        // time_allowed: this.time_allowed,
-        // time_taken: parseInt(this.time_taken),
         options_ids: this.currTestAnsw.toString(),
         curr_question: parseInt(this.currentQuestion.id),
         test_practice: parseInt(this.myJson.id),
@@ -308,10 +312,6 @@ export default {
     }
   },
   mounted () {
-    // if (exam > 0) {
-    //   alert('MOUNTED REVIEW')
-    // }
-
     const username = store.getters.getUserName
 
     getAPI({
@@ -320,7 +320,7 @@ export default {
       data: {
         user: username,
         timed: true,
-        time_allowed: 3600
+        time_allowed: 0
       },
       headers: { Authorization: `Bearer ${access}` }
     })
@@ -342,17 +342,12 @@ export default {
             answer: 0
           })
         }
-        // console.log(qs)
+        this.$store.dispatch('setTestTimeTotal', date.addToDate(Date.now(), { minutes: 120 }))
         this.questionsNumbersList = qs
-        store.commit({ type: 'setTimeAllowed', payload: this.myJson.time_allowed + 0 })
         this.setQuestion(1)
+        this.spinnegal = false
       })
       .catch(error => console.log('Error', error.message))
-
-    // this.myJson = JSON.parse(JSON.stringify(json))
-    // this.interval = setInterval(() => {
-    //   this.timerCount()
-    // }, 1000)
   },
   updated () {
     this.setAnswerChecked()
@@ -362,8 +357,6 @@ export default {
       alert('CREATED REVIEW')
     }
     this.clock = setInterval(this.timers, 1000)
-    // this.startTime = Date.now()
-    this.$store.dispatch('setTotalTime', Date.now())
   }
 }
 
