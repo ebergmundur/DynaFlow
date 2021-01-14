@@ -224,7 +224,7 @@ class QuestionnaireGroupRelation(models.Model):
 
 
 class TestAnswers(Base):
-    tesing_user = models.ManyToManyField(PersonUser, default=default_user, blank=True )
+    tesing_user = models.ForeignKey(PersonUser, on_delete=models.CASCADE, default=default_user, blank=True )
     curr_question = models.SmallIntegerField(default=0)
     question = models.ForeignKey(Question, on_delete=models.CASCADE,  default=55)
     options_ids = models.CharField(max_length=200, default='')

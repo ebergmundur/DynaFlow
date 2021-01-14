@@ -304,4 +304,5 @@ class TestMemoAdmin(TabbedTranslationAdmin):
 
 @admin.register(TestAnswers)
 class TestAnswersAdmin(TabbedTranslationAdmin):
-    list_display = ('result_date', 'result', 'known', 'postpone', 'question', 'points_given' )
+    list_display = ('result_date', 'result', 'test_practice', 'tesing_user', 'known', 'postpone', 'question', 'points_given' )
+    # list_editable = ['']
