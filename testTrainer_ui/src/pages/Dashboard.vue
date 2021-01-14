@@ -5,38 +5,18 @@
     >
       <q-toolbar class="q-dark">
         <q-toolbar-title>
-          Mælaborð - meðaltal {{averagescore}}
+          Mælaborð - meðaltal {{ averagescore }}
         </q-toolbar-title>
       </q-toolbar>
-      <!--          <q-card-section>-->
 
-      <!--            <q-list>-->
-      <!--              <q-item-->
-      <!--                v-for="(exam, index) in exams"-->
-      <!--                :key="index"-->
-      <!--              >-->
-      <!--                <q-item-section>-->
-      <!--                  <q-item-label>{{ exam.name }}</q-item-label>-->
-      <!--                  <q-item-label caption lines="2">-->
-      <!--                    {{ formatDate(exam.created_date) }}-->
-
-      <!--                  </q-item-label>-->
-      <!--                </q-item-section>-->
-
-      <!--                <q-item-section side top>-->
-      <!--                  <q-item-label caption>{{ exam.results.given_points }}</q-item-label>-->
-      <!--                  <q-item-label caption>{{ exam.results.optional_points }}</q-item-label>-->
-      <!--                  &lt;!&ndash;                <q-icon name="star" color="yellow"/>&ndash;&gt;-->
-      <!--                </q-item-section>-->
-
-      <!--              </q-item>-->
-
-      <!--            </q-list>-->
-
-      <!--          </q-card-section>-->
       <q-card-section class="q-pa-none echarts">
         <IEcharts :option="barChartOption" :resizable="true"/>
       </q-card-section>
+      <q-card-actions>
+        <q-btn @click="onAnswerSubmit" color="positive" label="Allt"/>
+        <q-btn @click="onAnswerSubmit" color="positive" label="Æfingar"/>
+        <q-btn @click="onAnswerSubmit" color="positive" label="Próf"/>
+      </q-card-actions>
     </q-card>
   </q-page>
 </template>
@@ -97,6 +77,9 @@ export default {
   methods: {
     formatDate (d) {
       return date.formatDate(d, 'YYYY-MM-DD HH:mm')
+    },
+    onAnswerSubmit () {
+
     }
   },
   beforeCreate () {
@@ -124,7 +107,13 @@ export default {
         var avrgscore = 0
         var i = 0
         for (i = 0; i < this.exams.length; i++) {
-          const kkey = this.exams[i].name
+          var practice
+          if (this.exams[i].practice) {
+            practice = 'Æ'
+          } else {
+            practice = 'P'
+          }
+          const kkey = this.exams[i].name + ' ' + practice + ' ' + this.exams[i].id
           const testscore = parseInt(this.exams[i].final_results * 10000) / 1000
           avrgscore = avrgscore + testscore
 
