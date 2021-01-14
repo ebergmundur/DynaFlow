@@ -21,6 +21,7 @@ RESULT = [
 class Category(Base):
     # group = models.ManyToManyField(Group, blank=True)
     # question = models.ManyToManyField(Question, blank=True)
+    order = models.IntegerField( default=0 )
 
     def __str__(self):
         return self.name
@@ -28,6 +29,7 @@ class Category(Base):
     class Meta:
         verbose_name = "flokkur",
         verbose_name_plural = "flokkar"
+        ordering = ['order']
 
     @cached_property
     def q_count(self):
@@ -60,7 +62,7 @@ class Question(Base):
     class Meta:
         verbose_name = "spurning",
         verbose_name_plural = "spurningar"
-        # ordering = ['?']
+        ordering = ['category', '?']
 
     @property
     def options(self):
@@ -234,9 +236,9 @@ class TestAnswers(Base):
     result = models.SmallIntegerField(default=0, choices=RESULT)
     result_date = models.DateTimeField(auto_now_add=True)
 
-    # @property
-    # def question(self):
-    #     return Question.objects.get(id=self.question_id)
+    @property
+    def question_category(self):
+        return Question.objects.get(id=self.question_id).category.order -1 
 
     # def __str__(self):
     #     q = Question.objects.get(id=self.question_id)
@@ -262,15 +264,15 @@ class TestMemo(Base):
 def collect_questions(cats=[]):
     i = 0
     for q in cats:
-        print(q)
+        # print(q)
         if q != None:
             try:
                 category = Category.objects.get(id=i)
-                print(category)
+                # print(category)
                 questions = category.question.all()[:q]
-                print(questions)
+                # print(questions)
                 for quest in questions:
-                    # question_collection.add(quest)
+                    question_collection.add(quest)
                     pass
                 # print(questions.count())
             except:

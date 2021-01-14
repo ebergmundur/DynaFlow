@@ -281,7 +281,8 @@ class GroupAdmin(TabbedTranslationAdmin):
 
 @admin.register(Category)
 class CategoryAdmin(TabbedTranslationAdmin):
-    pass
+    list_display = ('name', 'order')
+    list_editable = ['order']
 
 
 @admin.register(Questionnaire)

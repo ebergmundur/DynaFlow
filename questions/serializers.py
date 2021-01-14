@@ -41,6 +41,7 @@ class CategorySerializer(serializers.ModelSerializer):
             'id',
             'name',
             'q_count',
+            'order',
         ]
 
 class QuestionGroupRelationSerializer(serializers.ModelSerializer):
@@ -168,6 +169,40 @@ class QuestionSerializer(serializers.ModelSerializer):
     #         Option.objects.create(question=question, **option_data)
     #     return album
 
+class QuestionAnswerSerializer(serializers.ModelSerializer):
+    # tesing_user = PersonSerializer(many=False)
+    question = QuestionSerializer(many=False)
+
+    class Meta:
+        model = TestAnswers
+        fields = [
+            'id',
+            'created_date',
+            'points',
+            'points_given',
+            'curr_question',
+            'question',
+            'question',
+            'result',
+            'result_date',
+            'options_ids',
+        ]
+
+
+class DashboardQuestionAnswerSerializer(serializers.ModelSerializer):
+    # question = QuestionSerializer(many=False)
+
+    class Meta:
+        model = TestAnswers
+        fields = [
+            'id',
+            'created_date',
+            'points',
+            'points_given',
+            'curr_question',
+            'question_category',
+        ]
+
 
 class QuestionnaireSerializer(serializers.ModelSerializer):
     question_collection = QuestionSerializer(many=True)
@@ -193,6 +228,8 @@ class QuestionnaireSerializer(serializers.ModelSerializer):
 
 
 class DashboardSerializer(serializers.ModelSerializer):
+    # question_collection = QuestionSerializer(many=True)
+    answers = DashboardQuestionAnswerSerializer(many=True)
 
     class Meta:
         model = Questionnaire
@@ -206,30 +243,14 @@ class DashboardSerializer(serializers.ModelSerializer):
             'results',
             'final_results',
             'only_failed',
-            # 'question_collection_str',
+            # 'question_collection',
+            'answers',
             'q_count',
             'created_date',
             'practice',
         ]
 
 
-class QuestionAnswerSerializer(serializers.ModelSerializer):
-    # tesing_user = PersonSerializer(many=False)
-    question = QuestionSerializer(many=False)
-
-    class Meta:
-        model = TestAnswers
-        fields = [
-            'id',
-            'created_date',
-            'points',
-            'points_given',
-            'curr_question',
-            'question',
-            'result',
-            'result_date',
-            'options_ids',
-        ]
 
 
 class RevieweSerializer(serializers.ModelSerializer):
