@@ -232,7 +232,7 @@ export default {
             // tekur saman einkunn fyrir hvert fag fyrir sig
             const scorefactor = (theTest.answers.length * catHolder.length)
             const catSlot = theTest.answers[ii].question_category - 1
-            catHolder[catSlot] = Number(catHolder[catSlot]) + Number(theTest.answers[ii].points_given / scorefactor) * 100
+            catHolder[catSlot] = Number(catHolder[catSlot]) + parseInt(Number(theTest.answers[ii].points_given / scorefactor) * 100)
 
             // this.xTests[i][0] = theTest.answers[ii].question_category_name
             // this.xTests[catSlot][i] = Number(this.xTests[catSlot][i]) + Number(theTest.answers[ii].points_given)
@@ -263,7 +263,7 @@ export default {
                 this.barChartOption.series.forEach(serie => {
                   total += serie.data[params.dataIndex]
                 })
-                return total.toFixed(2) + '%'
+                return total + '%'
               }
             }
           } else {
