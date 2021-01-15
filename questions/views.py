@@ -91,7 +91,8 @@ class ReviewViewSet(viewsets.ModelViewSet):
 def dashboard(request):
     print(request.data)
     if request.method == 'POST':
-        queryset = Questionnaire.objects.filter(owner__user__username=request.data['username']).order_by('created_date')
+        # queryset = Questionnaire.objects.filter(owner__user__username=request.data['username']).order_by('created_date')
+        queryset = Questionnaire.objects.all().order_by('created_date')
         serializer = DashboardSerializer(queryset, many=True)
         return Response(serializer.data)
 

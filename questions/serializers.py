@@ -201,6 +201,7 @@ class DashboardQuestionAnswerSerializer(serializers.ModelSerializer):
             'points_given',
             'curr_question',
             'question_category',
+            'question_category_name',
         ]
 
 

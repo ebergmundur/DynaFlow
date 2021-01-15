@@ -238,7 +238,16 @@ class TestAnswers(Base):
 
     @property
     def question_category(self):
-        return Question.objects.get(id=self.question_id).category.order -1 
+        return Question.objects.get(id=self.question_id).category.order
+
+    @property
+    def question_category_name(self):
+        return Question.objects.get(id=self.question_id).category.name
+
+    class Meta:
+        verbose_name = "svar á prófi",
+        verbose_name_plural = "svör á prófum"
+        ordering = ['test_practice', 'created_date']
 
     # def __str__(self):
     #     q = Question.objects.get(id=self.question_id)

@@ -18,6 +18,13 @@
         <q-btn @click="onAnswerSubmit" color="positive" label="Próf"/>
       </q-card-actions>
     </q-card>
+    <!-- <br/>
+    <div style="float: none; overflow: scroll;" >
+      <pre>
+      {{this.barChartOption.series}}
+      {{this.barChartOption.xAxis}}
+      </pre>
+    </div> -->
   </q-page>
 </template>
 
@@ -31,7 +38,7 @@ const access = store.getters.token
 
 var emphasisStyle = {
   itemStyle: {
-    barBorderWidth: 1,
+    borderWidth: 4,
     shadowBlur: 10,
     shadowOffsetX: 0,
     shadowOffsetY: 0,
@@ -52,7 +59,7 @@ export default {
       barChartOption: {
         width: '70%',
         grid: {
-          bottom: '15%'
+          bottom: '120px'
         },
         toolbox: {
           feature: {
@@ -63,9 +70,11 @@ export default {
           }
         },
         legend: {
+          // data: ['Fag', 'Líffræði', 'Efnafræði', 'Eðlisfræði', 'Stærðfræði', 'Almenn þekking'],
           type: 'scroll',
-          orient: 'vertical',
-          right: 0
+          orient: 'horisontal',
+          right: 10,
+          top: 30
         },
         tooltip: {
           trigger: 'item',
@@ -73,7 +82,6 @@ export default {
             type: 'line'
           },
           formatter: function (params) {
-            console.log(params)
             var tar
             if (params.value < 0) {
               tar = params[1]
@@ -85,39 +93,44 @@ export default {
         },
         xAxis: {
           data: [],
+          type: 'category',
           name: 'Próf',
           axisLine: { onZero: true },
           splitLine: { show: false },
-          splitArea: { show: false }
+          splitArea: { show: false },
+          axisLabel: {
+            show: true,
+            rotate: 60
+          }
         },
         yAxis: {
           name: '%',
           inverse: false,
           splitArea: { show: true }
         },
-        visualMap: {
-          type: 'continuous',
-          dimension: 2,
-          text: ['', ''],
-          inverse: true,
-          itemHeight: 200,
-          calculable: true,
-          min: 100,
-          max: -100,
-          top: 60,
-          left: 10,
-          inRange: {
-            colorLightness: [0.4, 0.8]
-          },
-          outOfRange: {
-            color: '#bbb'
-          },
-          controller: {
-            inRange: {
-              color: '#2f4554'
-            }
-          }
-        },
+        // visualMap: {
+        //   type: 'piecewise',
+        //   dimension: 2,
+        //   text: ['', ''],
+        //   inverse: true,
+        //   itemHeight: 20,
+        //   calculable: true,
+        //   min: 100,
+        //   max: -100,
+        //   top: 60,
+        //   left: 10,
+        //   inRange: {
+        //     colorLightness: [0.4, 0.8]
+        //   },
+        //   outOfRange: {
+        //     color: '#bbb'
+        //   },
+        //   controller: {
+        //     inRange: {
+        //       color: '#2f4554'
+        //     }
+        //   }
+        // },
         // Declare several bar series, each will be mapped
         // to a column of dataset.source by default.
         series: []
@@ -152,10 +165,14 @@ export default {
     })
       .then(response => {
         this.exams = JSON.parse(JSON.stringify(response.data))
-        console.log(this.exams)
+
         var avrgscore = 0
         var i = 0
         var iii = 0
+
+        this.xTests = [[], [], [], [], []]
+        const catNames = ['Líffræði', 'Efnafræði', 'Eðlisfræði', 'Stærðfræði', 'Almenn þekking']
+
         for (i = 0; i < this.exams.length; i++) {
           var testtype
           var ii = 0
@@ -165,50 +182,63 @@ export default {
           } else {
             testtype = 'P'
           }
-          const kkey = theTest.name + ' ' + testtype + ' ' + theTest.id
+          const kkey = theTest.name + ' ' + testtype
           const testscore = parseInt(theTest.final_results * 10000) / 1000
           avrgscore = avrgscore + testscore
 
           this.barChartOption.xAxis.data.push(kkey)
-          this.xTests.push([])
-
-          this.xTests[i].push(0, 0, 0, 0, 0)
+          var catHolder = [0, 0, 0, 0, 0]
 
           for (ii = 0; ii < theTest.answers.length; ii++) {
-            const catSlot = theTest.answers[ii].question_category
-            this.xTests[i][catSlot] = Number(this.xTests[i][catSlot]) + Number(theTest.answers[ii].points_given)
+            // tekur saman einkunn fyrir hvert fag fyrir sig
+            const scorefactor = (theTest.answers.length * catHolder.length) / 100
+            const catSlot = theTest.answers[ii].question_category - 1
+            catHolder[catSlot] = Number(catHolder[catSlot]) + parseInt(theTest.answers[ii].points_given / scorefactor)
+
+            // this.xTests[i][0] = theTest.answers[ii].question_category_name
+            // this.xTests[catSlot][i] = Number(this.xTests[catSlot][i]) + Number(theTest.answers[ii].points_given)
           }
+
+          var c = 0
+          for (c = 0; c < catHolder.length; c++) {
+            // this.xTests[c][0] = catNames[c]
+            this.xTests[c].push(catHolder[c])
+          }
+
+          console.log(catHolder)
+          console.log(this.barChartOption.xAxis.data)
+          console.log(this.barChartOption.series)
+          console.log(this.xTests)
         }
 
-        for (iii = 0; iii < this.xTests[0].length; iii++) {
+        for (iii = 0; iii < catHolder.length; iii++) {
           var lableholder
-          if (iii === this.xTests[0].length - 1) {
+          if (iii === catHolder.length - 1) {
             lableholder = {
-              normal: {
-                show: true,
-                margin: 15,
-                fontSize: 18,
-                position: 'top',
-                formatter: (params) => {
-                  let total = 0
-                  this.barChartOption.series.forEach(serie => {
-                    total += serie.data[params.dataIndex]
-                  })
-                  return total
-                }
+              show: true,
+              margin: 15,
+              fontSize: 18,
+              position: 'top',
+              formatter: (params) => {
+                let total = 0
+                this.barChartOption.series.forEach(serie => {
+                  total += serie.data[params.dataIndex]
+                })
+                return total
               }
             }
           } else {
             lableholder = { show: false }
           }
           var bar = {
-            name: iii.toString(),
+            name: catNames[iii],
             stack: 'one',
             type: 'bar',
             emphasis: emphasisStyle,
             label: lableholder,
             data: this.xTests[iii]
           }
+          console.log(bar)
 
           this.barChartOption.series.push(bar)
         }
@@ -223,7 +253,7 @@ export default {
 <style scoped>
 .echarts {
   width: 100%;
-  height: 400px;
+  height: 600px;
 }
 </style>
 <!--Categories-->
