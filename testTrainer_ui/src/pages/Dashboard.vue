@@ -12,11 +12,11 @@
       <q-card-section class="q-pa-none echarts">
         <IEcharts :option="barChartOption" :resizable="true"/>
       </q-card-section>
-      <q-card-actions>
+      <!-- <q-card-actions>
         <q-btn @click="onAnswerSubmit" color="positive" label="Allt"/>
         <q-btn @click="onAnswerSubmit" color="positive" label="Æfingar"/>
         <q-btn @click="onAnswerSubmit" color="positive" label="Próf"/>
-      </q-card-actions>
+      </q-card-actions> -->
     </q-card>
     <!-- <br/>
     <div style="float: none; overflow: scroll;" >
@@ -57,15 +57,23 @@ export default {
       username: null,
       averagescore: 0,
       barChartOption: {
-        width: '70%',
+        width: '86%',
         grid: {
-          bottom: '120px'
+          bottom: '90px',
+          left: '15px'
         },
         toolbox: {
+          top: '10px',
+          right: '10px',
           feature: {
             magicType: {
               type: ['stack', 'tiled']
             },
+            dataZoom: {
+              yAxisIndex: 'none'
+            },
+            restore: { show: false },
+            saveAsImage: {},
             dataView: {}
           }
         },
@@ -73,8 +81,8 @@ export default {
           // data: ['Fag', 'Líffræði', 'Efnafræði', 'Eðlisfræði', 'Stærðfræði', 'Almenn þekking'],
           type: 'scroll',
           orient: 'horisontal',
-          right: 10,
-          top: 30
+          right: 15,
+          top: 50
         },
         tooltip: {
           trigger: 'item',
@@ -98,9 +106,11 @@ export default {
           axisLine: { onZero: true },
           splitLine: { show: false },
           splitArea: { show: false },
+          // minInterval: 1,
+          // maxInterval: 3600 * 1000 * 24,
           axisLabel: {
             show: true,
-            rotate: 60
+            rotate: 0
           }
         },
         yAxis: {
@@ -108,7 +118,34 @@ export default {
           inverse: false,
           splitArea: { show: true }
         },
-        // visualMap: {
+        dataZoom: [{
+          type: 'slider',
+          start: 0,
+          end: 100
+        }, {
+          start: 0,
+          end: 100,
+          // handleIcon: 'image://data:image/gif;base64,R0lGODlhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/XBs/fNwfjZ0frl3/zy7////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABAALAAAAAAQABAAAAVVICSOZGlCQAosJ6mu7fiyZeKqNKToQGDsM8hBADgUXoGAiqhSvp5QAnQKGIgUhwFUYLCVDFCrKUE1lBavAViFIDlTImbKC5Gm2hB0SlBCBMQiB0UjIQA7',
+          // handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+          handleSize: '80%',
+          handleStyle: {
+            color: '#fff',
+            shadowBlur: 3,
+            shadowColor: 'rgba(0, 0, 0, 0.6)',
+            shadowOffsetX: 2,
+            shadowOffsetY: 2
+          }
+        }],
+        // timeline: {
+        //   show: true,
+        //   axisType: 'time',
+        //   loop: false,
+        //   label: {
+        //     show: true,
+        //     interval: 'auto'
+        //   }
+        // },
+        // // visualMap: {
         //   type: 'piecewise',
         //   dimension: 2,
         //   text: ['', ''],
@@ -174,15 +211,17 @@ export default {
         const catNames = ['Líffræði', 'Efnafræði', 'Eðlisfræði', 'Stærðfræði', 'Almenn þekking']
 
         for (i = 0; i < this.exams.length; i++) {
-          var testtype
           var ii = 0
           const theTest = this.exams[i]
+
+          var testtype
           if (theTest.practice) {
-            testtype = 'Æ'
+            testtype = 'Æfing'
           } else {
-            testtype = 'P'
+            testtype = 'Próf'
           }
-          const kkey = theTest.name + ' ' + testtype
+          // const kkey = theTest.created_date
+          const kkey = theTest.name + '\n' + testtype + ' ' + theTest.q_count + ' spurningar'
           const testscore = parseInt(theTest.final_results * 10000) / 1000
           avrgscore = avrgscore + testscore
 
@@ -191,9 +230,9 @@ export default {
 
           for (ii = 0; ii < theTest.answers.length; ii++) {
             // tekur saman einkunn fyrir hvert fag fyrir sig
-            const scorefactor = (theTest.answers.length * catHolder.length) / 100
+            const scorefactor = (theTest.answers.length * catHolder.length)
             const catSlot = theTest.answers[ii].question_category - 1
-            catHolder[catSlot] = Number(catHolder[catSlot]) + parseInt(theTest.answers[ii].points_given / scorefactor)
+            catHolder[catSlot] = Number(catHolder[catSlot]) + Number(theTest.answers[ii].points_given / scorefactor) * 100
 
             // this.xTests[i][0] = theTest.answers[ii].question_category_name
             // this.xTests[catSlot][i] = Number(this.xTests[catSlot][i]) + Number(theTest.answers[ii].points_given)
@@ -205,9 +244,9 @@ export default {
             this.xTests[c].push(catHolder[c])
           }
 
-          console.log(catHolder)
-          console.log(this.barChartOption.xAxis.data)
-          console.log(this.barChartOption.series)
+          // console.log(catHolder)
+          // console.log(this.barChartOption.xAxis.data)
+          // console.log(this.barChartOption.series)
           console.log(this.xTests)
         }
 
@@ -224,7 +263,7 @@ export default {
                 this.barChartOption.series.forEach(serie => {
                   total += serie.data[params.dataIndex]
                 })
-                return total
+                return total.toFixed(2) + '%'
               }
             }
           } else {
