@@ -219,7 +219,7 @@ def answer_add(request):
                     points_earned = int(data['points'])
                 else:
                     results = -1
-                    points_earned = int(data['points']) * -1
+                    points_earned = 0 #int(data['points']) * -1
 
         obj = TestAnswers.objects.create(
             # tesing_user=1,

@@ -197,10 +197,10 @@ class OptionInline(TranslationTabularInline):
 
 @admin.register(Question)
 class QuestionAdmin(TabbedTranslationAdmin):
-    list_display = ('name', 'question', 'category', 'exam_question', 'answer_count', 'owner','single_selection',)
+    list_display = ('name', 'question', 'category', 'exam_question', 'flipcard_question', 'answer_count', 'owner','single_selection',)
     inlines = [OptionInline, ]
     list_filter = [ 'category', 'owner', 'exam_question', 'single_selection',]
-    list_editable = ['single_selection', 'exam_question', 'category']
+    list_editable = ['single_selection', 'exam_question', 'category', 'flipcard_question', ]
 
     def get_form(self, request, obj, **kwargs):
         form = super(QuestionAdmin, self).get_form(request, obj, **kwargs)
