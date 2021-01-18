@@ -6,7 +6,6 @@
         <q-toolbar class="q-dark">
           <q-toolbar-title>
             {{ testname }}
-
 <!--            {{ formatDate(testdate) }}-->
 
             <span class="" style="float: right">
@@ -19,10 +18,11 @@
           <q-expansion-item
             v-for="(item, index) in currTestAnsw"
             :key="index"
-            :class="iscorrect( item.result)"
+            :class="iscorrect( item.result, item.question.category.order )"
             expand-separator
+            group="item.question.category.name"
             :label="item.question.virtname"
-            class=""
+            :caption="item.question.category.name"
           >
             <q-card-section style="background-color: white;" class="row quest-options">
               <div class="col-6">
@@ -54,6 +54,11 @@
             </q-card-section>
           </q-expansion-item>
         </q-list>
+        </q-card-section>
+        <q-card-section>
+        <q-card-actions>
+        <q-btn @click="dashboard" color="positive" label="Mælaborð"/>
+      </q-card-actions>
         </q-card-section>
     </q-card>
   </q-page>
@@ -105,15 +110,17 @@ export default {
     }
   },
   methods: {
+    dashboard () {
+      this.$router.push({ path: '/dashboard' }).catch(err => {
+        console.log(err.message)
+      })
+    },
     onMemoReset () {
       this.memotext = ''
       this.difficulty = 50
       this.accept = false
       this.calendar = false
       this.showDate = false
-    },
-    openUrl () {
-      window.open('https://api.enam.is/admin/questions/question/' + this.currentQuestion.id, '_blank')
     },
     openMemos () {
       this.memolist = true
@@ -135,37 +142,47 @@ export default {
         return 'checkbox'
       }
     },
-    iscorrect (i) {
+    catColor (i) {
+      return 'cat-' + 1
+    },
+    iscorrect (i, ii) {
       // console.log(p)
       // console.log('totpoints')
       // console.log(this.totpoints)
       // this.totpoints = this.totpoints + p
 
       if (i === 1) {
-        return 'correct'
+        return 'correct ccat-' + ii
       } else if (i === 0) {
-        return 'postponed'
+        return 'postponed ccat-' + ii
       } else {
-        return 'wrong'
+        return 'wrong ccat-' + ii
       }
     },
     reviewTest () {
       this.testFinished = false
-      this.$router.push({ path: '/review', params: { exam: 50 } }).catch(err => {
+      this.$router.push({ path: '/review' }).catch(err => {
         console.log(err.message)
       })
     }
   },
+  computed: {
+    reviewId () {
+      return this.$route.params.id || 0
+    }
+  },
   mounted () {
     // if (exam > 0) {
-    //   alert('MOUNTED REVIEW')
+    //   alert('MOUNTED REVIEW'
     // }
 
     // console.log(store.getters.getUserInfo)
+
     getAPI({
       url: '/api/review/',
       method: 'post',
       data: {
+        id: this.reviewId,
         username: store.getters.getUserInfo.username
       },
       headers: { Authorization: `Bearer ${access}` }
@@ -195,15 +212,7 @@ export default {
             answer: 0
           })
         }
-        // console.log(qs)
         this.questionsNumbersList = qs
-        // index.commit({ type: 'setTimeAllowed', payload: this.myJson.time_allowed + 0 })
-        // console.log(this.myJson.time_allowed)
-
-        // console.log(clock)
-        // clock.limit = this.myJson.time_allowed * (60000)
-
-        // this.setQuestion(1)
       })
       .catch(error => console.log('Error', error.message))
 
@@ -248,5 +257,20 @@ export default {
 
 .redborder
   border: 1px solid red
+
+.ccat-1
+  border-right: 12px solid $cat-1
+
+.ccat-2
+  border-right: 12px solid $cat-2
+
+.ccat-3
+  border-right: 12px solid $cat-3
+
+.ccat-4
+  border-right: 12px solid $cat-4
+
+.ccat-5
+  border-right: 12px solid $cat-5
 
 </style>

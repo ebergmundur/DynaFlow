@@ -5,7 +5,7 @@
       <q-page-container class="basebackground">
         <router-view/>
       </q-page-container>
-<!--      <Footer></Footer>-->
+     <Footer></Footer>
 
     </div>
   </q-layout>
@@ -14,12 +14,13 @@
 <script>
 // import { mapState } from 'vuex'
 import Header from 'components/Header'
-// import Footer from 'components/Footer'
+import Footer from 'components/Footer'
 
 export default {
   name: 'MainLayout',
   components: {
-    Header
+    Header,
+    Footer
   },
   data () {
     return {}

@@ -1,5 +1,14 @@
 <template>
   <q-page class="flex flex-center">
+
+        <div v-if="spinnegal" class="content-center" style="z-index: 1000;">
+      <q-spinner-bars
+        color="primary"
+        size="8em"
+        />
+      <q-tooltip :offset="[0, 8]">QSpinnerBars</q-tooltip>
+    </div>
+
     <q-card flat
             class="pagecard"
     >
@@ -25,7 +34,8 @@
       {{this.barChartOption.xAxis}}
       </pre>
     </div> -->
-  </q-page>
+
+    </q-page>
 </template>
 
 <script>
@@ -35,6 +45,7 @@ import IEcharts from 'vue-echarts-v3/src/full.js'
 import { getAPI } from 'src/api/axios-base'
 // import axios from 'axios'
 const access = store.getters.token
+var catQuestScore = []
 
 var emphasisStyle = {
   itemStyle: {
@@ -56,11 +67,12 @@ export default {
       access: null,
       username: null,
       averagescore: 0,
+      spinnegal: true,
       barChartOption: {
         width: '86%',
         grid: {
           bottom: '90px',
-          left: '15px'
+          left: '75px'
         },
         toolbox: {
           top: '10px',
@@ -86,17 +98,28 @@ export default {
         },
         tooltip: {
           trigger: 'item',
+          triggerOn: 'click',
+          // position: [10, 10],
+          enterable: true,
+          confine: true,
+          transitionDuration: 1.3,
           axisPointer: {
-            type: 'line'
+            type: 'none'
           },
           formatter: function (params) {
             var tar
+            // console.log('params')
+            // console.log(params)
             if (params.value < 0) {
               tar = params[1]
             } else {
               tar = params
             }
-            return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value
+            var ahref = '<a href="#/review/' + catQuestScore[params.dataIndex].id + '/">'
+            var catQuest = ahref + catQuestScore[params.dataIndex][params.seriesIndex][0] + ' spurningar,'
+            var catScore = catQuestScore[params.dataIndex][params.seriesIndex][1] + ' stig ' + catQuestScore[params.dataIndex][params.seriesIndex][1] / 5 + ' rétt</a>'
+
+            return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value + '<br/>' + catQuest + ' ' + catScore
           }
         },
         xAxis: {
@@ -228,11 +251,15 @@ export default {
           this.barChartOption.xAxis.data.push(kkey)
           var catHolder = [0, 0, 0, 0, 0]
 
+          catQuestScore.push({ name: kkey, id: theTest.id, 0: [0, 0], 1: [0, 0], 2: [0, 0], 3: [0, 0], 4: [0, 0] })
+
           for (ii = 0; ii < theTest.answers.length; ii++) {
             // tekur saman einkunn fyrir hvert fag fyrir sig
             const scorefactor = (theTest.answers.length * catHolder.length)
             const catSlot = theTest.answers[ii].question_category - 1
             catHolder[catSlot] = Number(catHolder[catSlot]) + parseInt(Number(theTest.answers[ii].points_given / scorefactor) * 100)
+            catQuestScore[i][catSlot][0]++
+            catQuestScore[i][catSlot][1] += theTest.answers[ii].points_given
 
             // this.xTests[i][0] = theTest.answers[ii].question_category_name
             // this.xTests[catSlot][i] = Number(this.xTests[catSlot][i]) + Number(theTest.answers[ii].points_given)
@@ -247,7 +274,7 @@ export default {
           // console.log(catHolder)
           // console.log(this.barChartOption.xAxis.data)
           // console.log(this.barChartOption.series)
-          console.log(this.xTests)
+          // console.log(this.xTests)
         }
 
         for (iii = 0; iii < catHolder.length; iii++) {
@@ -277,12 +304,13 @@ export default {
             label: lableholder,
             data: this.xTests[iii]
           }
-          console.log(bar)
+          // console.log(bar)
 
           this.barChartOption.series.push(bar)
         }
 
         this.averagescore = parseInt((avrgscore / this.exams.length) * 100) / 100
+        this.spinnegal = false
       })
       .catch(error => console.log('Error', error.message))
   }

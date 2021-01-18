@@ -200,6 +200,17 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'my_cache_table',
+        'TIMEOUT': 1200,
+        'OPTIONS': {
+            'MAX_ENTRIES': 5000
+        }
+    }
+}
+
 # AUTH_USER_MODEL = 'person.PersonUser'
 
 # Internationalization

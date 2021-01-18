@@ -181,11 +181,11 @@ class Questionnaire(Base):
     def q_count(self):
         return self.question_collection.count
 
-    @property
+    @cached_property
     def answers(self):
         return self.testanswers_set.all()
 
-    @property
+    @cached_property
     def results(self):
         optional_points = 0
         given_points = 0
@@ -196,7 +196,7 @@ class Questionnaire(Base):
         return {'optional_points': optional_points, 'given_points': given_points }
 
 
-    @property
+    @cached_property
     def final_results(self):
         if self.results['optional_points'] > 0:
             return self.results['given_points'] / self.results['optional_points']
