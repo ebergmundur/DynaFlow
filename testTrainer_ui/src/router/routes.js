@@ -87,6 +87,18 @@ const routes = [
       requiresLogged: false
     }
   },
+
+  {
+    path: '',
+    props: { exam: 1 },
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '/review/:id', name: 'review', component: (id) => import('pages/Review') }
+    ],
+    meta: {
+      requiresLogged: false
+    }
+  },
   {
     path: '/flipcard',
     component: () => import('layouts/MainLayout.vue'),
