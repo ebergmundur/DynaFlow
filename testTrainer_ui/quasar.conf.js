@@ -89,7 +89,8 @@ module.exports = function (/* ctx */) {
       iconSet: 'svg-mdi-v5', // Quasar icon set
       lang: 'en-us', // Quasar language pack
       config: {
-        notify: { /* look at QUASARCONFOPTIONS from the API card (bottom of page) */ }
+        notify: { /* look at QUASARCONFOPTIONS from the API card (bottom of page) */ },
+        dark: 'false' // or Boolean true/false
       },
       components: [
         'QCheckbox',
