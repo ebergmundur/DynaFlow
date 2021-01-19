@@ -6,7 +6,7 @@
     @keydown.native="keyprocess"
   >
     <div class="content" >
-    <div class="card"  ref="cardholder" v-touch-swipe.mouse="doSomething" v-on:click="toggleCard" >
+    <div class="card"  ref="cardholder" v-touch-swipe.mouse.touch="doSomething"  v-on:click="toggleCard" >
     <div class="front" id="cardfrontID" ref="cardfront">
        <div class="">{{ currentQuestion.question }}</div>
                       {{ currentQuestion.description }}
@@ -234,10 +234,10 @@ export default {
 $primary: rgb(6, 2, 245);
 $primary-light: rgb(82, 131, 247);
 
-$secondary: hsl(350,80%,50%);
+$secondary: rgb(187, 226, 78);
 
 $red: hsl(10,80%,50%);
-$orange: hsl(50,80%,50%);
+$orange: rgb(227, 230, 25);
 
 *, *:before, *:after {
   box-sizing: border-box;
@@ -301,7 +301,7 @@ $orange: hsl(50,80%,50%);
   background-size: cover;
   background-blend-mode: overlay;
   padding: 2rem;
-  font-size: 1.618rem;
+  font-size: 1.418rem;
   font-weight: 600;
   color: #fff;
   overflow: hidden;
@@ -314,8 +314,8 @@ $orange: hsl(50,80%,50%);
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, adjust-hue($primary, -20deg), $primary);
-    opacity: .25;
+    background: linear-gradient(135deg,$primary-light, $primary);
+    opacity: .85;
     z-index: -1;
   }
   // .card:hover & {
@@ -327,9 +327,11 @@ $orange: hsl(50,80%,50%);
 }
 
 .back {
-  background: rgb(232, 236, 230);
+  background: rgb(208, 211, 206);
   transform: rotateY(-180deg);
   padding: 0 2em;
+  font-weight: 600;
+  font-size: 1.24rem;
 
   // .button {
   //   background: linear-gradient(135deg, adjust-hue($primary, -20deg), $primary);
@@ -347,7 +349,7 @@ $orange: hsl(50,80%,50%);
     background: linear-gradient(135deg, adjust-hue($secondary, -20deg), $secondary);
     &:before {
       box-shadow: 0 0 10px 10px rgba($secondary, 0.25);
-    background-color: rgba($secondary, 0.25);
+    background-color: rgba($secondary, 0.45);
     }
   }
   }
