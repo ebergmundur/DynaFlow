@@ -76,20 +76,20 @@ const routes = [
     }
   },
 
-  {
-    path: '/review',
-    props: { exam: 1 },
-    component: () => import('layouts/MainLayout.vue'),
-    children: [
-      { path: '', name: 'review', component: () => import('pages/Review') }
-    ],
-    meta: {
-      requiresLogged: false
-    }
-  },
+  // {
+  //   path: '/review',
+  //   props: { exam: 1 },
+  //   component: () => import('layouts/MainLayout.vue'),
+  //   children: [
+  //     { path: '', name: 'review', component: () => import('pages/Review') }
+  //   ],
+  //   meta: {
+  //     requiresLogged: false
+  //   }
+  // },
 
   {
-    path: '',
+    path: '/review',
     props: { exam: 1 },
     component: () => import('layouts/MainLayout.vue'),
     children: [

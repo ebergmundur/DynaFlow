@@ -1,6 +1,6 @@
 from modeltranslation.translator import register, TranslationOptions
 from .models import Question, Questionnaire, Option, Group, Category, TestAnswers, TestMemo, QuestionGroupRelation, \
-    QuestionnaireGroupRelation
+    QuestionnaireGroupRelation, QuestionsAndAnswers
 
 
 
@@ -34,6 +34,11 @@ class TestMemoTranslationOptions(TranslationOptions):
 
 
 @register(TestAnswers)
+class TestAnswersTranslationOptions(TranslationOptions):
+    fields = ('name', 'description',)
+
+
+@register(QuestionsAndAnswers)
 class TestAnswersTranslationOptions(TranslationOptions):
     fields = ('name', 'description',)
 

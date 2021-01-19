@@ -269,6 +269,11 @@ class TestMemo(Base):
     # def question(self):
     #     return Question.objects.get(id=self.question_id)
 
+class QuestionsAndAnswers(Base):
+    topic = models.CharField(max_length=200)
+    class Meta:
+        verbose_name = "Spurt og svarað",
+        verbose_name_plural = "Spurt og svarað"
 
 
 def collect_questions(cats=[]):

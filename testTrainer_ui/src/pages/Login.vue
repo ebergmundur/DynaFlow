@@ -75,7 +75,7 @@ export default {
       })
         .then(() => {
           this.wrongCred = false
-          this.$router.push({ path: '/dashboard' })
+          this.$router.push({ path: '/' })
         })
         .catch(err => {
           console.log(err)
