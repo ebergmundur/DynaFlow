@@ -17,6 +17,36 @@ RESULT = [
     [1, 'Correct'],
 ]
 
+SPOTS = [
+    [1, 'Carousel'],
+    [2, 'Kubbar'],
+    [3, 'Um vefinn'],
+    [3, 'Um Q&A'],
+    [3, 'Fyrirvarar'],
+    [3, 'Skilmálar'],
+    [3, 'Áskrift'],
+]
+
+
+class TextBlock(Base):
+    slot = models.CharField(max_length=100, help_text="Heiti á hólfi, samfellt og án sértákna, lágstafir")
+    spot = models.SmallIntegerField(default=0, help_text="Svæði,  ", choices=SPOTS)
+    order = models.IntegerField( default=0, help_text="Röð á svæði, númer: 0…n" )
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Texti",
+        verbose_name_plural = "Textar"
+
+
+    @cached_property
+    def q_count(self):
+        return self.question_set.count
+        # return QuestionGroupRelation.objects.filter(group=self.id).count()
+
+
 
 class Category(Base):
     # group = models.ManyToManyField(Group, blank=True)

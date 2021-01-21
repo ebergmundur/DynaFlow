@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Question, Option, Questionnaire, Category, Group, QuestionGroupRelation, QuestionnaireGroupRelation, \
-    TestMemo, TestAnswers, QuestionsAndAnswers
+    TestMemo, TestAnswers, QuestionsAndAnswers, TextBlock
 from modeltranslation.admin import TranslationAdmin, TabbedTranslationAdmin, TranslationGenericStackedInline, \
     TranslationStackedInline, TranslationInlineModelAdmin, TranslationTabularInline
 import pytz
@@ -305,6 +305,33 @@ class TestMemoAdmin(TabbedTranslationAdmin):
 class QuestionsAndAnswersAdmin(TabbedTranslationAdmin):
     pass
 
+@admin.register(TextBlock)
+class QuestionsAndAnswersAdmin(TabbedTranslationAdmin):
+    list_display = ('name', 'spot', 'order', )
+    list_filter = ['spot']
+    list_editable = ['order']
+    fieldsets = [
+        (u'', {
+            'fields': (
+                'name',
+                'spot',
+                'order',
+                # 'slot',
+                'description',
+            ),
+            'classes': (),
+        }),
+        (u'Aðilar', {
+            # TODO prófa að fela
+            'fields': (
+                # 'owner',
+                'modified_by',
+                'created_by',
+            ),
+            'classes': ('collapse', 'collapsed',),
+            # 'classes': ('tab-fs-otpowner',),
+        }),
+    ]
 
 @admin.register(TestAnswers)
 class TestAnswersAdmin(TabbedTranslationAdmin):
