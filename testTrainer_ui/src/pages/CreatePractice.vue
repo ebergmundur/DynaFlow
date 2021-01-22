@@ -12,26 +12,54 @@
       <q-card-section>
 
         <div class="text-h6 q-mt-md">Flokkar</div>
+        <div class="q-ma-lg">
+        <q-input v-model="tot_count" label="Fjöldi" @input="calc_total_count" />
+         <!-- <q-field
+          :label="tot_count.toString()"
+          v-model="cats"
+        > -->
+          <q-slider
+            v-model="tot_count"
+            :min='0'
+            color="blue"
+            label
+            :max='100'
+            :step='5'
+            markers
+            @change="calc_total_count"
+          />
+          <!-- </q-field> -->
+          <q-checkbox
+            v-for="(data, index) in myJson"
+            :key="index"
+            :value="data.id"
+            :label="data.name"
+            v-model="cats_count[data.id].use"
+            @input="calc_total_count"
+        />
+        </div>
+        <div class="q-ma-lg">
         <q-field
           v-for="(data, index) in myJson"
           :key="index"
-          :label="data.name + ' ' + cats_count[data.id] + ' af ' + data.q_count"
-          stack-label
+          :label="data.name + ' ' + cats_count[data.id].num + ' af ' + data.q_count"
           v-model="cats"
         >
           <q-slider
             v-if="data.q_count"
-            v-model="cats_count[data.id]"
+            v-model="cats_count[data.id].num"
             :min="0"
             color="green"
+            label
+            markers
             :max="data.q_count"
             @change="calc_question_count"
           />
         </q-field>
+        </div>
 
-        <div class="text-h6">Fjöldi spurninga í æfingu {{ question_count }}</div>
-
-        <div>
+        <div class="text-h6 q-mt-md">Fjöldi spurninga í æfingu {{ question_count }}</div>
+        <!-- <div>
           Nota tímamörk spurninga {{ time_limit }} mín.
           eða setja eigin tíma: {{ manualTime }} mín.
           <q-slider
@@ -41,7 +69,7 @@
             :step="5"
             label
           />
-        </div>
+        </div> -->
         <div>
           <q-checkbox
             label="Sleppa „kann vel“"
@@ -57,14 +85,16 @@
       </q-card-section>
       <!--      {{groups}} // {{cats}}-->
       <q-separator/>
-      <q-card-actions>
+      <q-card-section style="width: 100%; min-height: 100px;" class="">
+
         <q-btn
           @click="onPracticeSubmit"
           color="green"
+          style="position: absolute; right: 45px; top: 15px;"
         >
           Vista
         </q-btn>
-      </q-card-actions>
+      </q-card-section>
     </q-card>
   </q-page>
 </template>
@@ -83,6 +113,7 @@ export default {
       name: 'CreatePractice',
       groups: [],
       cats_count: [],
+      tot_count: '0',
       cats: [],
       question_count: 0,
       given_time_limit: true,
@@ -118,7 +149,7 @@ export default {
         examname: this.examname,
         user: store.getters.getUserName
       }
-      // console.log(formdata)
+      console.log(formdata)
       getAPI({
         url: '/api/questionnaiere/',
         method: 'post',
@@ -137,16 +168,56 @@ export default {
     manualSet () {
       this.given_time_limit = false
     },
+    calc_total_count (e) {
+      var i = 0
+      var ii = 0
+      var tc = 0
+
+      for (i = 0; i < this.cats_count.length; i++) {
+        if (typeof this.cats_count[i] !== 'undefined') {
+          if (this.cats_count[i].use) {
+            tc++
+          }
+        }
+      }
+      if (tc === 0) {
+        console.log('tc test')
+        console.log(tc)
+        tc = 1
+      }
+      console.log('tc')
+      console.log(tc)
+
+      var qPerCat = Math.round(Number(this.tot_count) / tc)
+
+      console.log('qPerCat')
+      console.log(qPerCat)
+      console.log('catta count')
+      for (ii = 0; ii < this.cats_count.length; ii++) {
+        if (typeof this.cats_count[ii] !== 'undefined') {
+          if (this.cats_count[ii].use) {
+            this.cats_count[ii].num = qPerCat
+            console.log(this.cats_count[ii])
+          } else {
+            this.cats_count[ii].num = 0
+          }
+        }
+      }
+      this.calc_question_count()
+    },
     calc_question_count () {
       var i = 0
       var t = 0
       for (i = 0; i < this.cats_count.length; i++) {
-        if (this.cats_count[i] > 0) {
-          t = t + (this.cats_count[i] * 1)
+        if (typeof this.cats_count[i] !== 'undefined') {
+          if (this.cats_count[i].use === true) {
+            t = t + (this.cats_count[i].num)
+          }
         }
       }
       this.question_count = t
       this.count_time_limit()
+      console.log(this.cats_count)
     },
     setGroupChecked () {
       return 0
@@ -161,13 +232,24 @@ export default {
         var cid = this.myJson[i]
         qc = qc + Math.round(cid.q_count / 2)
         // this.cats_count[cid.id] = Math.round(cid.q_count / 2)
-        this.cats_count[cid.id] = 0
+        // this.cats_count[cid.id][0] = true
+        this.cats_count[cid.id] = { id: cid.id, num: 0, use: true }
       }
       // this.question_count = qc
+      console.log(this.cats_count)
     },
     count_time_limit () {
       this.time_limit = Math.round(this.question_count)
       this.manualTime = this.time_limit
+    },
+    keyprocess (e) {
+      // e.preventDefault()
+      console.log(e)
+
+      if (e.key === 'Enter') {
+        // console.log('ENTER')
+        this.onPracticeSubmit()
+      }
     }
   },
   beforeMount () {
@@ -179,12 +261,18 @@ export default {
       .then(response => {
         // console.log(response)
         this.myJson = JSON.parse(JSON.stringify(response.data))
-        console.log(this.myJson)
+        // console.log(this.myJson)
         this.set_slider()
         this.count_time_limit()
       })
       .catch(error => console.log('Error', error.message))
     // this.myJson = JSON.parse(JSON.stringify(json))
+  },
+  mounted () {
+    window.addEventListener('keyup', this.keyprocess)
+  },
+  beforeDestroy () {
+    window.removeEventListener('keyup', this.keyprocess)
   }
 }
 </script>

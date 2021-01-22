@@ -60,8 +60,8 @@ export default {
         url: '/api/flipcard/'
       })
         .then(response => {
+          // this.$refs.cardfront.setAttribute('style', 'color: #5566f7;')
           this.myJson = JSON.parse(JSON.stringify(response.data))
-          console.log(this.myJson)
           this.setQuestion(1)
         })
         .catch(error => console.log('Error', error.message))
@@ -73,20 +73,25 @@ export default {
       } else {
         index = 0
       }
+      // this.$refs.cardfront.setAttribute('style', 'color: #5566f7;')
       this.editingIndex = index
       this.question = JSON.parse(JSON.stringify(this.myJson[index]))
+
       store.commit({ type: 'setQuestion', payload: this.question })
-      index.commit({ type: 'setTestQuestion', payload: [] })
+      // index.commit({ type: 'setTestQuestion', payload: [] })
       // Question.setAnswerChecked()
       this.questNum = index + 1
       // this.flippclass = 'flippover'
       // this.position = 300
       // this.$refs.scrollArea.setScrollPosition(this.position, 200)
+
+      // setTimeout(function () {
+      //   this.$refs.cardfront.setAttribute('style', 'transform: color: #FFFFF; transition: color 800ms;')
+      // }, 1200)
     },
     doSomething ({ evt, ...info }) {
+      // this.$refs.cardfront.setAttribute('style', 'color: #5566f7;')
       evt.preventDefault()
-      // console.log(event)
-      // console.log(info)
 
       if (info.direction === 'left') {
         // console.log('spacebar')
@@ -103,6 +108,7 @@ export default {
       }
     },
     keyprocess (e) {
+      // this.$refs.cardfront.setAttribute('style', 'color: #5566f7;')
       e.preventDefault()
 
       if (e.keyCode === 32) {
@@ -126,52 +132,49 @@ export default {
     },
     goLeft () {
       console.log('goLeft')
-      // this.$refs.cardback.setAttribute('style', 'transform: rotateY(5deg); left: -300px; opacity: 0.01; transition: opacity 600ms linear;')
-      this.$refs.cardholder.setAttribute('style', 'transform: rotateY(5deg); left: -300px; opacity: 0.01; transition: opacity 600ms linear;')
+      this.$refs.cardfront.setAttribute('style', 'color: #5566f7;')
+      this.$refs.cardholder.setAttribute('style', 'transform: rotateY(5deg); left: -600px; opacity: 0.01; transition: 600ms linear;')
       this.reset(this.$refs.cardholder)
     },
     goRight () {
       console.log('goRight')
-      // this.$refs.cardback.setAttribute('style', 'transform: rotateY(5deg); right: -300px; ; opacity: 0.01; transition: opacity 600ms linear;')
-      this.$refs.cardholder.setAttribute('style', 'transform: rotateY(5deg); right: -300px; opacity: 0.01; transition: opacity 600ms linear;')
+      this.$refs.cardholder.setAttribute('style', 'transform: rotateY(5deg); right: -600px; opacity: 0.01; transition: 600ms linear;')
       this.reset(this.$refs.cardholder)
     },
     goUp () {
       console.log('goUp')
-      // this.$refs.cardback.setAttribute('style', 'transform: rotateY(5deg); top: -300px; ; opacity: 0.01; transition: opacity 600ms linear;')
-      this.$refs.cardholder.setAttribute('style', 'transform: rotateY(5deg); top: -300px; ; opacity: 0.01; transition: opacity 600ms linear;')
+      this.$refs.cardholder.setAttribute('style', 'transform: rotateY(0deg); top: -600px; opacity: 0.01; transition: 600ms linear;')
       this.reset(this.$refs.cardholder)
     },
     goDown () {
       console.log('goDown')
-      // console.log(this.$refs.cardfront)
-      this.$refs.cardholder.setAttribute('style', 'transform: rotateY(5deg); bottom: -300px; opacity: 0.01; transition: opacity 600ms linear;')
-      // this.$refs.cardfront.setAttribute('style', 'transform: rotateY(5deg); bottom: -300px; opacity: 0.01; transition: opacity 600ms linear;')
+      this.$refs.cardholder.setAttribute('style', 'transform: rotateY(0deg); bottom: -600px; opacity: 0.01; transition: 600ms linear;')
       this.reset(this.$refs.cardholder)
     },
     toggleCard () {
       console.log('toggleCard')
       // console.log(this.$refs.cardholder)
       if (this.flipped) {
-        this.$refs.cardfront.setAttribute('style', 'transform: rotateY(0deg)')
+        this.$refs.cardfront.setAttribute('style', 'transform: rotateY(0deg);')
         this.$refs.cardback.setAttribute('style', 'transform: rotateY(-180deg)')
       } else {
         this.$refs.cardback.setAttribute('style', 'transform: rotateY(0deg)')
-        this.$refs.cardfront.setAttribute('style', 'transform: rotateY(180deg)')
+        this.$refs.cardfront.setAttribute('style', 'transform: rotateY(180deg);')
       }
       this.flipped = !this.flipped
     },
     reset (f) {
-      this.flippit()
       var frontur = this.$refs.cardfront
       var bak = this.$refs.cardback
-      frontur.setAttribute('style', 'transform: rotateY(0deg)')
-      bak.setAttribute('style', 'transform: rotateY(-180deg)')
+      this.$refs.cardfront.setAttribute('style', 'color: #5566f7;')
+
       setTimeout(function () {
-        console.log('reset')
-        f.setAttribute('style', 'transform: rotateY(0deg); bottom: 0; left: 0; opacity: 1; transition: opacity 600ms linear;')
-        console.log('reset out')
-      }, 800)
+        frontur.setAttribute('style', 'transform: rotateY(0deg)')
+        bak.setAttribute('style', 'transform: rotateY(-180deg)')
+        f.setAttribute('style', 'transform: rotateY(0deg); bottom: 0; left: 0; opacity: 1; transition: opacity 800ms;')
+        this.$refs.cardfront.setAttribute('style', 'transform: color: #FFFFF; transition: color 800ms;')
+      }, 1200)
+      this.flippit()
     }
   },
   mounted () {
