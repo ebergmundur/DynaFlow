@@ -1,11 +1,11 @@
 <template>
-  <q-footer class="bg-grey-8 text-white flex flex-center">
+  <q-footer class="bg-grey-9 text-white flex flex-center">
     <q-toolbar>
-      <q-toolbar-title class="justify-center" >
+      <q-toolbar-title style="text-align: center;">
         <q-avatar>
           <img src="../assets/enam-logo.svg">
         </q-avatar>
-        © E-nám efh. 2021 enam@enam.is
+        ©2021 E-nám ehf. – netfang: <a href="mailto:enam@enam.is" style="color: white;">enam@enam.is</a>
       </q-toolbar-title>
     </q-toolbar>
   </q-footer>

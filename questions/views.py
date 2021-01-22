@@ -287,18 +287,16 @@ def practice_test(request):
         i = 0  # index of array refers to Category id
         print(data['question_collection'])
         for q in data['question_collection']:
-            if q == None:
-                q = 0
-            if q > 0:
-                category = Category.objects.get(id=i)
+            if q != None:
+                print('actual q: ', q['id'])
+                category = Category.objects.get(id=q['id'])
                 print(category.name)
-                print('actual q: ', q)
                 questions = category.question_set.all().order_by('?')
                 print(questions.count())
                 quest_counter = 0
                 for question in questions:
                     # print('quest_counter ', quest_counter)
-                    if quest_counter < q:
+                    if quest_counter < q['num']:
                         if data['omit_known'] == False and data['only_failed'] == False:
                             print('normal')
                             obj.question_collection.add(question)
