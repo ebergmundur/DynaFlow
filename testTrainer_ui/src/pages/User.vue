@@ -46,7 +46,7 @@
                 Ástundun
               </q-toolbar-title>
             </q-toolbar>
-            <div class="redborder" style="height: 300px;">
+            <div class="" style="height: 300px;">
               <Heatmap></Heatmap>
             </div>
           </q-card-section>
