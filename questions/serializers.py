@@ -265,7 +265,6 @@ class HeatmapSerializer(serializers.ModelSerializer):
             'q_count',
             'created_date',
             'modified_date',
-            'mod_tic',
         ]
 
 
