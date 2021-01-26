@@ -17,7 +17,21 @@ export default {
       loading: false,
       data: [],
       options: {
-        tooltip: {},
+        tooltip: {
+          triggerOn: 'click',
+          formatter: function (params, ticket, callback) {
+            console.log(params.value[0])
+            var months = ['jan', 'feb', 'mar', 'apr', 'maí', 'jún', 'júl', 'ágú', 'sep', 'okt', 'nóv', 'des']
+            // var dash = '<br><a href="#/dashboard/">Mælaborð</a>'
+            var lbl = params.value[0].getDate() + '. ' + months[params.value[0].getMonth()] + '. ' + params.value[0].getFullYear() +
+            '<br><strong>' + params.value[1] + ' próf/æfingar</strong>'
+            return lbl
+          }
+        },
+        dayLabel: {
+          show: true,
+          fontSize: 12
+        },
         visualMap: {
           min: 1,
           max: 5,
@@ -27,7 +41,7 @@ export default {
           text: ['High', '1'],
           top: 65,
           textStyle: {
-            // color: '#000'
+            color: '#868686'
           }
         },
         toolbox: {
@@ -39,27 +53,40 @@ export default {
         },
         calendar: {
           top: 120,
-          left: 60,
+          left: 70,
           right: 30,
+          width: 'auto',
+          height: 'auto',
           cellSize: ['auto', 16],
           range: ['2020-01-01', '2021-12-31'],
           monthLabel: {
-            nameMap: ['jan', 'feb', 'mar', 'apr', 'maí', 'jún', 'júl', 'ágú', 'sep', 'okt', 'nóv', 'des']
+            nameMap: ['jan', 'feb', 'mar', 'apr', 'maí', 'jún', 'júl', 'ágú', 'sep', 'okt', 'nóv', 'des'],
+            color: '#929292'
           },
           dayLabel: {
-            nameMap: ['su', 'má', 'þr', 'mi', 'fi', 'fö', 'la']
+            nameMap: ['su', 'má', 'þr', 'mi', 'fi', 'fö', 'la'],
+            color: '#929292'
           },
           itemStyle: {
             borderWidth: 0.5
           },
           yearLabel: {
-            show: true
+            show: true,
+            color: '#929292',
+            margin: 40
           }
         },
         series: {
           type: 'heatmap',
           coordinateSystem: 'calendar',
-          data: []
+          data: [],
+          label: {
+            show: true,
+            fontSize: 9,
+            formatter: function (params, ticket, callback) {
+              return params.value[0].getDate()
+            }
+          }
         },
         dataZoom: [{
           type: 'inside'
@@ -130,7 +157,7 @@ export default {
           }
         }
 
-        this.options.calendar.range = [(minYear - 1) + '-01-01', maxYear + '-12-31']
+        this.options.calendar.range = [minYear + '-01-01', maxYear + '-12-31']
         this.options.visualMap.max = maxScore + 3
         this.options.visualMap.text[0] = maxScore + 2
         console.log(this.options)
