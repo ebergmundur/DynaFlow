@@ -252,6 +252,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
+    'DATETIME_FORMAT': 'iso-8601',
 }
 
 DJANGO_WYSIWYG_FLAVOR = "ckeditor"

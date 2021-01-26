@@ -51,6 +51,7 @@ urlpatterns = [
                   path('api/review/', question_views.review),
                   path('api/dashboarddata/', question_views.dashboard),
                   path('api/questionnaiere/', question_views.practice_test),
+                  path('api/heatmap/', question_views.heatmap),
                   path('api/realtest/', question_views.real_test),
                   path('api/handin/', question_views.practice_hand_in),
                   path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),

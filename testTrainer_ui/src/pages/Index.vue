@@ -1,10 +1,9 @@
 <template>
-  <q-page class="flex flex-center " >
+  <q-page class="flex " >
     <!--    <div class="row q-pa-md">-->
     <div class="col">
 
       <q-carousel
-
         v-model="slide"
         transition-prev="fade"
         transition-next="fade"
@@ -14,11 +13,10 @@
         @mouseleave="autoplay = true"
         swipeable
         animated
-        control-color="darkgray"
+        control-color="primary"
         navigation
         padding
         arrows
-        class="ebbg-primary"
       >
 
         <q-carousel-slide name="welcome" class="column no-wrap flex-center">
@@ -196,7 +194,6 @@
                </q-card-section>
              </q-card>
       </div>
-
       <!--      <q-separator class="q-ma-md"/>-->
 
       <!--      <div class="row q-gutter-md justify-center col-lg-8  q-px-lg col ">-->
@@ -262,23 +259,27 @@ export default {
       lorem: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque voluptatem totam, architecto cupiditate officia rerum, error dignissimos praesentium libero ab nemo.'
     }
   },
+  methods: {
+  },
   created () {
-    this.$q.dark.set(true)
+    // this.$q.dark.set(true)
   }
 }
 </script>
 
 <style lang="sass" scoped>
 
-.logo-card
-  background-color: #ffffff
-  color: whitesmoke
+// .logo-card
+  // background-color: #ffffff
+  // color: whitesmoke
 
-.logo-card h3
-  font-weight: bolder
+// .logo-card h3
+//   font-weight: bolder
 
 .card-icon
-  color: #6d91b7
+  opacity: 0.8
+  // color: #271ce0
+  // color: #6d91b7
 
 .ebbg-primary
   background: linear-gradient(to right, $primary, $secondary)

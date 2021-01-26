@@ -253,6 +253,21 @@ class DashboardSerializer(serializers.ModelSerializer):
 
 
 
+class HeatmapSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Questionnaire
+        fields = [
+            'id',
+            'owner',
+            'name',
+            'timed',
+            'q_count',
+            'created_date',
+            'modified_date',
+            'mod_tic',
+        ]
+
 
 class RevieweSerializer(serializers.ModelSerializer):
     # questions = QuestionSerializer(many=True)

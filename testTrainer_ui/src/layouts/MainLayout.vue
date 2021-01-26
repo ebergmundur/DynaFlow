@@ -1,8 +1,8 @@
 <template>
   <q-layout view="hHh lpr fFf">
-    <div class="q-pa-none q-ma-none">
+    <div  class="q-pa-none q-ma-none">
       <Header></Header>
-      <q-page-container class="basebackground">
+      <q-page-container class="">
         <router-view/>
       </q-page-container>
      <Footer></Footer>

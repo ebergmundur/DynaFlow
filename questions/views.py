@@ -5,10 +5,11 @@ from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from django.db.models import Count
 
 from .serializers import OptionSerializer, QuestionSerializer, QuestionMemoSerializer, QuestionAnswerSerializer, \
     GroupSerializer, CategorySerializer, QuestionnaireSerializer, RevieweSerializer, PersonSerializer, UserSerializer, \
-    DashboardSerializer
+    DashboardSerializer, HeatmapSerializer
 from .models import Option, Question, Questionnaire, QuestionGroupRelation, QuestionnaireGroupRelation, Group, Category, \
     TestMemo, TestAnswers
 from person.models import PersonUser
@@ -89,7 +90,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 @api_view(['POST'])
 def dashboard(request):
-    print(request.data)
+    # print(request.data)
     if request.method == 'POST':
         queryset = Questionnaire.objects.filter(owner__user__username=request.data['username']).order_by('created_date')
         # queryset = Questionnaire.objects.all().order_by('created_date')
@@ -106,6 +107,15 @@ def review(request):
         else:
             queryset = Questionnaire.objects.filter(owner__user__username=request.data['username']).order_by('-created_date')[0]
         serializer = RevieweSerializer(queryset, many=False)
+        return Response(serializer.data)
+
+
+@api_view(['POST'])
+def heatmap(request):
+    if request.method == 'POST':
+        tests = Questionnaire.objects.filter(owner__user__username=request.data['username']).order_by('modified_date')
+        print(tests)
+        serializer = HeatmapSerializer(tests, many=True)
         return Response(serializer.data)
 
 
