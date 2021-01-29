@@ -45,6 +45,9 @@
             </q-item>
 
             <q-item clickable @click="tab = 'more'">
+              <q-route-tab v-if="loggedIn" @click="tab = 'more'" to="/dashboard/allt" label="Mælaborð"/>
+            </q-item>
+            <q-item clickable @click="tab = 'more'">
               <q-route-tab v-if="loggedIn" @click="tab = 'more'" to="/dashboard" label="Mælaborð"/>
             </q-item>
 
