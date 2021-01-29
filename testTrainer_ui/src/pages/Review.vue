@@ -111,7 +111,7 @@ export default {
   },
   methods: {
     dashboard () {
-      this.$router.push({ path: '/dashboard' }).catch(err => {
+      this.$router.push({ path: '/dashboard/allt' }).catch(err => {
         console.log(err.message)
       })
     },
@@ -226,7 +226,7 @@ export default {
   },
   created () {
     if (exam > 0) {
-      alert('CREATED REVIEW')
+      // alert('CREATED REVIEW')
     }
   }
 }

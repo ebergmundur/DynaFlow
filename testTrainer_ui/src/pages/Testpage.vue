@@ -93,7 +93,7 @@
                     <div class="text-h6">{{ formatDate(data.created_date) }}</div>
                     <div>
                       <q-toggle v-model="data.known" label="Kann vel " class=" q-ma-sm" disable/>
-                      <q-toggle v-model="data.postpone" label="Geymd" class=" q-ma-sm" disable/>
+                      <!-- <q-toggle v-model="data.postpone" label="Geymd" class=" q-ma-sm" disable/> -->
                     </div>
                     <div class="text-subtitle2">
                       Þyngd: {{ data.difficulty }}
@@ -140,9 +140,9 @@
       </q-toolbar>
       <q-card-section class="row col">
         <div class="col-md-6 q-pr-lg ">
-          <div class="text-h6">{{ currentQuestion.question }}</div>
-          <!--            <div class="text-subtitle2">{{ currentQuestion.name }}</div>-->
-          <!--            <div class="text-subtitle2">{{ currentQuestion.owner.fullname }}</div>-->
+          <div class="text-h6">{{ currentQuestion.virtname }}</div>
+                     <!-- <div class="text-subtitle2">{{ currentQuestion.name }}</div>
+                      <div class="text-subtitle2">{{ currentQuestion.owner.fullname }}</div> -->
           <div
             v-if="hinttext"
             class="text-white bg-orange q-pa-sm ">{{ hinttext }}
@@ -176,7 +176,9 @@
               v-model="currTestAnsw"
               @input="setAnswerChecked"
             />
-            {{ opt.correct }}
+            <span v-if="userok">
+              {{ opt.correct }}
+            </span>
 
           </div>
         </div>
@@ -187,7 +189,7 @@
         <q-checkbox v-model="known" value="false" label="Kann vel " class=" q-ma-sm"/>
         <q-checkbox v-model="postpone" value="false" label="Geyma" class=" q-ma-sm"/>
 
-        <div class="text-h5 ">
+        <div class="">
           {{ currPoints }} stig &nbsp;
           <!--          <span q-red>{{hintloss}}</span>&nbsp;-->
         </div>
@@ -197,7 +199,8 @@
           @click="hint">„Tips“ {{ currentQuestion.hint_cost }} stig
         </q-btn>
         &nbsp;
-        <q-btn label="Minnismiðar" icon="">
+        <q-btn color="orange">
+          {{ currentQuestion.memos.length }} Minnismiðar
           <q-menu cover auto-close>
             <q-list>
               <q-btn
@@ -206,7 +209,7 @@
                 color="orange"
                 style="width: 100%"
               >
-                Minnismiðar {{ currentQuestion.memos.length }}
+                {{ currentQuestion.memos.length }} Minnismiðar
               </q-btn>
               <br>
               <q-btn
@@ -235,7 +238,7 @@
 
     <div class="row questlist content-center ">
 
-      <div class="content-center col ">
+      <div class="content-center col">
         <q-btn-toggle
           v-model="questNum"
           :options="questionsNumbersList"
@@ -291,7 +294,8 @@ export default {
       timeTotal: 0,
       questStartTime: null,
       questTime: null,
-      spinnegal: true
+      spinnegal: true,
+      username: ''
     }
   },
   computed: {
@@ -431,13 +435,21 @@ export default {
       this.$router.push({ path: '/review', params: { exam: 52 } }).catch(err => {
         console.log(err.message)
       })
+    },
+    keyprocess (e) {
+      console.log(e)
+      if (e.key === 'Enter') {
+        this.onAnswerSubmit()
+      }
+    },
+    userok () {
+      return this.username === 'eberg'
     }
   },
   mounted () {
-    const username = store.getters.getUserName
-
+    this.username = store.getters.getUserName
     getAPI({
-      url: '/api/questionnaiere/?user=' + username,
+      url: '/api/questionnaiere/?user=' + this.username,
       headers: { Authorization: `Bearer ${access}` }
     })
       .then(response => {
@@ -470,6 +482,10 @@ export default {
   },
   created () {
     this.clock = setInterval(this.timers, 1000)
+    window.addEventListener('keyup', this.keyprocess)
+  },
+  beforeDestroy () {
+    window.removeEventListener('keyup', this.keyprocess)
   }
 }
 
@@ -503,7 +519,7 @@ export default {
   padding: 10px 20px
   width: 100%
   position: fixed
-  bottom: 0px
+  bottom: 50px
   margin: 0px
   background-color: $primary
   //min-height: 40px

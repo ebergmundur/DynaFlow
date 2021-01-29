@@ -10,6 +10,10 @@ import store from 'src/store'
 
 const access = store.getters.token
 
+// function dash2 (d) {
+//   alert(d)
+// }
+
 export default {
   name: 'Heatmap',
   data () {
@@ -18,13 +22,16 @@ export default {
       data: [],
       options: {
         tooltip: {
+          trigger: 'item',
           triggerOn: 'click',
+          enterable: true,
+          appendToBody: true,
           formatter: function (params, ticket, callback) {
-            console.log(params.value[0])
+            console.log(params)
             var months = ['jan', 'feb', 'mar', 'apr', 'maí', 'jún', 'júl', 'ágú', 'sep', 'okt', 'nóv', 'des']
-            // var dash = '<br><a href="#/dashboard/">Mælaborð</a>'
+            var ahref = '<a style="display: block; border: 1px solid darkgray; text-align: center; backgroundcolor; lightgray; color: black; text-decoration: none;" href="#/dashboard/' + params.value[0].getFullYear() + '-' + params.value[0].getMonth() + 1 + '-' + params.value[0].getDate() + '" >Sjá mælaborð</a>'
             var lbl = params.value[0].getDate() + '. ' + months[params.value[0].getMonth()] + '. ' + params.value[0].getFullYear() +
-            '<br><strong>' + params.value[1] + ' próf/æfingar</strong>'
+            '<br><strong>' + params.value[1] + ' próf/æfingar</strong><br>' + ahref
             return lbl
           }
         },
@@ -98,10 +105,14 @@ export default {
     IEcharts
   },
   methods: {
+    dash (d) {
+      // console.log(d)
+      alert(d)
+    }
   },
   mounted () {
-    console.log('mounted chart')
-    console.log(this.option)
+    // console.log('mounted chart')
+    // console.log(this.option)
     getAPI({
       url: '/api/heatmap/',
       method: 'post',
@@ -113,7 +124,6 @@ export default {
       .then(response => {
         this.exams = JSON.parse(JSON.stringify(response.data))
 
-        var slotValue = 0
         var dateslot = 0
         var minYear = 2020
         var maxYear = 2030
@@ -122,6 +132,7 @@ export default {
         for (i = 0; i < this.exams.length; i++) {
           const ddd = new Date(this.exams[i].modified_date)
           const dd = new Date(ddd.getFullYear(), ddd.getMonth(), ddd.getDate())
+          var slotValue = 0
 
           if (i === 0) {
             // console.log('initial pDate: ' + dd)
@@ -144,13 +155,15 @@ export default {
 
           if (this.options.series.data[dateslot][0].toString() === dd.toString()) {
             // if the date is still the same
-            slotValue++
+            slotValue = this.options.series.data[dateslot][1] + 1
             this.options.series.data[dateslot][1] = slotValue
+            console.log('A ', slotValue, this.options.series.data[dateslot][1], this.options.series.data[dateslot][0], dd)
           } else {
             dateslot++
             // should kick when new date appears in array
             slotValue = 0
             this.options.series.data.push([dd, 1])
+            console.log('B ', slotValue, this.options.series.data[dateslot][1], this.options.series.data[dateslot][0], dd)
           }
           if (maxScore < slotValue) {
             maxScore = slotValue
@@ -160,12 +173,12 @@ export default {
         this.options.calendar.range = [minYear + '-01-01', maxYear + '-12-31']
         this.options.visualMap.max = maxScore + 3
         this.options.visualMap.text[0] = maxScore + 2
-        console.log(this.options)
+        // console.log(this.options)
       })
       .catch(error => console.log('Error', error.message))
   },
   beforeCreate () {
-    console.log('to be created chart')
+    // console.log('to be created chart')
   }
 }
 </script>

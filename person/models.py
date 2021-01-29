@@ -12,6 +12,8 @@ class PersonUser(models.Model):
     bio = models.TextField(blank=True)
     rating = models.SmallIntegerField(default=0)
     admin_note = models.TextField(blank=True)
+    prefs_dark_mode = models.BooleanField(default=False)
+    prefs_system_dark_mode = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.get_full_name()

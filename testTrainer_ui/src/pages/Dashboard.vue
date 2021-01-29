@@ -19,19 +19,20 @@
       </q-toolbar>
 
       <q-card-section class="q-pa-none echarts">
-        <IEcharts :option="barChartOption" :resizable="true"/>
+        <IEcharts :option="option" ref="echart"/>
       </q-card-section>
       <!-- <q-card-actions>
         <q-btn @click="onAnswerSubmit" color="positive" label="Allt"/>
         <q-btn @click="onAnswerSubmit" color="positive" label="Æfingar"/>
         <q-btn @click="onAnswerSubmit" color="positive" label="Próf"/>
       </q-card-actions> -->
+      <!-- <h1 style="color: red;">{{testDate}}</h1> -->
     </q-card>
     <!-- <br/>
     <div style="float: none; overflow: scroll;" >
       <pre>
-      {{this.barChartOption.series}}
-      {{this.barChartOption.xAxis}}
+      {{this.option.series}}
+      {{this.option.xAxis}}
       </pre>
     </div> -->
 
@@ -43,6 +44,7 @@ import { date } from 'quasar'
 import store from 'src/store'
 import IEcharts from 'vue-echarts-v3/src/full.js'
 import { getAPI } from 'src/api/axios-base'
+
 // import axios from 'axios'
 const access = store.getters.token
 var catQuestScore = []
@@ -68,8 +70,14 @@ export default {
       username: null,
       averagescore: 0,
       spinnegal: true,
-      barChartOption: {
-        width: '86%',
+      startDate: 0,
+      endDate: 100,
+      fixedStartDate: new Date('2021-01-24 00:00'),
+      FixedEndDate: new Date('2021-24-12 23:59'),
+      chart: null,
+      // testDate: null,
+      option: {
+        width: '84%',
         grid: {
           bottom: '90px',
           left: '75px'
@@ -81,9 +89,9 @@ export default {
             magicType: {
               type: ['stack', 'tiled']
             },
-            dataZoom: {
-              yAxisIndex: 'none'
-            },
+            // dataZoom: {
+            //   yAxisIndex: 'none'
+            // },
             restore: { show: false },
             saveAsImage: {},
             dataView: {}
@@ -108,18 +116,18 @@ export default {
           },
           formatter: function (params) {
             var tar
-            // console.log('params')
             // console.log(params)
             if (params.value < 0) {
               tar = params[1]
             } else {
               tar = params
             }
-            var ahref = '<a href="#/review/' + catQuestScore[params.dataIndex].id + '/">'
+            var name = tar.name.split(',')
+            var ahref = '<a style="display: block; border: 1px solid darkgray; text-align: center; backgroundcolor; lightgray; color: black; text-decoration: none;" href="#/review/' + catQuestScore[params.dataIndex].id + '/">'
             var catQuest = ahref + catQuestScore[params.dataIndex][params.seriesIndex][0] + ' spurningar,'
-            var catScore = catQuestScore[params.dataIndex][params.seriesIndex][1] + ' stig ' + catQuestScore[params.dataIndex][params.seriesIndex][1] / 5 + ' rétt</a>'
+            var catScore = catQuestScore[params.dataIndex][params.seriesIndex][1] + ' stig ' + catQuestScore[params.dataIndex][params.seriesIndex][1] / 5 + ' rétt<br>Sjá niðurstöður</a>'
 
-            return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value + '<br/>' + catQuest + ' ' + catScore
+            return name[1] + '<br/>' + tar.seriesName + ' : ' + tar.value + '<br/>' + catQuest + ' ' + catScore
           }
         },
         xAxis: {
@@ -133,7 +141,11 @@ export default {
           // maxInterval: 3600 * 1000 * 24,
           axisLabel: {
             show: true,
-            rotate: 0
+            rotate: 0,
+            formatter: function (params) {
+              var par = params.split(',')
+              return par[1]
+            }
           }
         },
         yAxis: {
@@ -142,57 +154,18 @@ export default {
           splitArea: { show: true }
         },
         dataZoom: [{
+          show: true,
           type: 'slider',
-          start: 0,
-          end: 100
-        }, {
+          // brushSelect: true,
           start: 0,
           end: 100,
-          // handleIcon: 'image://data:image/gif;base64,R0lGODlhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/XBs/fNwfjZ0frl3/zy7////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABAALAAAAAAQABAAAAVVICSOZGlCQAosJ6mu7fiyZeKqNKToQGDsM8hBADgUXoGAiqhSvp5QAnQKGIgUhwFUYLCVDFCrKUE1lBavAViFIDlTImbKC5Gm2hB0SlBCBMQiB0UjIQA7',
-          // handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
-          handleSize: '80%',
-          handleStyle: {
-            color: '#fff',
-            shadowBlur: 3,
-            shadowColor: 'rgba(0, 0, 0, 0.6)',
-            shadowOffsetX: 2,
-            shadowOffsetY: 2
+          rangeMode: ['percent', 'percent'],
+          labelFormatter: function (value, valueStr) {
+            var par = valueStr.split(',')
+            var dt = par[0]
+            return date.formatDate(dt, 'YYYY-MM-DD')
           }
         }],
-        // timeline: {
-        //   show: true,
-        //   axisType: 'time',
-        //   loop: false,
-        //   label: {
-        //     show: true,
-        //     interval: 'auto'
-        //   }
-        // },
-        // // visualMap: {
-        //   type: 'piecewise',
-        //   dimension: 2,
-        //   text: ['', ''],
-        //   inverse: true,
-        //   itemHeight: 20,
-        //   calculable: true,
-        //   min: 100,
-        //   max: -100,
-        //   top: 60,
-        //   left: 10,
-        //   inRange: {
-        //     colorLightness: [0.4, 0.8]
-        //   },
-        //   outOfRange: {
-        //     color: '#bbb'
-        //   },
-        //   controller: {
-        //     inRange: {
-        //       color: '#2f4554'
-        //     }
-        //   }
-        // },
-        // Declare several bar series, each will be mapped
-        // to a column of dataset.source by default.
         series: []
       }
     }
@@ -202,19 +175,24 @@ export default {
   },
   methods: {
     formatDate (d) {
-      return date.formatDate(d, 'YYYY-MM-DD HH:mm')
+      return date.formatDate(d, 'YYYY-MM-DD')
     },
     onAnswerSubmit () {
 
     }
   },
-  beforeCreate () {
-    this.access = store.getters.token // attempt to obtain new access token by running 'refreshToken' action
-    this.username = store.getters.getUserInfo.username
+  updated () {
   },
-  created () {
+  computed: {
+    testDate () {
+      return this.$route.params.tdate.toString() || null
+    }
   },
   mounted () {
+    this.access = store.getters.token // attempt to obtain new access token by running 'refreshToken' action
+    this.username = store.getters.getUserInfo.username
+
+    // console.log('mánti')
     getAPI({
       url: '/api/dashboarddata/',
       method: 'post',
@@ -225,6 +203,9 @@ export default {
     })
       .then(response => {
         this.exams = JSON.parse(JSON.stringify(response.data))
+
+        // console.log('this.exams')
+        // console.log(this.exams)
 
         var avrgscore = 0
         var i = 0
@@ -244,11 +225,16 @@ export default {
             testtype = 'Próf'
           }
           // const kkey = theTest.created_date
-          const kkey = theTest.name + '\n' + testtype + ' ' + theTest.q_count + ' spurningar'
+          const tdate = new Date(theTest.modified_date)
+
+          const kkeyText = theTest.name + '\n' + testtype + ' ' + theTest.q_count + ' spurningar'
+          // const tdtext = tdate.getFullYear() + '-' + tdate.getMonth() + 1 + '-' + tdate.getDate() + 'T' + tdate.getHours() + ':' + tdate.getMinutes() + ':00Z'
+          // const tdtext = tdate.getFullYear() + '-' + tdate.getMonth() + '-' + tdate.getDate()
+          const kkey = [tdate, kkeyText]
           const testscore = parseInt(theTest.final_results * 10000) / 1000
           avrgscore = avrgscore + testscore
 
-          this.barChartOption.xAxis.data.push(kkey)
+          this.option.xAxis.data.push(kkey)
           var catHolder = [0, 0, 0, 0, 0]
 
           catQuestScore.push({ name: kkey, id: theTest.id, 0: [0, 0], 1: [0, 0], 2: [0, 0], 3: [0, 0], 4: [0, 0] })
@@ -270,12 +256,9 @@ export default {
             // this.xTests[c][0] = catNames[c]
             this.xTests[c].push(catHolder[c])
           }
-
-          // console.log(catHolder)
-          // console.log(this.barChartOption.xAxis.data)
-          // console.log(this.barChartOption.series)
-          // console.log(this.xTests)
         }
+
+        // console.log(this.option.dataZoom)
 
         for (iii = 0; iii < catHolder.length; iii++) {
           var lableholder
@@ -287,7 +270,7 @@ export default {
               position: 'top',
               formatter: (params) => {
                 let total = 0
-                this.barChartOption.series.forEach(serie => {
+                this.option.series.forEach(serie => {
                   total += serie.data[params.dataIndex]
                 })
                 return total + '%'
@@ -304,24 +287,73 @@ export default {
             label: lableholder,
             data: this.xTests[iii]
           }
-          // console.log(bar)
-
-          this.barChartOption.series.push(bar)
+          this.option.series.push(bar)
         }
-
+        // this.chart.setOption(this.option)
         this.averagescore = parseInt((avrgscore / this.exams.length) * 100) / 100
         this.spinnegal = false
+        this.chart = this.$refs.echart
+      })
+      .then(response => {
+        if (this.testDate !== null) {
+          // console.log('range change')
+          // console.log(this.testDate)
+
+          // console.log(this.option.dataZoom.start)
+          // console.log(this.option.dataZoom.end)
+
+          const start = new Date(this.testDate + 'T00:00:00Z')
+          const end = new Date(this.testDate + 'T23:59:59Z')
+          // this.testDate + ' 23:59'
+          const datalength = this.exams.length
+          // console.log('datalength')
+          // console.log(datalength)
+
+          var ix = 0
+          var idxStart = 0
+          var idxEnd = 100
+          for (ix = 0; ix < datalength; ix++) {
+            // console.log(this.option.xAxis.data[ix], this.option.xAxis.data[ix].getTime(), this.option.xAxis.data[ix].getTime() <= start.getTime(), start, start.getTime())
+            if (this.option.xAxis.data[ix][0].getTime() >= start.getTime() && idxStart === 0) {
+              idxStart = ix
+            }
+            if (this.option.xAxis.data[ix][0].getTime() <= end.getTime()) {
+              idxEnd = ix
+            }
+          }
+
+          if (idxStart === idxEnd) {
+            idxStart = idxStart - 0.1
+            idxEnd = idxEnd + 0.1
+          }
+
+          this.startDate = parseInt((idxStart / datalength) * 100)
+          this.endDate = parseInt((idxEnd / datalength) * 100)
+
+          this.chart.instance.setOption({ dataZoom: [{ start: this.startDate }] })
+          this.chart.instance.setOption({ dataZoom: [{ end: this.endDate }] })
+        }
       })
       .catch(error => console.log('Error', error.message))
+    // this.IEcharts.instance.setOption(this.option)
+    // console.log(this.IEcharts)
   }
 }
+
 </script>
 
-<style scoped>
-.echarts {
-  width: 100%;
-  height: 600px;
-}
+<style lang="sass" scoped>
+
+.echarts
+  width: 100%
+  height: 600px
+
+.tiplink
+  display: block
+  border: 1px solid green
+  color: red
+  text-decoration: none
+
 </style>
 <!--Categories-->
 

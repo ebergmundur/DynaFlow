@@ -101,6 +101,8 @@ class PersonSerializer(serializers.ModelSerializer):
             'email',
             'open',
             'until',
+            'prefs_dark_mode',
+            'prefs_system_dark_mode',
         ]
 
 
@@ -248,6 +250,7 @@ class DashboardSerializer(serializers.ModelSerializer):
             'answers',
             'q_count',
             'created_date',
+            'modified_date',
             'practice',
         ]
 

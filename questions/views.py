@@ -114,7 +114,6 @@ def review(request):
 def heatmap(request):
     if request.method == 'POST':
         tests = Questionnaire.objects.filter(owner__user__username=request.data['username']).order_by('modified_date')
-        print(tests)
         serializer = HeatmapSerializer(tests, many=True)
         return Response(serializer.data)
 

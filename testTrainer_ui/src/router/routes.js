@@ -111,9 +111,10 @@ const routes = [
   },
   {
     path: '/dashboard',
+    date: { tdate: null },
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', name: 'dashboard', component: () => import('pages/Dashboard') }
+      { path: '/dashboard/:tdate', name: 'dashboard', component: () => import('pages/Dashboard') }
     ],
     meta: {
       requiresLogged: false

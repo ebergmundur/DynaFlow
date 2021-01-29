@@ -54,13 +54,18 @@
           <q-card-section>
                       <q-toolbar>
             <q-toolbar-title>
-              Dark mode
+              Dark mode stilling
             </q-toolbar-title>
           </q-toolbar>
             <div>
               <!-- Setja inn preferenca í User Model í bakenda -->
-              <q-toggle v-model="autodark" @input="setdarkauto" toggle-color="primary" label="Fylgja tölvu" />
-              <q-toggle v-model="isdark" ref="mandark" @input="setdark" toggle-color="primary" label="Handvirkt" />
+              <!-- {{systemDark}} // {{dark}} // {{userInfo}}<br>
+              <q-toggle :v-model="systemDark" @click="setdarkauto" toggle-color="primary" label="Fylgja tölvu" />
+              <q-toggle :v-model="dark" ref="mandark" @click="setdark" toggle-color="primary" label="Handvirkt" /> -->
+              {{userSystemDark}} // {{userDark}}<br>
+              {{systemDark}} // {{dark}} // {{userInfo}}<br>
+              <q-toggle v-model="systemDark" oggle-color="primary" @input="setdarkauto" label="Fylgja tölvu" />
+              <q-toggle v-model="dark" ref="mandark" toggle-color="primary" @input="setdark" label="Handvirkt" />
             </div>
             <!-- <q-separator spaced/> -->
           </q-card-section>
@@ -68,7 +73,7 @@
     </div>
   </q-page>
 </template>
-
+input
 <script>
 import store from 'src/store'
 import { date } from 'quasar'
@@ -92,18 +97,40 @@ export default {
       firstName: '',
       lastName: '',
       email: '',
-      isdark: false,
-      autodark: true
+      dark: false,
+      systemDark: false
     }
   },
   methods: {
     setdark () {
-      this.$q.dark.toggle()
+      console.log('setdark')
+      this.$q.dark.set(false)
+      if (this.dark === false) {
+        this.dark = false
+        store.commit('setDarkMode', false)
+      } else if (this.dark === true) {
+        this.$q.dark.set(true)
+        this.dark = true
+        this.systemDark = false
+        store.commit('setDarkMode', true)
+        store.commit('setSystemDarkMode', false)
+      }
     },
     setdarkauto () {
-      this.$q.dark.set('auto')
-      this.isdark = false
-      // this.$ref.set(false)
+      console.log('setdarkauto')
+      if (this.systemDark === false) {
+        this.$q.dark.set(false)
+        this.systemDark = false
+        this.dark = false
+        store.commit('setDarkMode', false)
+        store.commit('setSystemDarkMode', true)
+      } else if (this.systemDark === true) {
+        this.$q.dark.set('auto')
+        this.systemDark = true
+        this.dark = false
+        store.commit('setDarkMode', false)
+        store.commit('setSystemDarkMode', true)
+      }
     },
     format_date (d) {
       return date.formatDate(d, 'DD. MMMM YYYY', {
@@ -126,34 +153,37 @@ export default {
     },
     userInfo () {
       return store.getters.getUserInfo
+    },
+    userDark () {
+      return store.getters.getDarkMode
+    },
+    userSystemDark () {
+      return store.getters.getSystemDarkMode
     }
   },
   mounted () {
-  //   this.token = store.getters.token
-  //   var formdata = {
-  //     username: 'eberg'
-  //   }
-  //   // console.log('response')
-  //   axios({
-  //     method: 'post',
-  //     data: formdata,
-  //     headers: { Authorization: `Bearer ${access}` }, // the new access token is attached to the authorization header
-  //     url: 'https://einars-macbook-pro.local:8000/userdata/'
-  //   })
-  //     .then(response => {
-  //       // console.log('response 2')
-  //       console.log(response)
-  //       this.user = response.data.username
-  //       this.userId = response.data.id
-  //       this.firstName = response.data.first_name
-  //       this.lastName = response.data.last_name
-  //       this.email = response.data.email
-  //       // console.log('response OUT')
-  //       localStorage.setItem('userFirstName')
-  //       localStorage.setItem('userLastName')
-  //       localStorage.setItem('userEmail')
-  //     })
-  //     .catch(error => console.log('Error', error.message))
+    // if (this.loggedIn) {
+    //   const access = store.getters.token
+    //   getAPI({
+    //     data: { username: this.user },
+    //     method: 'post',
+    //     headers: { Authorization: `Bearer ${access}` }, // the new access token is attached to the authorization header
+    //     url: '/api/userinfo/'
+    //   })
+    //     .then(response => {
+    //       console.log('response')
+    //       console.log(response)
+    //       store.commit('setUserId', response.data.id)
+    //       store.commit('setUserFirstName', response.data.first_name)
+    //       store.commit('setUserLastName', response.data.last_name)
+    //       store.commit('setUserEmail', response.data.email)
+    //       store.commit('setUserEndDay', response.data.until)
+    //       store.commit('setUserOpen', response.data.open)
+    //       store.commit('setUserIsadmin', response.data.isadmin)
+    //       store.commit('setDarkMode', response.data.prefs_dark_mode)
+    //       store.commit('setSystemDarkMode', response.data.prefs_system_dark_mode)
+    //     })
+    // }
   }
 }
 

@@ -90,7 +90,7 @@ module.exports = function (/* ctx */) {
       lang: 'en-us', // Quasar language pack
       config: {
         notify: { /* look at QUASARCONFOPTIONS from the API card (bottom of page) */ },
-        dark: 'false' // or Boolean true/false
+        dark: 'auto' // or Boolean true/false
       },
       components: [
         'QCheckbox',
