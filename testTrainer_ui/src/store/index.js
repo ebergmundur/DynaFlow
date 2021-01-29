@@ -20,6 +20,8 @@ const store = new Vuex.Store({
     userOpen: localStorage.getItem('open') || null,
     userIsadmin: localStorage.getItem('isadmin') || null,
     userEndDay: localStorage.getItem('endday') || null,
+    ueserPrefsDarkMode: localStorage.getItem('dark_mode') || null,
+    userPrefsSystemDarkMode: localStorage.getItem('system_dark_mode') || null,
     timeTotal: localStorage.getItem('timetotal') || 0,
     testTimeTotal: localStorage.getItem('testtimetotal') || 0,
     timeAllowed: localStorage.getItem('timeallowed') || 0,
@@ -33,6 +35,14 @@ const store = new Vuex.Store({
     },
     setTimeAllowed (state, payload) {
       state.timeAllowed = payload
+    },
+    setDarkMode (state, payload) {
+      localStorage.setItem('dark_mode', payload)
+      state.userPrefsDarkMode = payload
+    },
+    setSystemDarkMode (state, payload) {
+      localStorage.setItem('system_dark_mode', payload)
+      state.userPrefsSysemDarkMode = payload
     },
     setTimeTotal (state, payload) {
       localStorage.setItem('timetotal', payload)
@@ -85,7 +95,7 @@ const store = new Vuex.Store({
       state.refreshToken = refresh
       state.userName = username
     },
-    updateLocalUserStorage (state, { firstname, lastname, email, id, open, until, isadmin }) {
+    updateLocalUserStorage (state, { firstname, lastname, email, id, open, until, isadmin, darkMode, systemDarkMode }) {
       localStorage.setItem('user_first_name', firstname)
       localStorage.setItem('user_last_name', lastname)
       localStorage.setItem('user_email', email)
@@ -93,6 +103,8 @@ const store = new Vuex.Store({
       localStorage.setItem('open', open)
       localStorage.setItem('endday', until)
       localStorage.setItem('isadmin', isadmin)
+      localStorage.setItem('dark_mode', darkMode)
+      localStorage.setItem('system_dark_mode', systemDarkMode)
       state.userFirstName = firstname
       state.userLastName = lastname
       state.userEmail = email
@@ -168,6 +180,8 @@ const store = new Vuex.Store({
               localStorage.removeItem('user_id')
               localStorage.removeItem('open')
               localStorage.removeItem('endday')
+              localStorage.removeItem('dark_mode')
+              localStorage.removeItem('system_dark_mode')
               context.commit('destroyToken')
               console.log('LOGGED OUT A')
             })
@@ -187,6 +201,8 @@ const store = new Vuex.Store({
               localStorage.removeItem('user_id')
               localStorage.removeItem('open')
               localStorage.removeItem('endday')
+              localStorage.removeItem('dark_mode')
+              localStorage.removeItem('system_dark_mode')
               context.commit('destroyToken')
               resolve(err)
               console.log('LOGGED OUT B')
@@ -208,6 +224,8 @@ const store = new Vuex.Store({
         localStorage.removeItem('user_id')
         localStorage.removeItem('open')
         localStorage.removeItem('endday')
+        localStorage.removeItem('dark_mode')
+        localStorage.removeItem('system_dark_mode')
         context.commit('destroyToken')
         console.log('LOGGED OUT D')
       }
@@ -232,6 +250,7 @@ const store = new Vuex.Store({
         })
           // if successful update local storage:
           .then(response => {
+            console.log(response)
             context.commit('updateLocalStorage', {
               access: response.data.access,
               refresh: response.data.refresh,
@@ -283,6 +302,12 @@ const store = new Vuex.Store({
     getUserLastName (state) {
       return state.userLastName
     },
+    getDarkMode (state) {
+      return state.userPrefsDarkMode
+    },
+    getSystemDarkMode (state) {
+      return state.userPrefsSystemDarkMode
+    },
     getUserEmail (state) {
       return state.userEmail
     },
@@ -295,7 +320,9 @@ const store = new Vuex.Store({
         email: state.userEmail,
         isadmin: state.userIsadmin,
         open: state.userOpen,
-        until: state.userEndDay
+        until: state.userEndDay,
+        darkMode: state.userPrefsDarkMode,
+        systemDarkMode: state.userPrefsSystemDarkMode
       }
     },
     currTimeAllowed: state => {
