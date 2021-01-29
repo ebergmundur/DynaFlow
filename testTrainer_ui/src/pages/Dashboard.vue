@@ -312,15 +312,21 @@ export default {
           var ix = 0
           var idxStart = 0
           var idxEnd = 100
+          var startSet = true
           for (ix = 0; ix < datalength; ix++) {
-            // console.log(this.option.xAxis.data[ix], this.option.xAxis.data[ix].getTime(), this.option.xAxis.data[ix].getTime() <= start.getTime(), start, start.getTime())
-            if (this.option.xAxis.data[ix][0].getTime() >= start.getTime() && idxStart === 0) {
+            console.log('dagar', this.option.xAxis.data[ix][0].getDate(), start.getDate())
+            // console.log(this.option.xAxis.data[ix][0], this.option.xAxis.data[ix][0].getTime(), this.option.xAxis.data[ix][0].getTime() <= start.getTime(), start, start.getTime())
+            if (this.option.xAxis.data[ix][0].getDate() === start.getDate() && startSet) {
+              console.log('inn', ix, idxStart, idxEnd, this.testDate)
               idxStart = ix
+              startSet = false
             }
-            if (this.option.xAxis.data[ix][0].getTime() <= end.getTime()) {
+            if (this.option.xAxis.data[ix][0].getDate() === end.getDate()) {
+              console.log('ut', ix, idxStart, idxEnd, this.testDate)
               idxEnd = ix
             }
           }
+          console.log(idxStart, idxEnd)
 
           if (idxStart === idxEnd) {
             idxStart = idxStart - 0.1

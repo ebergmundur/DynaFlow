@@ -131,12 +131,9 @@ export default {
         var i = 0
         for (i = 0; i < this.exams.length; i++) {
           const ddd = new Date(this.exams[i].modified_date)
-          const dd = new Date(ddd.getFullYear(), ddd.getMonth(), ddd.getDate())
-          var slotValue = 0
+          var dd = new Date(ddd.getFullYear(), ddd.getMonth(), ddd.getDate())
 
           if (i === 0) {
-            // console.log('initial pDate: ' + dd)
-            this.options.series.data.push([dd, 1])
             maxYear = ddd.getFullYear()
             minYear = ddd.getFullYear()
           }
@@ -148,32 +145,27 @@ export default {
             minYear = ddd.getFullYear()
           }
 
-          // console.log('dd: ' + dd)
-          // console.log('pDate: ' + previousDate)
-          // console.log('slott: ' + this.options.series.data[dateslot][0])
-          // console.log(this.options.series.data[dateslot][0].toString() === dd.toString())
-
-          if (this.options.series.data[dateslot][0].toString() === dd.toString()) {
-            // if the date is still the same
-            slotValue = this.options.series.data[dateslot][1] + 1
-            this.options.series.data[dateslot][1] = slotValue
-            console.log('A ', slotValue, this.options.series.data[dateslot][1], this.options.series.data[dateslot][0], dd)
-          } else {
-            dateslot++
-            // should kick when new date appears in array
-            slotValue = 0
+          if (i === 0) {
             this.options.series.data.push([dd, 1])
-            console.log('B ', slotValue, this.options.series.data[dateslot][1], this.options.series.data[dateslot][0], dd)
-          }
-          if (maxScore < slotValue) {
-            maxScore = slotValue
+          } else {
+            if (this.options.series.data[dateslot][0].toString() === dd.toString()) {
+              // if the date is still the same
+              this.options.series.data[dateslot][1] = this.options.series.data[dateslot][1] + 1
+            } else {
+              // should kick when new date appears in array
+              this.options.series.data.push([dd, 1])
+              dateslot++
+            }
+            if (maxScore < this.options.series.data[dateslot][1]) {
+              maxScore = this.options.series.data[dateslot][1]
+            }
           }
         }
 
         this.options.calendar.range = [minYear + '-01-01', maxYear + '-12-31']
         this.options.visualMap.max = maxScore + 3
         this.options.visualMap.text[0] = maxScore + 2
-        // console.log(this.options)
+        console.log(this.options.series.data)
       })
       .catch(error => console.log('Error', error.message))
   },
