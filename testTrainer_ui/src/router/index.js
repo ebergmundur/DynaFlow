@@ -5,10 +5,16 @@ import IdleVue from 'idle-vue'
 // import MainLayout from 'src/layouts/MainLayout'
 import store from 'src/store'
 import routes from './routes'
+import VueTour from 'vue-tour'
+
+require('vue-tour/dist/vue-tour.css')
+
+// Vue.use(VueTour)
 
 const eventsHub = new Vue()
 
 Vue.use(VueRouter)
+Vue.use(VueTour)
 
 Vue.use(IdleVue, {
   eventEmitter: eventsHub,

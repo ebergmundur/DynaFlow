@@ -35,7 +35,10 @@
       {{this.option.xAxis}}
       </pre>
     </div> -->
-
+    <v-tour name="myTour" :steps="steps"></v-tour>
+    <div id="vstep0" style="position: absolute; top: 150px; right: 50px;"></div>
+    <div id="vstep1" style="position: absolute; top: 400px; right: 50%;"></div>
+    <div id="vstep2" style="position: absolute; top: 650px; left: 150px;"></div>
     </q-page>
 </template>
 
@@ -75,6 +78,36 @@ export default {
       fixedStartDate: new Date('2021-01-24 00:00'),
       FixedEndDate: new Date('2021-24-12 23:59'),
       chart: null,
+      steps: [
+        {
+          // target: this.$refs.vstep0, // We're using document.querySelector() under the hood
+          target: '#vstep0', // We're using document.querySelector() under the hood
+          header: {
+            title: 'Fög'
+          },
+          params: {
+            placement: 'top' // Any valid Popper.js placement. See https://popper.js.org/popper-documentation.html#Popper.placements
+          },
+          content: 'Hægt er að fela/birta fög eftir óskum'
+        },
+        {
+          target: '#vstep1',
+          header: {
+            title: 'Próf og æfingar'
+          },
+          content: 'Ef smellt er á kubb þá sést fjöldi spurninga og rétt svör. Þar er lika hnappur til að sjá svör og niðurstöður.'
+        },
+        {
+          header: {
+            title: 'Tímabil'
+          },
+          target: '#vstep2',
+          content: 'Hér má stilla hvaða próf sjást',
+          params: {
+            placement: 'top' // Any valid Popper.js placement. See https://popper.js.org/popper-documentation.html#Popper.placements
+          }
+        }
+      ],
       // testDate: null,
       option: {
         width: '84%',
@@ -314,19 +347,19 @@ export default {
           var idxEnd = 100
           var startSet = true
           for (ix = 0; ix < datalength; ix++) {
-            console.log('dagar', this.option.xAxis.data[ix][0].getDate(), start.getDate())
+            // console.log('dagar', this.option.xAxis.data[ix][0].getDate(), start.getDate())
             // console.log(this.option.xAxis.data[ix][0], this.option.xAxis.data[ix][0].getTime(), this.option.xAxis.data[ix][0].getTime() <= start.getTime(), start, start.getTime())
             if (this.option.xAxis.data[ix][0].getDate() === start.getDate() && startSet) {
-              console.log('inn', ix, idxStart, idxEnd, this.testDate)
+              // console.log('inn', ix, idxStart, idxEnd, this.testDate)
               idxStart = ix
               startSet = false
             }
             if (this.option.xAxis.data[ix][0].getDate() === end.getDate()) {
-              console.log('ut', ix, idxStart, idxEnd, this.testDate)
+              // console.log('ut', ix, idxStart, idxEnd, this.testDate)
               idxEnd = ix
             }
           }
-          console.log(idxStart, idxEnd)
+          // console.log(idxStart, idxEnd)
 
           if (idxStart === idxEnd) {
             idxStart = idxStart - 0.1
@@ -339,10 +372,11 @@ export default {
           this.chart.instance.setOption({ dataZoom: [{ start: this.startDate }] })
           this.chart.instance.setOption({ dataZoom: [{ end: this.endDate }] })
         }
+        // console.log(this.chart)
+        this.$tours.myTour.start()
       })
       .catch(error => console.log('Error', error.message))
     // this.IEcharts.instance.setOption(this.option)
-    // console.log(this.IEcharts)
   }
 }
 
