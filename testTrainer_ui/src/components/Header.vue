@@ -1,7 +1,8 @@
 <template>
-  <q-header elevated class="ebbg-primary text-white row">
+  <q-header dark elevated class="text-white row">
     <div class="q-gutter-y-sm q-gutter-x-sm col">
       <q-tabs
+        dark
         align="left"
         inline-label
         class="float-left tabbar"
@@ -13,11 +14,11 @@
           </q-avatar>
         </q-route-tab>
 
-        <q-route-tab v-if="loggedIn" to="/createtest" label="Æfing"/>
-<!--        <q-route-tab v-if="loggedIn" to="/testpractice" label="Próf"/>-->
-        <q-route-tab v-if="loggedIn" to="/testreal" label="Próf"/>
-        <q-route-tab v-if="loggedIn" to="/flipcard" label="Flettikort"/>
-        <q-route-tab v-if="!loggedIn" to="/about" label="Um vefinn"/>
+        <q-route-tab dark v-if="loggedIn" to="/createtest" label="Æfing"/>
+        <q-route-tab dark v-if="loggedIn" to="/testpractice" label="ÆF"/>
+        <q-route-tab dark v-if="loggedIn" to="/testreal" label="Próf"/>
+        <q-route-tab dark v-if="loggedIn" to="/flipcard" label="Flettikort"/>
+        <q-route-tab dark v-if="!loggedIn" to="/about" label="Um vefinn"/>
       </q-tabs>
       <!--        <q-icon v-if="loggedIn" class="fa fa-user-alt nowrap q-ml-sm"/>-->
 
@@ -27,6 +28,7 @@
         class="float-right tabbar"
         stretch
       >
+
         <q-route-tab v-if="!loggedIn" name="login" to="/login" label="Innskrá" @click="tab = 'login'"/>
         <q-route-tab v-if="!loggedIn" name="register" to="/register" label="Nýskrá" @click="tab = 'register'"/>
 <!--        <q-route-tab to="/logout" label="L"/>-->
@@ -35,7 +37,7 @@
           stretch
           flat
           name="more"
-          label="Mitt svæði"
+          label="Mín gögn"
           style="float: right;"
           v-if="loggedIn"
         >
@@ -44,11 +46,16 @@
               <q-route-tab v-if="loggedIn" to="/userinfo" label="Áskrift"/>
             </q-item>
 
+            <!-- <q-item clickable @click="tab = 'more'">
+              <q-route-tab v-if="loggedIn" to="/userinfo" label="Ástundun"/>
+            </q-item> -->
+
             <q-item clickable @click="tab = 'more'">
               <q-route-tab v-if="loggedIn" @click="tab = 'more'" to="/dashboard/allt" label="Mælaborð"/>
             </q-item>
+
             <q-item clickable @click="tab = 'more'">
-              <q-route-tab v-if="loggedIn" @click="tab = 'more'" to="/dashboard" label="Mælaborð"/>
+              <q-route-tab v-if="loggedIn" @click="tab = 'review'" to="/review" label="Úrlausnir"/>
             </q-item>
 
             <q-item clickable @click="tab = 'more'">
@@ -107,7 +114,9 @@ export default {
   },
   data () {
     return {
-      tab: 'root'
+      tab: 'root',
+      isdark: true,
+      autodark: false
       // loggedIn: false,
       // user: ''
 
@@ -150,6 +159,7 @@ export default {
         url: '/api/userinfo/'
       })
         .then(response => {
+          // console.log('response')
           // console.log(response)
           store.commit('setUserId', response.data.id)
           store.commit('setUserFirstName', response.data.first_name)
@@ -158,6 +168,8 @@ export default {
           store.commit('setUserEndDay', response.data.until)
           store.commit('setUserOpen', response.data.open)
           store.commit('setUserIsadmin', response.data.isadmin)
+          store.commit('setDarkMode', response.data.prefs_dark_mode)
+          store.commit('setSystemDarkMode', response.data.prefs_system_dark_mode)
         })
     }
   }

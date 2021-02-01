@@ -58,13 +58,7 @@
             </q-toolbar-title>
           </q-toolbar>
             <div>
-              <!-- Setja inn preferenca í User Model í bakenda -->
-              <!-- {{systemDark}} // {{dark}} // {{userInfo}}<br>
-              <q-toggle :v-model="systemDark" @click="setdarkauto" toggle-color="primary" label="Fylgja tölvu" />
-              <q-toggle :v-model="dark" ref="mandark" @click="setdark" toggle-color="primary" label="Handvirkt" /> -->
-              {{userSystemDark}} // {{userDark}}<br>
-              {{systemDark}} // {{dark}} // {{userInfo}}<br>
-              <q-toggle v-model="systemDark" oggle-color="primary" @input="setdarkauto" label="Fylgja tölvu" />
+              <q-toggle v-model="systemDark" toggle-color="primary" @input="setdarkauto" label="Fylgja tölvu" />
               <q-toggle v-model="dark" ref="mandark" toggle-color="primary" @input="setdark" label="Handvirkt" />
             </div>
             <!-- <q-separator spaced/> -->
@@ -79,7 +73,7 @@ import store from 'src/store'
 import { date } from 'quasar'
 import Heatmap from 'components/Heatmap'
 // import axios from 'axios'
-// import { getAPI } from 'src/api/axios-base'
+import { getAPI } from 'src/api/axios-base'
 
 // const timeStamp = Date.now()
 
@@ -97,17 +91,18 @@ export default {
       firstName: '',
       lastName: '',
       email: '',
-      dark: false,
-      systemDark: false
+      dark: null,
+      systemDark: null
     }
   },
   methods: {
     setdark () {
       console.log('setdark')
-      this.$q.dark.set(false)
+      // this.$q.dark.set(false)
       if (this.dark === false) {
         this.dark = false
         store.commit('setDarkMode', false)
+        this.$q.dark.set(false)
       } else if (this.dark === true) {
         this.$q.dark.set(true)
         this.dark = true
@@ -115,6 +110,7 @@ export default {
         store.commit('setDarkMode', true)
         store.commit('setSystemDarkMode', false)
       }
+      this.update_prefs()
     },
     setdarkauto () {
       console.log('setdarkauto')
@@ -131,6 +127,7 @@ export default {
         store.commit('setDarkMode', false)
         store.commit('setSystemDarkMode', true)
       }
+      this.update_prefs()
     },
     format_date (d) {
       return date.formatDate(d, 'DD. MMMM YYYY', {
@@ -141,6 +138,25 @@ export default {
       const date = new Date()
       const restofdays = date.subtractFromDate(date, d)
       return restofdays
+    },
+    update_prefs () {
+      if (this.loggedIn) {
+        const access = store.getters.token
+        getAPI({
+          data: {
+            system_dark_mode: this.systemDark,
+            dark_mode: this.dark,
+            username: this.user
+          },
+          method: 'post',
+          headers: { Authorization: `Bearer ${access}` }, // the new access token is attached to the authorization header
+          url: '/api/prefs/'
+        })
+          .then(response => {
+            console.log('set prefs')
+            console.log(response)
+          })
+      }
     }
   },
   // computed: mapState(['accessToken', 'userName']),
@@ -162,28 +178,46 @@ export default {
     }
   },
   mounted () {
-    // if (this.loggedIn) {
-    //   const access = store.getters.token
-    //   getAPI({
-    //     data: { username: this.user },
-    //     method: 'post',
-    //     headers: { Authorization: `Bearer ${access}` }, // the new access token is attached to the authorization header
-    //     url: '/api/userinfo/'
-    //   })
-    //     .then(response => {
-    //       console.log('response')
-    //       console.log(response)
-    //       store.commit('setUserId', response.data.id)
-    //       store.commit('setUserFirstName', response.data.first_name)
-    //       store.commit('setUserLastName', response.data.last_name)
-    //       store.commit('setUserEmail', response.data.email)
-    //       store.commit('setUserEndDay', response.data.until)
-    //       store.commit('setUserOpen', response.data.open)
-    //       store.commit('setUserIsadmin', response.data.isadmin)
-    //       store.commit('setDarkMode', response.data.prefs_dark_mode)
-    //       store.commit('setSystemDarkMode', response.data.prefs_system_dark_mode)
-    //     })
-    // }
+    if (this.loggedIn) {
+      const access = store.getters.token
+      getAPI({
+        data: { username: this.user },
+        method: 'post',
+        headers: { Authorization: `Bearer ${access}` }, // the new access token is attached to the authorization header
+        url: '/api/userinfo/'
+      })
+        .then(response => {
+          console.log('response')
+          console.log(response)
+          this.systemDark = response.data.prefs_system_dark_mode
+          if (response.data.prefs_system_dark_mode) {
+            console.log('system-true')
+            this.$q.dark.set('auto')
+            this.dark = false
+            this.systemDark = true
+          } else if (response.data.prefs_dark_mode) {
+            console.log('user-true')
+            this.$q.dark.set(true)
+            this.dark = true
+            this.systemDark = false
+          } else {
+            console.log('user-false')
+            this.$q.dark.set(false)
+            this.dark = false
+            this.systemDark = false
+          }
+
+          store.commit('setUserId', response.data.id)
+          store.commit('setUserFirstName', response.data.first_name)
+          store.commit('setUserLastName', response.data.last_name)
+          store.commit('setUserEmail', response.data.email)
+          store.commit('setUserEndDay', response.data.until)
+          store.commit('setUserOpen', response.data.open)
+          store.commit('setUserIsadmin', response.data.isadmin)
+          store.commit('setDarkMode', response.data.prefs_dark_mode)
+          store.commit('setSystemDarkMode', response.data.prefs_system_dark_mode)
+        })
+    }
   }
 }
 

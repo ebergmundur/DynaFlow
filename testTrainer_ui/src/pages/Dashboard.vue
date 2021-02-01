@@ -1,16 +1,21 @@
 <template>
   <q-page class="flex flex-center">
 
-        <div v-if="spinnegal" class="content-center" style="z-index: 1000;">
+    <div
+      v-if="spinnegal"
+      class="content-center"
+      style="z-index: 1000;"
+    >
       <q-spinner-bars
         color="primary"
         size="8em"
-        />
+      />
       <q-tooltip :offset="[0, 8]">QSpinnerBars</q-tooltip>
     </div>
 
-    <q-card flat
-            class="pagecard"
+    <q-card
+      flat
+      class="pagecard"
     >
       <q-toolbar class="q-dark">
         <q-toolbar-title>
@@ -19,7 +24,10 @@
       </q-toolbar>
 
       <q-card-section class="q-pa-none echarts">
-        <IEcharts :option="option" ref="echart"/>
+        <IEcharts
+          :option="option"
+          ref="echart"
+        />
       </q-card-section>
       <!-- <q-card-actions>
         <q-btn @click="onAnswerSubmit" color="positive" label="Allt"/>
@@ -35,11 +43,23 @@
       {{this.option.xAxis}}
       </pre>
     </div> -->
-    <v-tour name="myTour" :steps="steps"></v-tour>
-    <div id="vstep0" style="position: absolute; top: 150px; right: 50px;"></div>
-    <div id="vstep1" style="position: absolute; top: 400px; right: 50%;"></div>
-    <div id="vstep2" style="position: absolute; top: 650px; left: 150px;"></div>
-    </q-page>
+    <v-tour
+      name="myTour"
+      :steps="steps"
+    ></v-tour>
+    <div
+      id="vstep0"
+      style="position: absolute; top: 150px; right: 150px;"
+    ></div>
+    <div
+      id="vstep1"
+      style="position: absolute; top: 400px; right: 50%;"
+    ></div>
+    <div
+      id="vstep2"
+      style="position: absolute; top: 650px; left: 150px;"
+    ></div>
+  </q-page>
 </template>
 
 <script>
@@ -51,7 +71,7 @@ import { getAPI } from 'src/api/axios-base'
 // import axios from 'axios'
 const access = store.getters.token
 var catQuestScore = []
-
+// MARK: -This is my comment that would be shown in outline
 var emphasisStyle = {
   itemStyle: {
     borderWidth: 4,
@@ -75,6 +95,7 @@ export default {
       spinnegal: true,
       startDate: 0,
       endDate: 100,
+      testDate: null,
       fixedStartDate: new Date('2021-01-24 00:00'),
       FixedEndDate: new Date('2021-24-12 23:59'),
       chart: null,
@@ -86,9 +107,9 @@ export default {
             title: 'Fög'
           },
           params: {
-            placement: 'top' // Any valid Popper.js placement. See https://popper.js.org/popper-documentation.html#Popper.placements
+            placement: 'right' // Any valid Popper.js placement. See https://popper.js.org/popper-documentation.html#Popper.placements
           },
-          content: 'Hægt er að fela/birta fög eftir óskum'
+          content: 'Hægt er að fela/birta fög eftir óskum, t.d. til að skoða framvindu stakra faga eða án tiltekins fags.'
         },
         {
           target: '#vstep1',
@@ -102,14 +123,14 @@ export default {
             title: 'Tímabil'
           },
           target: '#vstep2',
-          content: 'Hér má stilla hvaða próf sjást',
+          content: 'Hér má stilla hvaða próf eða æfingar sjást útfrá dagsetningu þeirra. ',
           params: {
             placement: 'top' // Any valid Popper.js placement. See https://popper.js.org/popper-documentation.html#Popper.placements
           }
         }
       ],
-      // testDate: null,
       option: {
+        // MARK: -Options
         width: '84%',
         grid: {
           bottom: '90px',
@@ -156,7 +177,7 @@ export default {
               tar = params
             }
             var name = tar.name.split(',')
-            var ahref = '<a style="display: block; border: 1px solid darkgray; text-align: center; backgroundcolor; lightgray; color: black; text-decoration: none;" href="#/review/' + catQuestScore[params.dataIndex].id + '/">'
+            var ahref = '<a href="#/review/' + catQuestScore[params.dataIndex].id + '/">'
             var catQuest = ahref + catQuestScore[params.dataIndex][params.seriesIndex][0] + ' spurningar,'
             var catScore = catQuestScore[params.dataIndex][params.seriesIndex][1] + ' stig ' + catQuestScore[params.dataIndex][params.seriesIndex][1] / 5 + ' rétt<br>Sjá niðurstöður</a>'
 
@@ -207,6 +228,7 @@ export default {
     IEcharts
   },
   methods: {
+    // MARK: -This is my comment that would be shown in outline
     formatDate (d) {
       return date.formatDate(d, 'YYYY-MM-DD')
     },
@@ -216,10 +238,8 @@ export default {
   },
   updated () {
   },
-  computed: {
-    testDate () {
-      return this.$route.params.tdate.toString() || null
-    }
+  beforeMount () {
+    this.testDate = this.$route.params.tdate.toString() || null
   },
   mounted () {
     this.access = store.getters.token // attempt to obtain new access token by running 'refreshToken' action
@@ -376,6 +396,7 @@ export default {
         this.$tours.myTour.start()
       })
       .catch(error => console.log('Error', error.message))
+
     // this.IEcharts.instance.setOption(this.option)
   }
 }
@@ -383,7 +404,6 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-
 .echarts
   width: 100%
   height: 600px
@@ -394,6 +414,9 @@ export default {
   color: red
   text-decoration: none
 
+.butt
+
+//  style="display: block; border: 1px solid darkgray; text-align: center; backgroundcolor; lightgray; color: black; text-decoration: none;"
 </style>
 <!--Categories-->
 

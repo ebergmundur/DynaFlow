@@ -13,18 +13,21 @@ default_user = User.objects.get(id=1)
 #     if not obj.created_date:
 #         obj.created_date = nowtime
 #     obj.modified_date  = nowtime
-#     obj.modified_by = request.user
-
-
+#     obj.modified_by = request.user    
 
 class Base(models.Model):
+
     name = models.CharField(max_length=200, blank=True)
     description = models.TextField(blank=True)
     note = models.TextField(blank=True)
     active = models.BooleanField(default=True)
-    created_by = models.ForeignKey(User, on_delete=models.PROTECT, related_name='+', default=1 )
+    created_by = models.ForeignKey(
+        User, on_delete=models.PROTECT, related_name="+", default=1
+    )
     created_date = models.DateTimeField(auto_now_add=True)
-    modified_by = models.ForeignKey(User, on_delete=models.PROTECT, related_name='+' , default=1 )
+    modified_by = models.ForeignKey(
+        User, on_delete=models.PROTECT, related_name="+", default=1
+    )
     modified_date = models.DateTimeField(auto_now=True)
     expire = models.DateTimeField(blank=True, null=True)
 

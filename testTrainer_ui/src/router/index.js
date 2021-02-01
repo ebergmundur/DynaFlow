@@ -31,8 +31,8 @@ export default function (/* { store, ssrContext } */) {
     routes: routes
   })
   router.beforeEach((to, from, next) => {
-  // if any of the routes in ./router.js has a meta named 'requiresAuth: true'
-  // then check if the user is logged in before routing to this path:
+    // if any of the routes in ./router.js has a meta named 'requiresAuth: true'
+    // then check if the user is logged in before routing to this path:
     if (to.matched.some(record => record.meta.requiresAuth)) {
       // console.log('login IS requried')
       if (!store.getters.loggedIn) {

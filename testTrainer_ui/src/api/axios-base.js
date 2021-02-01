@@ -1,12 +1,11 @@
 import axios from 'axios'
 import store from 'src/store'
 
-var APIUrl = 'https://api.enam.is'
-
+// var APIUrl = 'https://api.enam.is'
 // var APIUrl = 'https://einars-macbook-pro.local:8000'
-// var APIUrl = 'https://localhost:8000'
+var APIUrl = 'https://localhost:8000'
 
-console.log(window.location.hostname)
+// console.log(window.location.hostname)
 
 const axiosBase = axios.create({
   baseURL: APIUrl,

@@ -54,6 +54,7 @@ urlpatterns = [
                   path('api/heatmap/', question_views.heatmap),
                   path('api/realtest/', question_views.real_test),
                   path('api/handin/', question_views.practice_hand_in),
+                  path('api/prefs/', question_views.prefs),
                   path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
                   path('api/token/logout/', question_views.logout, name='logout'),
                   path('api/registeruser/', question_views.UserCreate.as_view(), name='user_register'),

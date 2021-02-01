@@ -1,5 +1,8 @@
 <template>
-      <IEcharts :option="options" :loading="loading" />
+  <IEcharts
+    :option="options"
+    :loading="loading"
+  />
 </template>
 
 <script>
@@ -27,11 +30,11 @@ export default {
           enterable: true,
           appendToBody: true,
           formatter: function (params, ticket, callback) {
-            console.log(params)
+            // console.log(params)
             var months = ['jan', 'feb', 'mar', 'apr', 'maí', 'jún', 'júl', 'ágú', 'sep', 'okt', 'nóv', 'des']
             var ahref = '<a style="display: block; border: 1px solid darkgray; text-align: center; backgroundcolor; lightgray; color: black; text-decoration: none;" href="#/dashboard/' + params.value[0].getFullYear() + '-' + params.value[0].getMonth() + 1 + '-' + params.value[0].getDate() + '" >Sjá mælaborð</a>'
             var lbl = params.value[0].getDate() + '. ' + months[params.value[0].getMonth()] + '. ' + params.value[0].getFullYear() +
-            '<br><strong>' + params.value[1] + ' próf/æfingar</strong><br>' + ahref
+              '<br><strong>' + params.value[1] + ' próf/æfingar</strong><br>' + ahref
             return lbl
           }
         },
@@ -165,7 +168,7 @@ export default {
         this.options.calendar.range = [minYear + '-01-01', maxYear + '-12-31']
         this.options.visualMap.max = maxScore + 3
         this.options.visualMap.text[0] = maxScore + 2
-        console.log(this.options.series.data)
+        // console.log(this.options.series.data)
       })
       .catch(error => console.log('Error', error.message))
   },

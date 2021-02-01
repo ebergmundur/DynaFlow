@@ -10,6 +10,8 @@ class PersonUser(models.Model):
     birthday = models.DateField(blank=True, null=True)
     kt = models.CharField(max_length=10, blank=True, null=True)
     bio = models.TextField(blank=True)
+    phone = models.CharField(max_length=12)
+    picture = models.ImageField(upload_to="avatars/")
     rating = models.SmallIntegerField(default=0)
     admin_note = models.TextField(blank=True)
     prefs_dark_mode = models.BooleanField(default=False)
@@ -45,7 +47,7 @@ class PersonUser(models.Model):
     @property
     def open(self):
         try:
-            latestpayment = self.payment_set.latest('period_end')
+            latestpayment = self.payment_set.latest("period_end")
             if latestpayment.open:
                 return True
         except:
@@ -54,7 +56,7 @@ class PersonUser(models.Model):
     @property
     def until(self):
         try:
-            latestpayment = self.payment_set.latest('period_end')
+            latestpayment = self.payment_set.latest("period_end")
             return latestpayment.period_end
         except:
             return False
