@@ -1,24 +1,57 @@
 <template>
-  <q-header dark elevated class="text-white row">
-    <div class="q-gutter-y-sm q-gutter-x-sm col">
+  <q-header
+    dark
+    elevated
+    class="text-white row"
+  >
+    <div
+      class="q-gutter-y-sm q-gutter-x-sm col"
+      v-if="$q.platform.is.desktop"
+    >
       <q-tabs
         dark
         align="left"
         inline-label
         class="float-left tabbar"
       >
-        <q-route-tab to="/" label="" name="root">
+        <q-route-tab
+          to="/"
+          label=""
+          name="root"
+        >
           <!--          E nám-->
           <q-avatar class="">
-            <img src="../assets/enam-logo.svg" style="height: 40px; margin: 0;">
+            <img
+              src="../assets/enam-logo.svg"
+              style="height: 40px; margin: 0;"
+            >
           </q-avatar>
         </q-route-tab>
 
-        <q-route-tab dark v-if="loggedIn" to="/createtest" label="Æfing"/>
-        <q-route-tab dark v-if="loggedIn" to="/testpractice" label="ÆF"/>
-        <q-route-tab dark v-if="loggedIn" to="/testreal" label="Próf"/>
-        <q-route-tab dark v-if="loggedIn" to="/flipcard" label="Flettikort"/>
-        <q-route-tab dark v-if="!loggedIn" to="/about" label="Um vefinn"/>
+        <q-route-tab
+          dark
+          v-if="loggedIn"
+          to="/createtest"
+          label="Æfing"
+        />
+        <q-route-tab
+          dark
+          v-if="loggedIn"
+          to="/testreal"
+          label="Próf"
+        />
+        <q-route-tab
+          dark
+          v-if="loggedIn"
+          to="/flipcard"
+          label="Flettikort"
+        />
+        <q-route-tab
+          dark
+          v-if="!loggedIn"
+          to="/about"
+          label="Um vefinn"
+        />
       </q-tabs>
       <!--        <q-icon v-if="loggedIn" class="fa fa-user-alt nowrap q-ml-sm"/>-->
       <q-tabs
@@ -28,9 +61,20 @@
         stretch
       >
 
-        <q-route-tab v-if="!loggedIn" name="login" to="/login" label="Innskrá" @click="tab = 'login'"/>
-        <q-route-tab v-if="!loggedIn" name="register" to="/register" label="Nýskrá" @click="tab = 'register'"/>
-<!--        <q-route-tab to="/logout" label="L"/>-->
+        <q-route-tab
+          v-if="!loggedIn"
+          name="login"
+          to="/login"
+          label="Innskrá"
+          @click="tab = 'login'"
+        />
+        <q-route-tab
+          v-if="!loggedIn"
+          name="register"
+          to="/register"
+          label="Nýskrá"
+          @click="tab = 'register'"
+        />
         <q-btn-dropdown
           auto-close
           stretch
@@ -41,44 +85,204 @@
           v-if="loggedIn"
         >
           <q-list>
-            <q-item clickable @click="tab = 'more'">
-              <q-route-tab v-if="loggedIn" to="/userinfo" label="Áskrift"/>
+            <q-item
+              clickable
+              @click="tab = 'more'"
+            >
+              <q-route-tab
+                v-if="loggedIn"
+                to="/userinfo"
+                label="Áskrift"
+              />
             </q-item>
 
             <!-- <q-item clickable @click="tab = 'more'">
               <q-route-tab v-if="loggedIn" to="/userinfo" label="Ástundun"/>
             </q-item> -->
 
-            <q-item clickable @click="tab = 'more'">
-              <q-route-tab v-if="loggedIn" @click="tab = 'more'" to="/dashboard/allt" label="Mælaborð"/>
+            <q-item
+              clickable
+              @click="tab = 'more'"
+            >
+              <q-route-tab
+                v-if="loggedIn"
+                @click="tab = 'more'"
+                to="/dashboard/allt"
+                label="Mælaborð"
+              />
             </q-item>
 
-            <q-item clickable @click="tab = 'more'">
-              <q-route-tab v-if="loggedIn" @click="tab = 'review'" to="/review" label="Úrlausnir"/>
+            <q-item
+              clickable
+              @click="tab = 'more'"
+            >
+              <q-route-tab
+                v-if="loggedIn"
+                @click="tab = 'review'"
+                to="/review"
+                label="Úrlausnir"
+              />
             </q-item>
 
-            <q-item clickable @click="tab = 'more'">
-              <q-route-tab v-if="loggedIn" to="/about" label="Um vefinn"/>
+            <q-item
+              clickable
+              @click="tab = 'more'"
+            >
+              <q-route-tab
+                v-if="loggedIn"
+                to="/about"
+                label="Um vefinn"
+              />
             </q-item>
 
-            <q-item clickable @click="tab = 'more'">
-              <q-route-tab v-if="loggedIn" to="/logout" label="Logout"/>
+            <q-item
+              clickable
+              @click="tab = 'more'"
+            >
+              <q-route-tab
+                v-if="loggedIn"
+                to="/logout"
+                label="Logout"
+              />
             </q-item>
           </q-list>
         </q-btn-dropdown>
       </q-tabs>
+    </div>
+    <div
+      class="absolute-full flex"
+      v-if="$q.platform.is.mobile"
+    >
+      <q-toolbar class="text-white bg-primary flex">
+        <img
+          src="../assets/enam-logo.svg"
+          style="height: 40px; margin: 0; width: auto;"
+        >
+        <q-tabs
+          align="right"
+          inline-label
+          style="float: right; margin-right: 1px; margin-left: auto;"
+          class="items-end"
+          stretch
+        >
+          <q-btn-dropdown
+            auto-close
+            stretch
+            flat
+            name="more"
+            icon="menu"
+          >
+            <q-list>
+              <q-item
+              v-if="!loggedIn"
+                clickable
+                @click="tab = 'more'"
+              >
+                <q-route-tab
+                  name="login"
+                  to="/login"
+                  label="Innskrá"
+                  @click="tab = 'login'"
+                />
+              </q-item>
 
-      <!--        <q-route-tab v-if="loggedIn" to="/dashboard" label="Mælaborð"/>-->
+              <q-item
+              v-if="!loggedIn"
+                clickable
+                @click="tab = 'more'"
+              >
+                <q-route-tab
+                  name="register"
+                  to="/register"
+                  label="Nýskrá"
+                  @click="tab = 'register'"
+                />
+              </q-item>
 
-      <!--        <q-route-tab v-if="!loggedIn" to="/login" label="Login" class="no-wrap">-->
-      <!--          <q-icon v-if="!loggedIn" class="fa fa-user-alt nowrap q-ml-sm"/>-->
-      <!--        </q-route-tab>-->
-      <!--        <q-route-tab v-if="!loggedIn" to="/register" icon="user" label="Register"/>-->
-      <!--        <q-route-tab v-if="loggedIn" to="/userinfo" :label=user.firstName>-->
-      <!--          <q-icon v-if="loggedIn" class="fa fa-user-alt nowrap q-ml-sm"/>-->
-      <!--        </q-route-tab>-->
-      <!--        <q-route-tab v-if="loggedIn" to="/logout" label="Logout"/>-->
+              <q-item
+              v-if="loggedIn"
+                clickable
+                @click="tab = 'more'"
+              >
+                <q-route-tab
+                  dark
+                  to="/createtest"
+                  label="Æfing"
+                />
+              </q-item>
 
+              <q-item
+                  v-if="loggedIn"
+                clickable
+                @click="tab = 'more'"
+              >
+                <q-route-tab
+                  dark
+                  to="/testreal"
+                  label="Próf"
+                />
+              </q-item>
+
+              <q-item
+                  v-if="loggedIn"
+                clickable
+                @click="tab = 'more'"
+              >
+                <q-route-tab
+                  dark
+                  to="/flipcard"
+                  label="Flettikort"
+                />
+              </q-item>
+
+              <q-item
+                  v-if="loggedIn"
+                clickable
+                @click="tab = 'more'"
+              >
+                <q-route-tab
+                  to="/dashboard/allt"
+                  label="Mælaborð"
+                />
+              </q-item>
+              <q-item
+                  v-if="loggedIn"
+                clickable
+                @click="tab = 'more'"
+              >
+                <q-route-tab
+                  @click="tab = 'review'"
+                  to="/review"
+                  label="Úrlausnir"
+                />
+              </q-item>
+
+              <q-item
+                  v-if="loggedIn"
+                clickable
+                @click="tab = 'more'"
+              >
+                <q-route-tab
+                  to="/about"
+                  label="Um vefinn"
+                />
+              </q-item>
+
+              <q-item
+                  v-if="loggedIn"
+                clickable
+                @click="tab = 'more'"
+              >
+                <q-route-tab
+                  to="/logout"
+                  label="Logout"
+                />
+              </q-item>
+
+            </q-list>
+          </q-btn-dropdown>
+        </q-tabs>
+      </q-toolbar>
     </div>
 
     <!--        <div class="nav-bar">-->
@@ -134,12 +338,12 @@ export default {
       } else {
         return null
       }
-    // },
-    // userDark () {
-    //   return store.getters.getDarkMode
-    // },
-    // userSystemDark () {
-    //   return store.getters.getSystemDarkMode
+      // },
+      // userDark () {
+      //   return store.getters.getDarkMode
+      // },
+      // userSystemDark () {
+      //   return store.getters.getSystemDarkMode
     }
 
     // firstName () {
@@ -205,19 +409,17 @@ export default {
     // }
   },
   mounted () {
-  // this.loggedIn = store.getters.loggedIn
-  // this.user = store.getters.getUserName
-  // }
+    // this.loggedIn = store.getters.loggedIn
+    // this.user = store.getters.getUserName
+    // }
   }
 }
 </script>
 
 <style scoped lang="sass">
-
 .tabbar
   height: 60px
 
 .ebbg-primary
   background: linear-gradient(to right, $primary, $secondary)
-
 </style>
