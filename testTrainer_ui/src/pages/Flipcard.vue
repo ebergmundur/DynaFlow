@@ -28,7 +28,7 @@
         >
           <div v-if="activeSession">
             <div
-              v-for="opt in currentQuestion.option"
+              v-for="opt in currentQuestion.options"
               :key="opt.id"
               class="col-12 q-pa-md scroll"
             >
