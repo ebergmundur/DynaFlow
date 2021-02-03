@@ -96,6 +96,7 @@ const store = new Vuex.Store({
       state.userName = username
     },
     updateLocalUserStorage (state, { firstname, lastname, email, id, open, until, isadmin, darkMode, systemDarkMode }) {
+      console.log('updateLocalUserStorage')
       localStorage.setItem('user_first_name', firstname)
       localStorage.setItem('user_last_name', lastname)
       localStorage.setItem('user_email', email)
@@ -111,7 +112,8 @@ const store = new Vuex.Store({
       state.userOpen = open.open
       state.userEndDay = open.until
       state.userIsadmin = isadmin
-      state.userIsadmin = isadmin
+      state.userPrefsSysemDarkMode = systemDarkMode
+      state.userPrefsDarkMode = darkMode
     },
     updateAccess (state, access) {
       state.accessToken = access
@@ -250,7 +252,7 @@ const store = new Vuex.Store({
         })
           // if successful update local storage:
           .then(response => {
-            console.log(response)
+            // console.log(response)
             context.commit('updateLocalStorage', {
               access: response.data.access,
               refresh: response.data.refresh,
@@ -303,10 +305,19 @@ const store = new Vuex.Store({
       return state.userLastName
     },
     getDarkMode (state) {
-      return state.userPrefsDarkMode
+      if (state.ueserPrefsDarkMode === 'false') {
+        return false
+      } else {
+        return true
+      }
     },
     getSystemDarkMode (state) {
-      return state.userPrefsSystemDarkMode
+      if (state.userPrefsSystemDarkMode === 'false') {
+        return false
+      } else {
+        return true
+      }
+      // return state.userPrefsSystemDarkMode
     },
     getUserEmail (state) {
       return state.userEmail

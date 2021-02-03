@@ -5,89 +5,259 @@
     @focusout.native="deactivateNavigation"
     @keydown.native="keyprocess"
   >
-    <div class="content" >
-    <div class="card"  ref="cardholder" v-touch-swipe.mouse.touch="doSomething"  v-on:click="toggleCard" >
-    <div class="front" id="cardfrontID" ref="cardfront">
-       <div class="">{{ currentQuestion.question }}</div>
-                      {{ currentQuestion.description }}
-    </div>
-    <div class="back" id="cardbackID" ref="cardback">
-      <div>
+    <div class="content">
+      <div
+        v-if="activeSession"
+        class="card"
+        ref="cardholder"
+        v-touch-swipe.mouse.touch="doSomething"
+        v-on:click="toggleCard"
+      >
         <div
-                      v-for="opt in currentOptions"
-                      :key="opt.id"
-                      class="col-12 q-pa-md scroll"
-                    >
-                      <div v-if="opt.correct" class="content-center">
-                        {{ opt.answer }}
-                      </div>
-                    </div>
-        <!-- <button class="button">Click Here</button> -->
+          class="front"
+          id="cardfrontID"
+          ref="cardfront"
+        >
+          <div class="">{{ currentQuestion.virtname }}</div>
+          {{ currentQuestion.description }}
+        </div>
+        <div
+          class="back"
+          id="cardbackID"
+          ref="cardback"
+        >
+          <div v-if="activeSession">
+            <div
+              v-for="opt in currentQuestion.option"
+              :key="opt.id"
+              class="col-12 q-pa-md scroll"
+            >
+              <div
+                v-if="opt.correct"
+                class="content-center"
+              >
+                {{ opt.answer }}
+              </div>
+            </div>
+            <!-- <button class="button">Click Here</button> -->
+          </div>
+        </div>
       </div>
     </div>
-    </div>
-    </div>
+
+    <q-dialog
+      v-model="persistent"
+      persistent
+      transition-show="scale"
+      transition-hide="scale"
+    >
+      <q-card
+        class=""
+        style="width: 500px"
+      >
+        <q-toolbar class="bg-dark text-white">
+          <q-avatar>
+            <img src="../assets/enam-logo.svg">
+          </q-avatar>
+          <q-toolbar-title>Fjöldi spurninga og fög:</q-toolbar-title>
+        </q-toolbar>
+
+        <q-card-section class="">
+          <q-input
+            v-model="tot_count"
+            label="Fjöldi"
+            @input="setup_session"
+          />
+
+          <q-slider
+            v-model="tot_count"
+            :min='0'
+            color="primary"
+            label
+            :max='100'
+            :step='5'
+            @input="setup_session"
+          />
+          <!-- </q-field> -->
+          <div v-if="!activeSession">
+            <q-checkbox
+              v-for="(data, index) in questions"
+              :key="index"
+              :value="data.id"
+              :label="data.name"
+              v-model="cats_count[index].use"
+            />
+          </div>
+        </q-card-section>
+        <q-separator></q-separator>
+        <q-card-actions
+          align="right"
+          class="bg-white"
+        >
+          <q-btn
+            color="positive"
+            label="OK"
+            @click="setup_session"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <q-linear-progress
+      size="30px"
+      :value="progress"
+      color="info"
+      class="q-mt-sm"
+      style="postion: absolute; bottom: 60px;"
+    >
+      <div class="absolute-full flex flex-center">
+        <q-badge
+          color="white"
+          text-color="accent"
+          :label="progressLabel"
+        />
+      </div>
+    </q-linear-progress>
+<!--
+    <q-linear-progress
+      size="35px"
+      :value="progress"
+      color="info"
+      :label="progressLabel"
+      class="q-mt-sm"
+    /> -->
+
   </q-page>
 </template>
 
 <script>
 import store from 'src/store'
-import { date } from 'quasar'
+// import { date } from 'quasar'
 import { getAPI } from 'src/api/axios-base'
 // import axios from 'axios'
 
 const access = store.getters.token // attempt to obtain new access token by running 'refreshToken' action
 
 export default {
-  name: 'Question',
-  computed: {
-    currentQuestion () {
-      return store.getters.currQest.payload
-    },
-    formDate () {
-      return date.formatDate(this.date, 'YYYY-MM-DD')
-    },
-    currentOptions () {
-      return store.getters.currQest.payload.options
+  name: 'Flipcard',
+  data () {
+    return {
+      // currentOptions: this.currentQuestion.options,
+      cQ: 0,
+      navigationActive: false,
+      // cancel: 0,
+      tot_count: 15,
+      toggle1: false,
+      time_allowed: 0,
+      time_taken: 0,
+      time_step: 0,
+      time: null,
+      tesing_user: 1,
+      flippclass: '',
+      flipped: false,
+      position: 0,
+      frontside: true,
+      persistent: true,
+      cats_count: [],
+      cats: [],
+      qPerCat: 2,
+      questions: [],
+      question_count: 0,
+      currentQnum: 0,
+      currentQuestion: null,
+      activeSession: false,
+      progress: 0,
+      // cardfront: this.$refs.cardfront,
+      // cardback: this.$refs.cardback,
+      cards: [
+        {
+          frontT: 'The "First Computer Programmer"',
+          backT: 'Ada Lovelace',
+          flipped: false
+        },
+        {
+          frontT: 'Invented the "Clarke Calculator"',
+          backT: 'Edith Clarke',
+          flipped: false
+
+        },
+        {
+          frontT: 'Famous World War II Enigma code breaker',
+          backT: 'Alan Turing',
+          flipped: false
+        },
+        {
+          frontT: 'Created satellite orbit analyzation software for NASA',
+          backT: 'Dr. Evelyn Boyd Granville',
+          flipped: false
+        }
+      ]
     }
+  },
+  computed: {
+    progressLabel () {
+      return (this.currentQnum + 1) + '/' + this.questions.length
+    }
+    // currentQuestion () {
+    //   return store.getters.currQest.payload
+    // },
+    // formDate () {
+    //   return date.formatDate(this.date, 'YYYY-MM-DD')
+    // },
+    // currentOptions () {
+    //   return store.getters.currQest.payload.options
+    // }
   },
   methods: {
     flippit () {
       console.log('flippit')
+      // getAPI({
+      //   method: 'get',
+      //   headers: { Authorization: `Bearer ${access}` },
+      //   url: '/api/flipcard/'
+      // })
+      //   .then(response => {
+      //     // this.$refs.cardfront.setAttribute('style', 'color: #5566f7;')
+      //     this.questions = JSON.parse(JSON.stringify(response.data))
+      //     this.setQuestion(1)
+      //   })
+      //   .catch(error => console.log('Error', error.message))
+    },
+    setup_session (e) {
+      this.persistent = false
+
       getAPI({
-        method: 'get',
+        method: 'POST',
         headers: { Authorization: `Bearer ${access}` },
-        url: '/api/flipcard/'
+        data: {
+          cats: this.cats_count,
+          count: this.tot_count
+        },
+        url: '/api/flip/'
       })
         .then(response => {
-          // this.$refs.cardfront.setAttribute('style', 'color: #5566f7;')
-          this.myJson = JSON.parse(JSON.stringify(response.data))
-          this.setQuestion(1)
+          this.questions = JSON.parse(JSON.stringify(response.data))
+          console.log(this.questions)
+          this.setQuestion(0)
         })
         .catch(error => console.log('Error', error.message))
+      console.log(this.cats_count)
+      // console.log(this.qPerCat)
+      window.addEventListener('keyup', this.keyprocess)
     },
-    setQuestion (e) {
-      var index = 0
-      if (e > -1) {
-        index = e - 1
-      } else {
-        index = 0
+    setQuestion (n) {
+      this.currentQnum = this.currentQnum + Number(n)
+
+      if (this.currentQnum <= this.questions.length && this.currentQnum >= 0) {
+        // console.log('range ok')
+        this.activeSession = true
+        this.currentQuestion = this.questions[this.currentQnum]
+        console.log(this.currentQuestion)
+        this.progress = (this.currentQnum + 1) / this.questions.length
+      } else if (this.currentQnum > this.questions.length) {
+        this.activeSession = false
+        alert('Búið!')
       }
-      // this.$refs.cardfront.setAttribute('style', 'color: #5566f7;')
-      this.editingIndex = index
-      this.question = JSON.parse(JSON.stringify(this.myJson[index]))
-
-      store.commit({ type: 'setQuestion', payload: this.question })
-      // index.commit({ type: 'setTestQuestion', payload: [] })
-      // Question.setAnswerChecked()
-      this.questNum = index + 1
-      // this.flippclass = 'flippover'
-      // this.position = 300
-      // this.$refs.scrollArea.setScrollPosition(this.position, 200)
-
-      // setTimeout(function () {
-      //   this.$refs.cardfront.setAttribute('style', 'transform: color: #FFFFF; transition: color 800ms;')
-      // }, 1200)
     },
     doSomething ({ evt, ...info }) {
       // this.$refs.cardfront.setAttribute('style', 'color: #5566f7;')
@@ -95,10 +265,13 @@ export default {
 
       if (info.direction === 'left') {
         // console.log('spacebar')
-        this.goLeft()
+        this.setQuestion(1)
+        // this.goLeft()
+        this.goRight()
       } else if (info.direction === 'right') {
         // console.log('right')
         this.goRight()
+        // this.goLeft()
       } else if (info.direction === 'up') {
         // console.log('top')
         this.goUp()
@@ -130,27 +303,31 @@ export default {
 
       }
     },
-    goLeft () {
+    // goLeft () {
+    goRight () {
       console.log('goLeft')
-      this.$refs.cardfront.setAttribute('style', 'color: #5566f7;')
+      // this.$refs.cardfront.setAttribute('style', 'color: #5566f7;')
       this.$refs.cardholder.setAttribute('style', 'transform: rotateY(5deg); left: -600px; opacity: 0.01; transition: 600ms linear;')
       this.reset(this.$refs.cardholder)
+      this.setQuestion(1)
     },
-    goRight () {
+    // goRight () {
+    goLeft () {
       console.log('goRight')
       this.$refs.cardholder.setAttribute('style', 'transform: rotateY(5deg); right: -600px; opacity: 0.01; transition: 600ms linear;')
       this.reset(this.$refs.cardholder)
+      this.setQuestion(-1)
     },
-    goUp () {
-      console.log('goUp')
-      this.$refs.cardholder.setAttribute('style', 'transform: rotateY(0deg); top: -600px; opacity: 0.01; transition: 600ms linear;')
-      this.reset(this.$refs.cardholder)
-    },
-    goDown () {
-      console.log('goDown')
-      this.$refs.cardholder.setAttribute('style', 'transform: rotateY(0deg); bottom: -600px; opacity: 0.01; transition: 600ms linear;')
-      this.reset(this.$refs.cardholder)
-    },
+    // goUp () {
+    //   console.log('goUp')
+    //   this.$refs.cardholder.setAttribute('style', 'transform: rotateY(0deg); top: -600px; opacity: 0.01; transition: 600ms linear;')
+    //   this.reset(this.$refs.cardholder)
+    // },
+    // goDown () {
+    //   console.log('goDown')
+    //   this.$refs.cardholder.setAttribute('style', 'transform: rotateY(0deg); bottom: -600px; opacity: 0.01; transition: 600ms linear;')
+    //   this.reset(this.$refs.cardholder)
+    // },
     toggleCard () {
       console.log('toggleCard')
       // console.log(this.$refs.cardholder)
@@ -172,63 +349,38 @@ export default {
         frontur.setAttribute('style', 'transform: rotateY(0deg)')
         bak.setAttribute('style', 'transform: rotateY(-180deg)')
         f.setAttribute('style', 'transform: rotateY(0deg); bottom: 0; left: 0; opacity: 1; transition: opacity 800ms;')
-        this.$refs.cardfront.setAttribute('style', 'transform: color: #FFFFF; transition: color 800ms;')
+        // this.$refs.cardfront.setAttribute('style', 'transform: color: #FFFFF; transition: color 800ms;')
       }, 1200)
-      this.flippit()
+      // this.flippit()
     }
   },
+  beforeMount () {
+    getAPI({
+      url: '/api/category/',
+      method: 'get',
+      headers: { Authorization: `Bearer ${access}` }
+    })
+      .then(response => {
+        // console.log(response)
+        this.questions = JSON.parse(JSON.stringify(response.data))
+        var i
+        for (i = 0; i < this.questions.length; i++) {
+          var cid = this.questions[i]
+          this.cats_count.push({ id: cid.id, use: true })
+          // this.cats_count.push(false)
+        }
+      })
+      .catch(error => console.log('Error', error.message))
+    // this.questions = JSON.parse(JSON.stringify(json))
+  },
   mounted () {
-    this.flippit()
-    window.addEventListener('keyup', this.keyprocess)
+    // this.flippit()
+    // window.addEventListener('keyup', this.keyprocess)
   },
   beforeDestroy () {
     clearTimeout(this.timer)
     window.removeEventListener('keyup', this.keyprocess)
-  },
-  data () {
-    return {
-      // currentOptions: this.currentQuestion.options,
-      cQ: 0,
-      navigationActive: false,
-      // cancel: 0,
-      toggle1: false,
-      time_allowed: 0,
-      time_taken: 0,
-      time_step: 0,
-      time: null,
-      tesing_user: 1,
-      flippclass: '',
-      flipped: false,
-      position: 0,
-      frontside: true,
-      // cardfront: this.$refs.cardfront,
-      // cardback: this.$refs.cardback,
-      cards: [
-        {
-          frontT: 'The "First Computer Programmer"',
-          backT: 'Ada Lovelace',
-          flipped: false
-        },
-        {
-          frontT: 'Invented the "Clarke Calculator"',
-          backT: 'Edith Clarke',
-          flipped: false
-
-        },
-        {
-          frontT: 'Famous World War II Enigma code breaker',
-          backT: 'Alan Turing',
-          flipped: false
-        },
-        {
-          frontT: 'Created satellite orbit analyzation software for NASA',
-          backT: 'Dr. Evelyn Boyd Granville',
-          flipped: false
-        }
-      ]
-    }
   }
-
 }
 // TODO Hreinsa currTestQuest á milli spurninga
 </script>
@@ -239,14 +391,16 @@ $primary-light: rgb(82, 131, 247);
 
 $secondary: rgb(187, 226, 78);
 
-$red: hsl(10,80%,50%);
+$red: hsl(10, 80%, 50%);
 $orange: rgb(227, 230, 25);
 
-*, *:before, *:after {
+*,
+*:before,
+*:after {
   box-sizing: border-box;
 }
 
-@mixin mobile ($size: 640px) {
+@mixin mobile($size: 640px) {
   @media screen and (max-width: $size) {
     @content;
   }
@@ -312,13 +466,13 @@ $orange: rgb(227, 230, 25);
   &:before {
     position: absolute;
     display: block;
-    content: '';
+    content: "";
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg,$primary-light, $primary);
-    opacity: .85;
+    background: linear-gradient(135deg, $primary-light, $primary);
+    opacity: 0.85;
     z-index: -1;
   }
   // .card:hover & {
@@ -349,12 +503,16 @@ $orange: rgb(227, 230, 25);
   .card:nth-child(even) & {
     transform: rotateY(180deg);
     .button {
-    background: linear-gradient(135deg, adjust-hue($secondary, -20deg), $secondary);
-    &:before {
-      box-shadow: 0 0 10px 10px rgba($secondary, 0.25);
-    background-color: rgba($secondary, 0.45);
+      background: linear-gradient(
+        135deg,
+        adjust-hue($secondary, -20deg),
+        $secondary
+      );
+      &:before {
+        box-shadow: 0 0 10px 10px rgba($secondary, 0.25);
+        background-color: rgba($secondary, 0.45);
+      }
     }
   }
-  }
-  }
+}
 </style>

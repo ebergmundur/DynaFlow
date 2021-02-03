@@ -21,7 +21,6 @@
         <q-route-tab dark v-if="!loggedIn" to="/about" label="Um vefinn"/>
       </q-tabs>
       <!--        <q-icon v-if="loggedIn" class="fa fa-user-alt nowrap q-ml-sm"/>-->
-
       <q-tabs
         align="right"
         inline-label
@@ -103,7 +102,9 @@
 // import Clock from 'components/Clock'
 import store from 'src/store'
 // import axios from 'axios'
-import { getAPI } from 'src/api/axios-base'
+// import { getAPI } from 'src/api/axios-base'
+// import Vue from 'vue'
+// Vue.forceUpdate()
 
 // import { mapState } from 'vuex'
 
@@ -115,11 +116,11 @@ export default {
   data () {
     return {
       tab: 'root',
-      isdark: true,
-      autodark: false
+      dark: false,
+      systemDark: false,
+      data: []
       // loggedIn: false,
       // user: ''
-
     }
   },
   // computed: mapState(['accessToken', 'userName']),
@@ -133,6 +134,12 @@ export default {
       } else {
         return null
       }
+    // },
+    // userDark () {
+    //   return store.getters.getDarkMode
+    // },
+    // userSystemDark () {
+    //   return store.getters.getSystemDarkMode
     }
 
     // firstName () {
@@ -148,36 +155,61 @@ export default {
     // this.loggedIn = index.getters.loggedIn
     // this.user = index.getters.getUserName
   },
-  mounted () {
-    if (this.loggedIn) {
-      const access = store.getters.token
+  beforeMount () {
+    // console.log('beforeMount')
+    // var loggg = true
+    // console.log(loggg)
+    // // if (this.loggedIn) {
+    // if (loggg === true) {
+    //   const access = store.getters.token
+    //   getAPI({
+    //     data: { username: this.user },
+    //     method: 'post',
+    //     headers: { Authorization: `Bearer ${access}` }, // the new access token is attached to the authorization header
+    //     url: '/api/userinfo/'
+    //   })
+    //     .then(response => {
+    //       // console.log('response')
+    //       // console.log(response)
+    //       this.data = response.data
 
-      getAPI({
-        data: { username: this.user },
-        method: 'post',
-        headers: { Authorization: `Bearer ${access}` }, // the new access token is attached to the authorization header
-        url: '/api/userinfo/'
-      })
-        .then(response => {
-          // console.log('response')
-          // console.log(response)
-          store.commit('setUserId', response.data.id)
-          store.commit('setUserFirstName', response.data.first_name)
-          store.commit('setUserLastName', response.data.last_name)
-          store.commit('setUserEmail', response.data.email)
-          store.commit('setUserEndDay', response.data.until)
-          store.commit('setUserOpen', response.data.open)
-          store.commit('setUserIsadmin', response.data.isadmin)
-          store.commit('setDarkMode', response.data.prefs_dark_mode)
-          store.commit('setSystemDarkMode', response.data.prefs_system_dark_mode)
-        })
-    }
-  }
+    //       console.log('mounted')
+    //       console.log(this.data)
+    //       if (this.data.prefs_system_dark_mode) {
+    //         console.log('system-true')
+    //         this.$q.dark.set('auto')
+    //         this.dark = false
+    //         this.systemDark = true
+    //       } else if (this.data.prefs_dark_mode) {
+    //         console.log('user-true')
+    //         this.$q.dark.set(true)
+    //         this.dark = true
+    //         this.systemDark = false
+    //       } else {
+    //         console.log('user-false')
+    //         this.$q.dark.set(false)
+    //         this.dark = false
+    //         this.systemDark = false
+    //       }
+
+    //       store.commit('setUserId', this.data.id)
+    //       store.commit('setUserFirstName', this.data.first_name)
+    //       store.commit('setUserLastName', this.data.last_name)
+    //       store.commit('setUserEmail', this.data.email)
+    //       store.commit('setUserEndDay', this.data.until)
+    //       store.commit('setUserOpen', this.data.open)
+    //       store.commit('setUserIsadmin', this.data.isadmin)
+    //       store.commit('setDarkMode', this.data.prefs_dark_mode)
+    //       store.commit('setSystemDarkMode', this.data.prefs_system_dark_mode)
+    //     })
+    // }
+  },
+  mounted () {
   // this.loggedIn = store.getters.loggedIn
   // this.user = store.getters.getUserName
   // }
+  }
 }
-
 </script>
 
 <style scoped lang="sass">

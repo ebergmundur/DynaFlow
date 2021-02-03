@@ -58,8 +58,8 @@
             </q-toolbar-title>
           </q-toolbar>
             <div>
-              <q-toggle v-model="systemDark" toggle-color="primary" @input="setdarkauto" label="Fylgja tölvu" />
-              <q-toggle v-model="dark" ref="mandark" toggle-color="primary" @input="setdark" label="Handvirkt" />
+              <q-toggle v-model="systemDark" toggle-color="primary" @input="setdarkauto" label="Fylgja tölvu" /> - skjámyndir verða dökkar ef stýrikerfið fer í „dark mode“ að kvöldi og ljósar að morgni.<br>
+              <q-toggle v-model="dark" ref="mandark" toggle-color="primary" @input="setdark" label="Handvirkt" /> - notandi velur hvort skjámyndir eru dökkar eða ljósar óháð stýrikerfi tækisins.
             </div>
             <!-- <q-separator spaced/> -->
           </q-card-section>
@@ -84,15 +84,14 @@ export default {
   },
   data () {
     return {
-      // loggedIn: false,
       token: null,
       Heatmap: Heatmap,
       userId: 0,
       firstName: '',
       lastName: '',
       email: '',
-      dark: null,
-      systemDark: null
+      dark: false,
+      systemDark: false
     }
   },
   methods: {
@@ -169,55 +168,18 @@ export default {
     },
     userInfo () {
       return store.getters.getUserInfo
-    },
-    userDark () {
-      return store.getters.getDarkMode
-    },
-    userSystemDark () {
-      return store.getters.getSystemDarkMode
+    // },
+    // userDark () {
+    //   return store.getters.getDarkMode
+    // },
+    // userSystemDark () {
+    //   return store.getters.getSystemDarkMode
     }
   },
   mounted () {
-    if (this.loggedIn) {
-      const access = store.getters.token
-      getAPI({
-        data: { username: this.user },
-        method: 'post',
-        headers: { Authorization: `Bearer ${access}` }, // the new access token is attached to the authorization header
-        url: '/api/userinfo/'
-      })
-        .then(response => {
-          console.log('response')
-          console.log(response)
-          this.systemDark = response.data.prefs_system_dark_mode
-          if (response.data.prefs_system_dark_mode) {
-            console.log('system-true')
-            this.$q.dark.set('auto')
-            this.dark = false
-            this.systemDark = true
-          } else if (response.data.prefs_dark_mode) {
-            console.log('user-true')
-            this.$q.dark.set(true)
-            this.dark = true
-            this.systemDark = false
-          } else {
-            console.log('user-false')
-            this.$q.dark.set(false)
-            this.dark = false
-            this.systemDark = false
-          }
-
-          store.commit('setUserId', response.data.id)
-          store.commit('setUserFirstName', response.data.first_name)
-          store.commit('setUserLastName', response.data.last_name)
-          store.commit('setUserEmail', response.data.email)
-          store.commit('setUserEndDay', response.data.until)
-          store.commit('setUserOpen', response.data.open)
-          store.commit('setUserIsadmin', response.data.isadmin)
-          store.commit('setDarkMode', response.data.prefs_dark_mode)
-          store.commit('setSystemDarkMode', response.data.prefs_system_dark_mode)
-        })
-    }
+    this.dark = store.getters.getDarkMode
+    this.systemDark = store.getters.getSystemDarkMode
+    console.log(store.getters.getDarkMode, store.getters.getSystemDarkMode)
   }
 }
 

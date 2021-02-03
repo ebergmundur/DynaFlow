@@ -185,19 +185,19 @@ export default {
         console.log(tc)
         tc = 1
       }
-      console.log('tc')
-      console.log(tc)
+      // console.log('tc')
+      // console.log(tc)
 
       var qPerCat = Math.round(Number(this.tot_count) / tc)
 
-      console.log('qPerCat')
-      console.log(qPerCat)
-      console.log('catta count')
+      // console.log('qPerCat')
+      // console.log(qPerCat)
+      // console.log('catta count')
       for (ii = 0; ii < this.cats_count.length; ii++) {
         if (typeof this.cats_count[ii] !== 'undefined') {
           if (this.cats_count[ii].use) {
             this.cats_count[ii].num = qPerCat
-            console.log(this.cats_count[ii])
+            // console.log(this.cats_count[ii])
           } else {
             this.cats_count[ii].num = 0
           }

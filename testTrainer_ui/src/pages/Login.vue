@@ -54,6 +54,10 @@
 </template>
 
 <script>
+
+import store from 'src/store'
+import { getAPI } from 'src/api/axios-base'
+
 export default {
   name: 'login',
   components: {
@@ -61,6 +65,7 @@ export default {
   },
   data () {
     return {
+      wdata: [],
       username: '',
       password: '',
       isPwd: true,
@@ -68,6 +73,53 @@ export default {
     }
   },
   methods: {
+    update () {
+      const access = store.getters.token
+      getAPI({
+        data: { username: this.user },
+        method: 'post',
+        headers: { Authorization: `Bearer ${access}` }, // the new access token is attached to the authorization header
+        url: '/api/userinfo/'
+      })
+        .then(response => {
+          console.log('update')
+          // console.log(response)
+          this.wdata = response.data
+          console.log(this.wdata)
+          store.commit('setUserId', this.wdata.id)
+          store.commit('setUserFirstName', this.wdata.first_name)
+          store.commit('setUserLastName', this.wdata.last_name)
+          store.commit('setUserEmail', this.wdata.email)
+          store.commit('setUserEndDay', this.wdata.until)
+          store.commit('setUserOpen', this.wdata.open)
+          store.commit('setUserIsadmin', this.wdata.isadmin)
+          store.commit('setDarkMode', this.wdata.prefs_dark_mode)
+          store.commit('setSystemDarkMode', this.wdata.prefs_system_dark_mode)
+          if (response.data.prefs_system_dark_mode) {
+            console.log('system-true')
+            this.$q.dark.set('auto')
+            this.dark = false
+            this.systemDark = true
+          } else if (response.data.prefs_dark_mode) {
+            console.log('user-true')
+            this.$q.dark.set(true)
+            this.dark = true
+            this.systemDark = false
+          } else {
+            console.log('user-false')
+            this.$q.dark.set(false)
+            this.dark = false
+            this.systemDark = false
+          }
+        })
+        .then(() => {
+          this.$router.push({ path: '/' })
+        })
+        .catch(err => {
+          console.log(err)
+          this.wrongCred = true // if the credentials were wrong set wrongCred to true
+        })
+    },
     loginUser () { // call loginUSer action
       this.$store.dispatch('loginUser', {
         username: this.username,
@@ -75,7 +127,9 @@ export default {
       })
         .then(() => {
           this.wrongCred = false
-          this.$router.push({ path: '/' })
+        })
+        .then(() => {
+          this.update()
         })
         .catch(err => {
           console.log(err)

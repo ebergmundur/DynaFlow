@@ -57,8 +57,7 @@ class FlipcardViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
-
-    queryset = Question.objects.all().order_by("?")[:1]
+    queryset = Question.objects.all().order_by("?")
     serializer_class = QuestionSerializer
 
 
@@ -228,7 +227,7 @@ def prefs(request):
     if request.method == "GET":
         # prefs = TestAnswers.objects.filter(curr_question=request)
         person = PersonUser.objects.filter(user__username=request.data["username"])
-        serializer = PersonSerializer(memos, many=False)
+        serializer = PersonSerializer(person, many=False)
         return Response(serializer.data)
 
     if request.method == "POST":
@@ -267,6 +266,28 @@ def answer_add(request):
         # memos = TestAnswers.objects.filter(curr_question=request)
         memos = TestAnswers.objects.all()
         serializer = QuestionAnswerSerializer(memos, many=True)
+        return Response(serializer.data)
+
+
+@api_view(["POST"])
+def flipp_view(request):
+    """
+    List all code snippets, or create a new snippet.
+    """
+    print(request.data)
+
+    if request.method == "POST":
+        cat_ids = []
+        count = int(request.data["count"])
+        cats = request.data["cats"]
+
+        for c in cats:
+            if c["use"]:
+                cat_ids.append(int(c["id"]))
+
+        # memos = TestAnswers.objects.filter(curr_question=request)
+        flips = Question.objects.order_by("?").filter(category_id__in=cat_ids)[:count]
+        serializer = QuestionSerializer(flips, many=True)
         return Response(serializer.data)
 
 
