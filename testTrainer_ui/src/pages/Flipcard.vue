@@ -14,12 +14,31 @@
         v-on:click="toggleCard"
       >
         <div
-          class="front"
+          class="front row"
           id="cardfrontID"
           ref="cardfront"
         >
-          <div class="">{{ currentQuestion.virtname }}</div>
-          {{ currentQuestion.description }}
+          <div class="q-pa-md flex flex-center">{{ currentQuestion.question }}</div>
+          <div
+            class="absolute-full flex"
+            style=""
+          >
+          <q-linear-progress
+            size="30px"
+            :value="progress"
+            color="info"
+            class="q-mt-no self-end"
+          >
+            <div class="absolute-full flex flex-center">
+              <q-badge
+                color="white"
+                text-color="accent"
+                :label="progressLabel"
+              />
+            </div>
+          </q-linear-progress>
+          </div>
+          <!-- {{ currentQuestion.description }} -->
         </div>
         <div
           class="back"
@@ -102,23 +121,7 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-
-    <q-linear-progress
-      size="30px"
-      :value="progress"
-      color="info"
-      class="q-mt-sm"
-      style="postion: absolute; bottom: 60px;"
-    >
-      <div class="absolute-full flex flex-center">
-        <q-badge
-          color="white"
-          text-color="accent"
-          :label="progressLabel"
-        />
-      </div>
-    </q-linear-progress>
-<!--
+    <!--
     <q-linear-progress
       size="35px"
       :value="progress"
