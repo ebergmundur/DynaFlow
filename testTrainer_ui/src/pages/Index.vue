@@ -1,7 +1,7 @@
 <template>
-  <q-page class="flex ">
+  <q-page class="">
     <!--    <div class="row q-pa-md">-->
-    <div class="col">
+    <div class="flex row">
 
       <q-carousel
         v-model="slide"
@@ -17,12 +17,12 @@
         navigation
         padding
         arrows
-        class="carshadow"
+        class="carshadow flex col-12"
       >
 
         <q-carousel-slide
           name="welcome"
-          class="column no-wrap flex-center"
+          class="column no-wrap flex flex-center"
         >
           <!--          <q-icon name="class" size="56px" />-->
           <div class="q-mt-md text-center">
@@ -188,7 +188,7 @@
 
       </q-carousel>
 
-      <div class="row q-gutter-md justify-center col-lg-8  q-px-lg col q-mt-md ">
+      <div class="row q-gutter-md justify-center col q-mt-md flex col-12">
         <q-card class="col-lg-2 col-md-4 col-sm-10 ">
           <q-card-section class="text-center">
             <q-icon
@@ -303,10 +303,14 @@
       <!--      </div>-->
     </div>
     <!--    </div>-->
+    <br>
+    <!-- <Footer></Footer> -->
+
   </q-page>
 </template>
 
 <script>
+// import Footer from 'components/Footer'
 export default {
   data () {
     return {
@@ -315,6 +319,9 @@ export default {
       autoplay: 5500,
       lorem: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque voluptatem totam, architecto cupiditate officia rerum, error dignissimos praesentium libero ab nemo.'
     }
+  },
+  components: {
+    // Footer
   },
   methods: {
   },
