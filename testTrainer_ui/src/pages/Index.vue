@@ -14,17 +14,18 @@
         swipeable
         animated
         control-color="primary"
+        control-type="flat"
         navigation
         padding
+        height="500px"
         arrows
-        class="carshadow flex col-12"
+        class="carshadow col-12"
       >
 
         <q-carousel-slide
           name="welcome"
-          class="column no-wrap flex flex-center"
+          class="flex flex-center cslide"
         >
-          <!--          <q-icon name="class" size="56px" />-->
           <div class="q-mt-md text-center">
             <img
               alt="Enám logo"
@@ -35,16 +36,14 @@
             <div style="max-width: 600px;">
               <p></p>
               <p class="splashtext">E-nám er vettvangur þar sem nemendur geta æft sig fyrir próf.</p>
-
             </div>
           </div>
         </q-carousel-slide>
 
         <q-carousel-slide
           name="welcome2"
-          class="column no-wrap flex-center"
+          class="flex flex-center cslide"
         >
-          <!--          <q-icon name="class" size="56px" />-->
           <div class="q-mt-md text-center">
             <img
               alt="Enám logo"
@@ -61,9 +60,8 @@
         </q-carousel-slide>
         <q-carousel-slide
           name="welcome3"
-          class="column no-wrap flex-center"
+          class="column no-wrap flex-center cslide"
         >
-          <!--          <q-icon name="class" size="56px" />-->
           <div class="q-mt-md text-center">
             <img
               alt="Enám logo"
@@ -82,9 +80,8 @@
         </q-carousel-slide>
         <q-carousel-slide
           name="welcome4"
-          class="column no-wrap flex-center"
+          class="column no-wrap flex-center cslide"
         >
-          <!--          <q-icon name="class" size="56px" />-->
           <div class="q-mt-md text-center">
             <img
               alt="Enám logo"
@@ -93,31 +90,26 @@
             >
             <div class="text-h3 text-center">Velkomin á e-nám</div>
             <div style="max-width: 600px;">
-              <p></p>
-
+             <p></p>
               <p class="splashtext">
                 Próf eru af fullri lengd og ekki hægt að gera hlé, svo það er ráðlegt að hafa tímann fyrir sér þegar sú
-                leið
-                er valin.</p>
+                leið er valin.</p>
             </div>
           </div>
         </q-carousel-slide>
 
         <q-carousel-slide
           name="style"
-          class="column no-wrap flex-center"
+          class="column no-wrap flex-center cslide"
         >
           <q-icon
             name="class"
             size="124px"
           />
           <div class="q-mt-md text-center">
-            <!--            <q-icon name="class" size="160px" class="card-icon"/>-->
             <div class="text-h6">Mælaborð</div>
-            <!--            <div class="text-subtitle2">0% lokið</div>-->
             <div style="max-width: 600px;">
               <p class="splashtext">
-
                 Yfirlit yfir árangur í æfingum og prófum. Hægt að skoða eftir efnisflokkum líka.
                 Svo getur þú farið yfir minnisatriði við spurningar og skoðað betur.
               </p>
@@ -127,14 +119,13 @@
 
         <q-carousel-slide
           name="flip"
-          class="column no-wrap flex-center"
+          class="column no-wrap flex-center cslide"
         >
           <q-icon
             name="flip"
             size="124px"
           />
           <div class="q-mt-md text-center">
-            <!--            <q-icon name="flip" size="160px" class="card-icon"/>-->
             <div class="text-h6">Flettikort</div>
             <div style="max-width: 600px;">
               <p class="splashtext">
@@ -148,7 +139,7 @@
 
         <q-carousel-slide
           name="layers"
-          class="column no-wrap flex-center"
+          class="column no-wrap flex-center cslide"
         >
           <q-icon
             name="flaky"
@@ -168,7 +159,7 @@
 
         <q-carousel-slide
           name="map"
-          class="column no-wrap flex-center"
+          class="column no-wrap flex-center cslide"
         >
           <q-icon
             name="school"
@@ -191,11 +182,12 @@
       <div class="row q-gutter-md justify-center col q-mt-md flex col-12">
         <q-card class="col-lg-2 col-md-4 col-sm-10 ">
           <q-card-section class="text-center">
+          <a href="/#/dashboard/allt" class="iconlink">
             <q-icon
               name="class"
               size="160px"
               class="card-icon"
-            />
+            /></a>
             <div class="text-h6">Mælaborð</div>
             <div class="text-subtitle2">0% lokið</div>
           </q-card-section>
@@ -207,11 +199,11 @@
 
         <q-card class="col-lg-2 col-md-4 col-sm-10">
           <q-card-section class="text-center">
-            <q-icon
+            <a href="/#/flipcard" class="iconlink"><q-icon
               name="flip"
               size="160px"
               class="card-icon"
-            />
+            /></a>
             <div class="text-h6">Flettikort</div>
             <div class="text-subtitle2">14% lokið</div>
           </q-card-section>
@@ -223,11 +215,11 @@
 
         <q-card class="col-lg-2 col-md-4 col-sm-10">
           <q-card-section class="text-center">
-            <q-icon
+            <a href="/#/createtest" class="iconlink"><q-icon
               name="flaky"
               size="160px"
               class="card-icon"
-            />
+            /></a>
             <div class="text-h6">Æfingar</div>
             <div class="text-subtitle2">14% lokið</div>
           </q-card-section>
@@ -238,12 +230,12 @@
 
         <q-card class="col-lg-2  col-md-4 col-sm-10">
           <q-card-section class="text-center">
-            <q-icon
+            <a href="/#/testreal" class="iconlink"><q-icon
               name="school"
               size="160px"
               class="card-icon"
-            />
-            <div class="text-h6">Próf</div>-->
+            /></a>
+            <div class="text-h6">Próf</div>
             <div class="text-subtitle2">4% lokið</div>
           </q-card-section>
           <q-card-section class="q-pt-none text-justify">
@@ -251,6 +243,7 @@
           </q-card-section>
         </q-card>
       </div>
+
       <!--      <q-separator class="q-ma-md"/>-->
 
       <!--      <div class="row q-gutter-md justify-center col-lg-8  q-px-lg col ">-->
@@ -353,4 +346,14 @@ export default {
 
 .splashtext
   font-size: large
+
+.iconlink
+  color: black
+  text-decoration: none
+  :hover
+    opacity: 0.6
+
+.cslide
+  min-width: 100%
+  flex-wrap: nowrap
 </style>

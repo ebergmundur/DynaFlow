@@ -19,25 +19,25 @@
           ref="cardfront"
         >
           <div class="q-pa-md flex flex-center">{{ currentQuestion.question }}</div>
-          <div
+          <!-- <div
             class="absolute-full flex"
             style=""
-          >
-          <q-linear-progress
+          > -->
+          <!-- <q-linear-progress
             size="30px"
             :value="progress"
             color="info"
             class="q-mt-no self-end"
-          >
-            <div class="absolute-full flex flex-center">
+          > -->
+            <!-- <div class="absolute-full q-mt-no self-end flex flex-center">
               <q-badge
                 color="white"
                 text-color="accent"
                 :label="progressLabel"
               />
-            </div>
-          </q-linear-progress>
-          </div>
+            </div> -->
+          <!-- </q-linear-progress>  -->
+          <!-- </div> -->
           <!-- {{ currentQuestion.description }} -->
         </div>
         <div
@@ -201,15 +201,6 @@ export default {
     progressLabel () {
       return (this.currentQnum + 1) + '/' + this.questions.length
     }
-    // currentQuestion () {
-    //   return store.getters.currQest.payload
-    // },
-    // formDate () {
-    //   return date.formatDate(this.date, 'YYYY-MM-DD')
-    // },
-    // currentOptions () {
-    //   return store.getters.currQest.payload.options
-    // }
   },
   methods: {
     flippit () {
@@ -246,7 +237,6 @@ export default {
         .catch(error => console.log('Error', error.message))
       console.log(this.cats_count)
       // console.log(this.qPerCat)
-      window.addEventListener('keyup', this.keyprocess)
     },
     setQuestion (n) {
       this.currentQnum = this.currentQnum + Number(n)
@@ -277,10 +267,10 @@ export default {
         // this.goLeft()
       } else if (info.direction === 'up') {
         // console.log('top')
-        this.goUp()
+        // this.goUp()
       } else if (info.direction === 'down') {
         // console.log('down')
-        this.goDown()
+        // this.goDown()
       }
     },
     keyprocess (e) {
@@ -295,13 +285,16 @@ export default {
         this.goRight()
       } else if (e.keyCode === 38) {
         // console.log('top')
-        this.goUp()
+        // this.goUp()
       } else if (e.keyCode === 37) {
         // console.log('left')
         this.goLeft()
       } else if (e.keyCode === 40) {
         // console.log('down')
-        this.goDown()
+        // this.goDown()
+      } else if (e.keyCode === 13) {
+        // console.log('down')
+        this.setup_session()
       } else {
 
       }
@@ -310,14 +303,14 @@ export default {
     goRight () {
       console.log('goLeft')
       // this.$refs.cardfront.setAttribute('style', 'color: #5566f7;')
-      this.$refs.cardholder.setAttribute('style', 'transform: rotateY(5deg); left: -600px; opacity: 0.01; transition: 600ms linear;')
+      this.$refs.cardholder.setAttribute('style', 'left: -400px; opacity: 0.0; transition: 300ms ease-in-out;')
       this.reset(this.$refs.cardholder)
       this.setQuestion(1)
     },
     // goRight () {
     goLeft () {
       console.log('goRight')
-      this.$refs.cardholder.setAttribute('style', 'transform: rotateY(5deg); right: -600px; opacity: 0.01; transition: 600ms linear;')
+      this.$refs.cardholder.setAttribute('style', 'right: -400px; opacity: 0.0; transition: 300ms ease-in-out;')
       this.reset(this.$refs.cardholder)
       this.setQuestion(-1)
     },
@@ -351,9 +344,9 @@ export default {
       setTimeout(function () {
         frontur.setAttribute('style', 'transform: rotateY(0deg)')
         bak.setAttribute('style', 'transform: rotateY(-180deg)')
-        f.setAttribute('style', 'transform: rotateY(0deg); bottom: 0; left: 0; opacity: 1; transition: opacity 800ms;')
+        f.setAttribute('style', 'transform: rotateY(0deg); bottom: 0; left: 0; opacity: 1; transition: opacity 300ms ease-in-out;')
         // this.$refs.cardfront.setAttribute('style', 'transform: color: #FFFFF; transition: color 800ms;')
-      }, 1200)
+      }, 400)
       // this.flippit()
     }
   },
@@ -378,14 +371,14 @@ export default {
   },
   mounted () {
     // this.flippit()
-    // window.addEventListener('keyup', this.keyprocess)
+    window.addEventListener('keyup', this.keyprocess)
   },
   beforeDestroy () {
     clearTimeout(this.timer)
     window.removeEventListener('keyup', this.keyprocess)
   }
 }
-// TODO Hreinsa currTestQuest á milli spurninga
+
 </script>
 
 <style scoped lang='scss'>
@@ -461,7 +454,7 @@ $orange: rgb(227, 230, 25);
   background-size: cover;
   background-blend-mode: overlay;
   padding: 2rem;
-  font-size: 1.418rem;
+  font-size: 1.3rem;
   font-weight: 600;
   color: #fff;
   overflow: hidden;
