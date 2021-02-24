@@ -5,6 +5,7 @@
     @focusout.native="deactivateNavigation"
     @keydown.native="keyprocess"
   >
+
     <div class="content">
       <div
         v-if="activeSession"
@@ -29,13 +30,13 @@
             color="info"
             class="q-mt-no self-end"
           > -->
-            <!-- <div class="absolute-full q-mt-no self-end flex flex-center">
+            <!-- <div class="absolute-full q-mt-no self-end flex flex-center">-->
               <q-badge
                 color="white"
                 text-color="accent"
                 :label="progressLabel"
               />
-            </div> -->
+           <!-- </div> -->
           <!-- </q-linear-progress>  -->
           <!-- </div> -->
           <!-- {{ currentQuestion.description }} -->
@@ -85,8 +86,8 @@
           <q-input
             v-model="tot_count"
             label="Fjöldi"
-            @input="setup_session"
           />
+          <!-- @input="setup_session" -->
 
           <q-slider
             v-model="tot_count"
@@ -95,8 +96,8 @@
             label
             :max='100'
             :step='5'
-            @input="setup_session"
           />
+          <!-- @input="setup_session" -->
           <!-- </q-field> -->
           <div v-if="!activeSession">
             <q-checkbox
@@ -121,6 +122,55 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+        <q-dialog
+      v-model="finale"
+      persistent
+      transition-show="scale"
+      transition-hide="scale"
+    >
+      <q-card
+        class=""
+        style="width: 500px"
+      >
+        <q-toolbar class="bg-dark text-white">
+          <q-avatar>
+            <img src="../assets/enam-logo.svg">
+          </q-avatar>
+          <q-toolbar-title>Spjöldin eru búin.</q-toolbar-title>
+        </q-toolbar>
+ <q-card-section class="flex flex-center">
+   <div class="row q-gutter-lg q-pa-md flex flex-center">
+        <q-btn
+              dense
+              color="primary"
+              size="lg"
+              label="Skoða aftur"
+              class="q-pa-sm col-xs-12 col-lg-3"
+              @click="finale = false"
+            />
+
+<q-btn
+      dense
+      color="primary"
+      size="lg"
+      label="Nýtt sett"
+      class="q-pa-sm col-xs-12 col-lg-3"
+    />
+
+<q-btn
+      dense
+      color="primary"
+      size="lg"
+      label="Gott í bili"
+      class="q-pa-sm col-xs-12 col-lg-3"
+    />
+
+    </div>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
+
     <!--
     <q-linear-progress
       size="35px"
@@ -129,7 +179,6 @@
       :label="progressLabel"
       class="q-mt-sm"
     /> -->
-
   </q-page>
 </template>
 
@@ -170,6 +219,7 @@ export default {
       currentQuestion: null,
       activeSession: false,
       progress: 0,
+      finale: false,
       // cardfront: this.$refs.cardfront,
       // cardback: this.$refs.cardback,
       cards: [
@@ -240,16 +290,23 @@ export default {
     },
     setQuestion (n) {
       this.currentQnum = this.currentQnum + Number(n)
-
-      if (this.currentQnum <= this.questions.length && this.currentQnum >= 0) {
-        // console.log('range ok')
-        this.activeSession = true
-        this.currentQuestion = this.questions[this.currentQnum]
-        console.log(this.currentQuestion)
-        this.progress = (this.currentQnum + 1) / this.questions.length
-      } else if (this.currentQnum > this.questions.length) {
-        this.activeSession = false
-        alert('Búið!')
+      if (this.currentQnum <= 0 && this.activeSession) {
+        this.currentQnum = 0
+        alert('fyrsta spjald')
+      } else if (this.currentQnum >= this.questions.length) {
+        this.currentQnum = this.questions.length
+        this.finale = true
+      } else {
+        if (this.currentQnum <= this.questions.length && this.currentQnum >= 0) {
+          // console.log('range ok')
+          this.activeSession = true
+          this.currentQuestion = this.questions[this.currentQnum]
+          // console.log(this.currentQuestion)
+          this.progress = (this.currentQnum + 1) / this.questions.length
+        } else if (this.currentQnum > this.questions.length) {
+          this.activeSession = false
+          alert('Búið!')
+        }
       }
     },
     doSomething ({ evt, ...info }) {
@@ -257,20 +314,9 @@ export default {
       evt.preventDefault()
 
       if (info.direction === 'left') {
-        // console.log('spacebar')
-        this.setQuestion(1)
-        // this.goLeft()
-        this.goRight()
+        this.goLeft()
       } else if (info.direction === 'right') {
-        // console.log('right')
         this.goRight()
-        // this.goLeft()
-      } else if (info.direction === 'up') {
-        // console.log('top')
-        // this.goUp()
-      } else if (info.direction === 'down') {
-        // console.log('down')
-        // this.goDown()
       }
     },
     keyprocess (e) {
@@ -295,8 +341,6 @@ export default {
       } else if (e.keyCode === 13) {
         // console.log('down')
         this.setup_session()
-      } else {
-
       }
     },
     // goLeft () {
@@ -325,7 +369,7 @@ export default {
     //   this.reset(this.$refs.cardholder)
     // },
     toggleCard () {
-      console.log('toggleCard')
+      // console.log('toggleCard')
       // console.log(this.$refs.cardholder)
       if (this.flipped) {
         this.$refs.cardfront.setAttribute('style', 'transform: rotateY(0deg);')
