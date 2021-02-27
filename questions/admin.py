@@ -306,7 +306,7 @@ class QuestionsAndAnswersAdmin(TabbedTranslationAdmin):
     pass
 
 @admin.register(TextBlock)
-class QuestionsAndAnswersAdmin(TabbedTranslationAdmin):
+class TextBlockAdmin(TabbedTranslationAdmin):
     list_display = ('name', 'spot', 'order', )
     list_filter = ['spot']
     list_editable = ['order']
@@ -335,6 +335,7 @@ class QuestionsAndAnswersAdmin(TabbedTranslationAdmin):
 
 @admin.register(TestAnswers)
 class TestAnswersAdmin(TabbedTranslationAdmin):
-    list_display = ('result_date', 'result', 'test_practice', 'tesing_user', 'known', 'postpone', 'question_category_name', 'question', 'points_given' )
+    list_display = ('result_date', 'modified_date', 'options_ids', 'result', 'test_practice', 'tesing_user', 'known', 'postpone', 'question_category_name', 'question', 'points_given' )
     list_filter = [ 'test_practice', 'tesing_user', 'points_given' ]
-    list_editable = ['points_given' ]
+    list_editable = ['points_given']
+    date_hierarchy = 'result_date'

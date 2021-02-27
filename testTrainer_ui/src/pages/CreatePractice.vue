@@ -1,9 +1,9 @@
 <template>
-  <q-page class="flex flex-center">
+  <q-page class="flex q-pa-none self-start column">
     <q-card flat
-            class="pagecard"
+            class=""
     >
-
+<!-- TODO: Fylla upp í svæðpi -->
       <q-toolbar class="q-dark">
         <q-toolbar-title>
           Búa til æfingapróf
@@ -13,7 +13,7 @@
 
         <div class="text-h6 q-mt-md">Flokkar</div>
         <div class="q-ma-lg">
-        <q-input v-model="tot_count" label="Fjöldi" @input="calc_total_count" />
+        <q-input v-model="tot_count" type="number" label="" @input="calc_total_count" class="text-h4" style="height: 80px; margin-top: -40px;"/>
          <!-- <q-field
           :label="tot_count.toString()"
           v-model="cats"

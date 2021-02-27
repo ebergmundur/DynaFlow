@@ -260,13 +260,33 @@ def answer_add(request):
     """
     List all code snippets, or create a new snippet.
     """
-    # print(request.data)
+    print(request.data)
 
     if request.method == "GET":
         # memos = TestAnswers.objects.filter(curr_question=request)
-        memos = TestAnswers.objects.all()
-        serializer = QuestionAnswerSerializer(memos, many=True)
+        ta = TestAnswers.objects.all()
+        serializer = QuestionAnswerSerializer(ta, many=True)
         return Response(serializer.data)
+
+    # if request.method == "POST":
+    #     test = Questionnaire.objects.get(id=request.data["test_practice"])
+    #     test_answer = TestAnswers.objects.get_or_create(
+    #         curr_question = request.data["curr_question"],
+    #         options_ids = request.data["options_ids"],
+    #         test_practice = test,
+    #         points = request.data["points"],
+    #         points_given = request.data["points"],
+    #         postpone = request.data["postpone"],
+    #     )
+
+    #     for c in cats:
+    #         if c["use"]:
+    #             cat_ids.append(int(c["id"]))
+
+        
+    #     flips = Question.objects.order_by("?").filter(category_id__in=cat_ids)[:count]
+    #     serializer = QuestionSerializer(flips, many=True)
+    #     return Response(serializer.data)
 
 
 @api_view(["POST"])
@@ -274,7 +294,7 @@ def flipp_view(request):
     """
     List all code snippets, or create a new snippet.
     """
-    print(request.data)
+    # print(request.data)
 
     if request.method == "POST":
         cat_ids = []
@@ -314,8 +334,8 @@ def practice_test(request):
         )
 
         user = PersonUser.objects.get(user__username=data["user"])
-        print(user)
-        print(user.id)
+        # print(user)
+        # print(user.id)
         # print(data)
 
         obj = Questionnaire.objects.create(
@@ -335,15 +355,15 @@ def practice_test(request):
             if q != None:
                 print("actual q: ", q["id"])
                 category = Category.objects.get(id=q["id"])
-                print(category.name)
+                # print(category.name)
                 questions = category.question_set.all().order_by("?")
-                print(questions.count())
+                # print(questions.count())
                 quest_counter = 0
                 for question in questions:
                     # print('quest_counter ', quest_counter)
                     if quest_counter < q["num"]:
                         if data["omit_known"] == False and data["only_failed"] == False:
-                            print("normal")
+                            # print("normal")
                             obj.question_collection.add(question)
                             quest_counter += 1
                         else:
@@ -354,7 +374,7 @@ def practice_test(request):
                                 tesing_user=user,
                                 curr_question=question.id,
                             )
-                            print(prev_answers)
+                            # print(prev_answers)
                             """
                             If student wants to omit questions marked with -known- flag we have to test each optional 
                             question for the flag 
@@ -471,26 +491,35 @@ def practice_hand_in(request):
     """
     if request.method == "POST":
         serializer = QuestionAnswerSerializer(data=request.data)
-        # print(serializer)
         data = request.data
         points = 0
+        print('data')
+        print(data)
 
-        cq = Question.objects.filter(id=data["curr_question"])
-        tp = Questionnaire.objects.filter(id=data["test_practice"])
-        total_points = cq[0].points
+        cq = Question.objects.get(id=int(data["curr_question"]))
+        tp = Questionnaire.objects.get(id=int(data["test_practice"]))
+        total_points = cq.points
+
+        # print(cq)
+        # print(tp)
 
         # print(points)
         # print(total_points)
 
-        if cq[0].single_selection:
-            answered = Option.objects.filter(id=int(data["options_ids"]))
+        opt_answers = data["options_ids"].split(",")
+
+        # print(opt_answers)
+
+        if cq.single_selection:
+            answered = Option.objects.filter(id=int(opt_answers[0]))
             if answered[0].correct:
                 points = total_points
+            # print(points)
         else:
             i = 0
             corrects = 0
             corr_opts = Option.objects.filter(
-                id__in=cq[0].options, correct=True
+                id__in=cq.options, correct=True
             ).count()
             # print(corr_opts)
 
@@ -514,18 +543,22 @@ def practice_hand_in(request):
             points = round(corrects)
             # points = round(corrects/total_points)
         # print(points)
-
-        obj = TestAnswers.objects.create(
+        print('hérna')
+        obj, newobj = TestAnswers.objects.get_or_create(
             # tesing_user=1,
-            time_allowed=data["time_allowed"],
-            time_taken=data["time_taken"],
-            curr_question=cq[0].id,
+            # time_allowed=data["time_allowed"],
+            # time_taken=data["time_taken"],
+            curr_question=cq.id,
+            question=cq,
             options_ids=str(data["options_ids"]),
-            test_practice=tp[0],
+            test_practice=tp,
             points=points,
         )
+        print('hérna líka')
 
         obj.save()
+
+        return Response(newobj, status=status.HTTP_201_CREATED)
 
         # {'time_allowed': 120, 'time_taken': 46, 'options_ids': '149,150', 'curr_question': 49, 'test_practice': 48}
 

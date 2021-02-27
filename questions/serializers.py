@@ -15,7 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         print(validated_data)
-        password = validated_data.pop('password')
+        password = validated_data.pop('password') 
         name = validated_data.pop('first_name')
         name = name.split( ' ')
 
@@ -138,8 +138,18 @@ class QuestionMemoSerializer(serializers.ModelSerializer):
 class QuestionSerializer(serializers.ModelSerializer):
     options = OptionSerializer(many=True)
     memos = QuestionMemoSerializer(many=True)
-    owner = PersonSerializer(many=False)
+    # owner = PersonSerializer(many=False)
     category = CategorySerializer(many=False)
+    time = serializers.IntegerField(default=0)
+    answered = serializers.BooleanField(default=False)
+    answer = serializers.IntegerField(default=0)
+    known = serializers.BooleanField(default=False)
+    postpone = serializers.BooleanField(default=False)
+    value = serializers.IntegerField(default=0)
+    numero = serializers.IntegerField(default=0)
+    color = serializers.CharField(max_length=200, default='info')
+    toggle_color = serializers.CharField(max_length=200, default='info')
+    label = serializers.IntegerField(default=0)
 
     class Meta:
         model = Question
@@ -151,8 +161,8 @@ class QuestionSerializer(serializers.ModelSerializer):
             'description',
             'options',
             'image',
-            'owner',
-            'timed',
+            # 'owner',
+            # 'timed',
             'time_allowed',
             'single_selection',
             'points',
@@ -161,7 +171,17 @@ class QuestionSerializer(serializers.ModelSerializer):
             # 'group_correct',
             # 'group_false',
             'hint',
-            'memos'
+            'memos',
+            'time',
+            'answered',
+            'answer',
+            'known',
+            'postpone',
+            'value',
+            'numero',
+            'color',
+            'toggle_color',
+            'label',
         ]
 
     # def create(self, validated_data):
