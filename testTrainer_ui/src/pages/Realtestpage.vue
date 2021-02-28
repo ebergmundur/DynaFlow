@@ -1,13 +1,13 @@
 <template>
   <q-page class="flex flex-center">
 
-          <div v-if="spinnegal">
-        <q-spinner-bars
-          color="primary"
-          size="8em"
-        />
-        <q-tooltip :offset="[0, 8]">QSpinnerBars</q-tooltip>
-      </div>
+    <div v-if="spinnegal">
+      <q-spinner-bars
+        color="primary"
+        size="8em"
+      />
+      <q-tooltip :offset="[0, 8]">QSpinnerBars</q-tooltip>
+    </div>
 
     <q-dialog v-model="testFinished">
       <q-card>
@@ -16,13 +16,17 @@
             <img src="../assets/enam-logo.svg">
           </q-avatar>
           <q-toolbar-title><span class="text-weight-bold">E-nám</span> Ljúka prófi?</q-toolbar-title>
-          <q-btn flat round dense icon="close" v-close-popup/>
+          <q-btn
+            flat
+            round
+            dense
+            icon="close"
+            v-close-popup
+          />
         </q-toolbar>
         <q-card-section class="scroll">
           Viltu fara í gegnum svörin núna?
-          <q-btn
-            @click="reviewTest"
-          >
+          <q-btn @click="reviewTest">
             Já endilega hreint.
           </q-btn>
 
@@ -30,15 +34,16 @@
       </q-card>
     </q-dialog>
 
-<!--    <div class="row col redborder">-->
-    <q-card flat
-            class="pagecard"
-            v-model='currentQuestion'
-            v-if="currentQuestion"
+    <!--    <div class="row col redborder">-->
+    <q-card
+      flat
+      class="pagecard"
+      v-model='currentQuestion'
+      v-if="currentQuestion"
     >
       <q-toolbar class="q-dark">
         <q-toolbar-title>
-          Próf |{{ totaltime }} |  {{currentQuestion.category.name }}
+          Próf |{{ totaltime }} | {{currentQuestion.category.name }}
           <div style="float: right;"> spurning {{ questNum }} af
             {{ totalQuestions }} | {{ questTime }}
           </div>
@@ -56,7 +61,8 @@
           <!--            <div class="text-subtitle2">{{ currentQuestion.owner.fullname }}</div>-->
           <div
             v-if="hinttext"
-            class="text-white bg-orange q-pa-sm ">{{ hinttext }}
+            class="text-white bg-orange q-pa-sm "
+          >{{ hinttext }}
           </div>
           <div class="qdeskr scroll q-mb-md">
             {{ currentQuestion.description }}
@@ -93,9 +99,9 @@
         </div>
         <!--        <q-linear-progress rounded size="20px" :value="progress" color="red" class="q-mt-sm"/>-->
       </q-card-section>
-      <q-separator/>
+      <q-separator />
       <q-card-actions class="">
-        <div style="position: absolute; right: 15px; bottom: -35px;" >
+        <div style="position: absolute; right: 15px; bottom: -35px;">
           <q-btn
             @click="onAnswerSubmit"
             color="positive"
@@ -105,7 +111,7 @@
         </div>
       </q-card-actions>
     </q-card>
-<!--      </div>-->
+    <!--      </div>-->
 
     <div class="row questlist content-center ">
 
@@ -119,6 +125,42 @@
         </q-btn-toggle>
       </div>
     </div>
+
+    <q-dialog
+      v-model="persistent"
+      persistent
+      transition-show="scale"
+      transition-hide="scale"
+    >
+      <q-card
+        class=""
+        style="width: 500px"
+      >
+        <q-toolbar class="bg-dark text-white">
+          <q-avatar>
+            <img src="../assets/enam-logo.svg">
+          </q-avatar>
+          <q-toolbar-title>Próf:</q-toolbar-title>
+        </q-toolbar>
+
+        <q-card-section class="">
+         Prófið er 60 spurningar og 120 mínútur gefnar til að svara.
+         Að þeim loknum lokast prófið og þá er hægt að fara yfir niðurstöður í framhaldi, eða síðar.<br>
+         Ekki er hægt að stöðva tímatalningu á meðan prófið stendur yfir.
+        </q-card-section>
+        <q-separator></q-separator>
+        <q-card-actions
+          align="right"
+          class="bg-white"
+        >
+          <q-btn
+            color="positive"
+            label="OK"
+            @click="setupExam"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
 
   </q-page>
 </template>
@@ -166,7 +208,8 @@ export default {
       timeTotal: 0,
       questStartTime: null,
       questTime: null,
-      spinnegal: true
+      spinnegal: true,
+      persistent: true
     }
   },
   computed: {
@@ -309,45 +352,45 @@ export default {
       this.$router.push({ path: '/review', params: { exam: 52 } }).catch(err => {
         console.log(err.message)
       })
-    }
-  },
-  mounted () {
-    const username = store.getters.getUserName
-
-    getAPI({
-      url: '/api/realtest/',
-      method: 'post',
-      data: {
-        user: username,
-        timed: true,
-        time_allowed: 0
-      },
-      headers: { Authorization: `Bearer ${access}` }
-    })
-      .then(response => {
-        // console.log(response.data)
-        this.myJson = JSON.parse(JSON.stringify(response.data))
-        this.totalQuestions = this.myJson.question_collection.length
-        var i
-        var qs = []
-        for (i = 0; i < this.totalQuestions; i++) {
-          // console.log(this.myJson.question_collection[i].name)
-          qs.push({
-            label: i + 1,
-            value: i + 1,
-            slot: i + 1,
-            title: this.myJson.question_collection[i].name,
-            color: 'info',
-            answered: false,
-            answer: 0
-          })
-        }
-        this.$store.dispatch('setTestTimeTotal', date.addToDate(Date.now(), { minutes: 120 }))
-        this.questionsNumbersList = qs
-        this.setQuestion(1)
-        this.spinnegal = false
+    },
+    setupExam () {
+      const username = store.getters.getUserName
+      this.persistent = false
+      getAPI({
+        url: '/api/realtest/',
+        method: 'post',
+        data: {
+          user: username,
+          timed: true,
+          time_allowed: 0
+        },
+        headers: { Authorization: `Bearer ${access}` }
       })
-      .catch(error => console.log('Error', error.message))
+        .then(response => {
+          // console.log(response.data)
+          this.myJson = JSON.parse(JSON.stringify(response.data))
+          this.totalQuestions = this.myJson.question_collection.length
+          var i
+          var qs = []
+          for (i = 0; i < this.totalQuestions; i++) {
+            // console.log(this.myJson.question_collection[i].name)
+            qs.push({
+              label: i + 1,
+              value: i + 1,
+              slot: i + 1,
+              title: this.myJson.question_collection[i].name,
+              color: 'info',
+              answered: false,
+              answer: 0
+            })
+          }
+          this.$store.dispatch('setTestTimeTotal', date.addToDate(Date.now(), { minutes: 120 }))
+          this.questionsNumbersList = qs
+          this.setQuestion(1)
+          this.spinnegal = false
+        })
+        .catch(error => console.log('Error', error.message))
+    }
   },
   updated () {
     this.setAnswerChecked()
@@ -363,7 +406,6 @@ export default {
 </script>
 
 <style scoped lang="sass">
-
 .memowing
   width: 400px
 

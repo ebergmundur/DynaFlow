@@ -335,6 +335,7 @@ export default {
       totaltime: 0,
       timeTotal: 0,
       questStartTime: null,
+      questCumulatedTime: null,
       questTime: null,
       spinnegal: true,
       username: '',
@@ -354,8 +355,9 @@ export default {
       this.totaltime = date
         .formatDate(Date.now() - this.timeTotal, 'HH:mm:ss')
         .toString()
+      var cqt = Date.now() - this.questStartTime
       this.questTime = date
-        .formatDate(Date.now() - this.questStartTime, 'mm:ss')
+        .formatDate(cqt, 'mm:ss')
         .toString()
     },
     answerButtonState (b) {
@@ -401,13 +403,7 @@ export default {
       this.currentQuestion.color = 'blue-grey-4'
       // this.rowButtonState(this.currentQuestion)
       // console.log('D', this.currentQuestion)
-      if (this.currentQuestion.time > 0) {
 
-      } else {
-        this.questStartTime = 0
-      }
-
-      console.log(this.questStartTime)
       this.timeTotal = store.getters.getTimeTotal
     },
     // setAnswerChecked (e) {
@@ -464,13 +460,13 @@ export default {
         curr_question: parseInt(this.currentQuestion.id),
         test_practice: parseInt(this.myJson.id),
         points: parseInt(this.currPoints),
-        known: this.known,
-        postpone: this.postpone
+        known: this.currentQuestion.known,
+        postpone: this.currentQuestion.postpone
       }
       // console.log(formdata)
 
       getAPI({
-        url: '/api/handin/',
+        url: '/api/answer/',
         method: 'post',
         data: formdata,
         headers: { Authorization: `Bearer ${access}` }

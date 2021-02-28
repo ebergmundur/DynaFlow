@@ -268,25 +268,42 @@ def answer_add(request):
         serializer = QuestionAnswerSerializer(ta, many=True)
         return Response(serializer.data)
 
-    # if request.method == "POST":
-    #     test = Questionnaire.objects.get(id=request.data["test_practice"])
-    #     test_answer = TestAnswers.objects.get_or_create(
-    #         curr_question = request.data["curr_question"],
-    #         options_ids = request.data["options_ids"],
-    #         test_practice = test,
-    #         points = request.data["points"],
-    #         points_given = request.data["points"],
-    #         postpone = request.data["postpone"],
-    #     )
-
-    #     for c in cats:
-    #         if c["use"]:
-    #             cat_ids.append(int(c["id"]))
-
+    if request.method == "POST":
+        test = Questionnaire.objects.get(id=request.data["test_practice"])
+        cq = Question.objects.get(id=int(request.data["curr_question"]))
         
-    #     flips = Question.objects.order_by("?").filter(category_id__in=cat_ids)[:count]
-    #     serializer = QuestionSerializer(flips, many=True)
-    #     return Response(serializer.data)
+        test_answer, new_ta = TestAnswers.objects.get_or_create(
+            curr_question = cq.id,
+            question = cq,
+            test_practice = test,
+        )
+        
+        test_answer.options_ids = request.data["options_ids"]
+        test_answer.known = request.data["known"]
+        test_answer.points = cq.points
+
+        answers =  request.data["options_ids"].split(',')
+
+        answer = Option.objects.get(id=int(answers[0]))
+        
+
+        if request.data["postpone"] != True:
+            test_answer.points_given = request.data["points"]
+            if answer.correct:
+                test_answer.result = 1
+            else:
+                test_answer.result = -1
+        else:
+            test_answer.postpone = True
+            test_answer.result = 0
+            test_answer.points_given = 0
+
+        test_answer.save()
+
+        return Response(new_ta, status=status.HTTP_201_CREATED)
+
+
+
 
 
 @api_view(["POST"])
@@ -500,12 +517,6 @@ def practice_hand_in(request):
         tp = Questionnaire.objects.get(id=int(data["test_practice"]))
         total_points = cq.points
 
-        # print(cq)
-        # print(tp)
-
-        # print(points)
-        # print(total_points)
-
         opt_answers = data["options_ids"].split(",")
 
         # print(opt_answers)
@@ -562,7 +573,7 @@ def practice_hand_in(request):
 
         # {'time_allowed': 120, 'time_taken': 46, 'options_ids': '149,150', 'curr_question': 49, 'test_practice': 48}
 
-        if serializer.is_valid():
-            # serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # if serializer.is_valid():
+        #     # serializer.save()
+        #     return Response(serializer.data, status=status.HTTP_201_CREATED)
+        # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

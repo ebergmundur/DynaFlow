@@ -168,7 +168,18 @@ export default {
       }).then(() => {
         this.$router.push({ name: 'login' })
       })
+    },
+    keyprocess (e) {
+      // this.$refs.cardfront.setAttribute('style', 'color: #5566f7;')
+      e.preventDefault()
+      if (e.keyCode === 13) {
+        this.registerUser()
+      }
     }
+  },
+  mounted () {
+    // this.flippit()
+    window.addEventListener('keyup', this.keyprocess)
   }
 }
 </script>
