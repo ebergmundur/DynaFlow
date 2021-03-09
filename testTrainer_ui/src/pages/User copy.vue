@@ -61,6 +61,7 @@
               <!-- Setja inn preferenca í User Model í bakenda -->
               <q-toggle v-model="autodark" @input="setdarkauto" toggle-color="primary" label="Fylgja tölvu" />
               <q-toggle v-model="isdark" ref="mandark" @input="setdark" toggle-color="primary" label="Handvirkt" />
+              <!-- TODO: setja manual i menubar -->
             </div>
             <!-- <q-separator spaced/> -->
           </q-card-section>

@@ -414,11 +414,4 @@ export default {
   color: red
   text-decoration: none
 
-.butt
-
-//  style="display: block; border: 1px solid darkgray; text-align: center; backgroundcolor; lightgray; color: black; text-decoration: none;"
 </style>
-<!--Categories-->
-
-<!--Results-->
-<!--Time axis-->
