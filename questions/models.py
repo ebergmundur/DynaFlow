@@ -198,6 +198,7 @@ class Questionnaire(Base):
     omit_known = models.BooleanField(default=False, blank=True)
     only_failed = models.BooleanField(default=False, blank=True)
     practice = models.BooleanField(default=True)
+    answered_questions = models.SmallIntegerField(default=0)
 
 
     def __str__(self):

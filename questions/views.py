@@ -120,7 +120,8 @@ def dashboard(request):
     # print(request.data)
     if request.method == "POST":
         queryset = Questionnaire.objects.filter(
-            owner__user__username=request.data["username"]
+            owner__user__username=request.data["username"],
+            answered_questions__gt=0
         ).order_by("created_date")
         # queryset = Questionnaire.objects.all().order_by('created_date')
         serializer = DashboardSerializer(queryset, many=True)
@@ -271,6 +272,9 @@ def answer_add(request):
     if request.method == "POST":
         test = Questionnaire.objects.get(id=request.data["test_practice"])
         cq = Question.objects.get(id=int(request.data["curr_question"]))
+
+        test.answered_questions += 1
+        test.save()
         
         test_answer, new_ta = TestAnswers.objects.get_or_create(
             curr_question = cq.id,
@@ -537,6 +541,7 @@ def practice_hand_in(request):
             points_per_correct = total_points / corr_opts
 
             anstring = data["options_ids"].split(",")
+            tp.answered_questions = anstring.count()
             for answ in anstring:
                 opt = Option.objects.get(id=int(answ))
                 # print(opt.answer)
