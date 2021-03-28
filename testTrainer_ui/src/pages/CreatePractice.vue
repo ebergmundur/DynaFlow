@@ -1,17 +1,15 @@
 <template>
   <q-page class="flex q-pa-none self-start column">
-    <q-card flat
-            class=""
-    >
+    <q-card class="q-pt-lg">
 <!-- TODO: Fylla upp í svæðpi -->
-      <q-toolbar class="q-dark">
+      <!-- <q-toolbar class="q-dark q-mt-md">
         <q-toolbar-title>
           Búa til æfingapróf
         </q-toolbar-title>
-      </q-toolbar>
+      </q-toolbar> -->
       <q-card-section>
 
-        <div class="text-h6 q-mt-md">Flokkar</div>
+        <div class="text-h4 q-mt-md">Veldu fjölda spurninga</div>
         <div class="q-ma-lg">
         <q-input v-model="tot_count" type="number" label="" @input="calc_total_count" class="text-h4" style="height: 80px; margin-top: -40px;"/>
          <!-- <q-field

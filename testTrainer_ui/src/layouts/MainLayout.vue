@@ -1,13 +1,10 @@
 <template>
-  <q-layout view="hHh lpr fFf">
-    <div  class="q-pa-none q-ma-none">
+  <q-layout view="hHh lpr fff">
       <Header></Header>
-      <q-page-container class="">
+      <q-page-container>
         <router-view/>
       </q-page-container>
      <Footer></Footer>
-
-    </div>
   </q-layout>
 </template>
 

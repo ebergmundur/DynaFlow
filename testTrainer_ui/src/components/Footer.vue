@@ -1,5 +1,9 @@
 <template>
   <div class="bg-grey-9 text-white" style="width: 100%; height: 50px;margin-top: 30px;">
+    <!-- <q-footer
+    elevated
+    class="bg-grey-9 text-white relative-position"
+    > -->
     <q-toolbar>
       <q-toolbar-title style="text-align: center;">
         <q-avatar>
@@ -8,6 +12,7 @@
         ©2021 E-nám ehf. – netfang: <a href="mailto:enam@enam.is" style="color: white;">enam@enam.is</a>
       </q-toolbar-title>
     </q-toolbar>
+    <!-- </q-footer> -->
   </div>
 </template>
 

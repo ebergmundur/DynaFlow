@@ -1,6 +1,7 @@
 <template>
   <q-header
     dark
+    reveal
     elevated
     class="text-white row"
   >
@@ -119,7 +120,7 @@
               <q-route-tab
                 v-if="loggedIn"
                 @click="tab = 'review'"
-                to="/review"
+                to="/review/0/"
                 label="Úrlausnir"
               />
             </q-item>
@@ -154,10 +155,12 @@
       v-if="$q.platform.is.mobile"
     >
       <q-toolbar class="text-white bg-primary flex">
+        <a href="/#">
         <img
           src="../assets/enam-logo.svg"
           style="height: 40px; margin: 0; width: auto;"
         >
+        </a>
         <q-tabs
           align="right"
           inline-label

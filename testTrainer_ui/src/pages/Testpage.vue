@@ -133,8 +133,8 @@
 
     <!--    <div class="row col redborder">-->
 
-    <q-card flat class="" v-model="currentQuestion" v-if="currentQuestion">
-      <q-toolbar class="q-dark">
+    <q-card flat class="q-pt-lg pagecard tpage" v-model="currentQuestion" v-if="currentQuestion">
+      <q-toolbar class="q-dark ">
         <q-toolbar-title>
           {{ totaltime }} | {{ currentQuestion.category.name }}
 
@@ -154,7 +154,7 @@
           <div style="float: right;">
             spurning {{ questNum }} af {{ totalQuestions }} | {{ questTime }} |
             <q-btn @click="testFinished = true" color="negative" style="">
-              Ljúka prófi
+              Ljúka
             </q-btn>
           </div>
         </q-toolbar-title>
@@ -593,8 +593,13 @@ export default {
   width: 400px
 
 .tpage
+  @media screen and (min-width: $breakpoint-md)
+     margin-top: -25px
+  @media screen and (max-width: $breakpoint-md)
+     margin-top: 26px
   @media screen and (max-width: $breakpoint-xs)
-//padding-top: 130px
+     margin-top: 21px
+
 //padding-bottom: 230px
 
 .quest-options

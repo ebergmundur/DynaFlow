@@ -210,7 +210,7 @@ class Questionnaire(Base):
 
     @property
     def q_count(self):
-        return self.question_collection.count
+        return self.question_collection.count()
 
     @cached_property
     def answers(self):

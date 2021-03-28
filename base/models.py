@@ -15,6 +15,11 @@ default_user = User.objects.get(id=1)
 #     obj.modified_date  = nowtime
 #     obj.modified_by = request.user    
 
+from django.db import close_old_connections
+
+# class SomeFailingTestCase(ChannelsTestMixin, TestCase):
+#      pass
+
 class Base(models.Model):
 
     name = models.CharField(max_length=200, blank=True)
