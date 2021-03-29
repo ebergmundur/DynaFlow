@@ -40,6 +40,8 @@
 
 .pagecard
   position: absolute
+  top: 0px
+  min-height: 100%
   // top: 30px
   @media screen and (min-width: $breakpoint-md)
     width: 100%
@@ -53,3 +55,11 @@
     top: 5px
     width: 100%
     //background-color: #c0d2ff
+
+.tpage
+  @media screen and (min-width: $breakpoint-md)
+     margin-top: -25px
+  @media screen and (max-width: $breakpoint-md)
+     margin-top: 26px
+  @media screen and (max-width: $breakpoint-xs)
+     margin-top: 21px

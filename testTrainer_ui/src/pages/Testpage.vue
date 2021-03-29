@@ -131,9 +131,27 @@
       </q-card>
     </q-dialog>
 
+    <!--OPTIONS-->
+    <q-dialog v-model="memolist" >
+      <q-card class="memowing">
+        <q-card-section class="row items-center q-pb-none col-lg-8">
+          <div class="text-h6">Veldu grein</div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+        <q-card-section>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
+
     <!--    <div class="row col redborder">-->
 
-    <q-card flat class="q-pt-lg pagecard tpage" v-model="currentQuestion" v-if="currentQuestion">
+    <q-card
+      flat
+      class="q-pt-lg pagecard tpage"
+      v-model="currentQuestion"
+      v-if="currentQuestion"
+    >
       <q-toolbar class="q-dark ">
         <q-toolbar-title>
           {{ totaltime }} | {{ currentQuestion.category.name }}
@@ -343,6 +361,9 @@ export default {
     }
   },
   computed: {
+    isTest () {
+      return this.$route.params.test || false
+    }
     // currentQuestion () {
     //   return store.getters.currQest.payload
     // },
@@ -356,9 +377,7 @@ export default {
         .formatDate(Date.now() - this.timeTotal, 'HH:mm:ss')
         .toString()
       var cqt = Date.now() - this.questStartTime
-      this.questTime = date
-        .formatDate(cqt, 'mm:ss')
-        .toString()
+      this.questTime = date.formatDate(cqt, 'mm:ss').toString()
     },
     answerButtonState (b) {
       if (b.answered) {
@@ -470,7 +489,7 @@ export default {
         method: 'post',
         data: formdata,
         headers: { Authorization: `Bearer ${access}` }
-      })// .catch((error) => console.log('Error', error.message))
+      }) // .catch((error) => console.log('Error', error.message))
 
       // this.questions[this.questNum - 1].answer = this.currTestAnsw
 
@@ -591,14 +610,6 @@ export default {
 
 .memowing
   width: 400px
-
-.tpage
-  @media screen and (min-width: $breakpoint-md)
-     margin-top: -25px
-  @media screen and (max-width: $breakpoint-md)
-     margin-top: 26px
-  @media screen and (max-width: $breakpoint-xs)
-     margin-top: 21px
 
 //padding-bottom: 230px
 

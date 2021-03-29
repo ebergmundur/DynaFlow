@@ -128,20 +128,24 @@ def dashboard(request):
         return Response(serializer.data)
 
 
-@api_view(["POST"])
+@api_view(["GET", "POST"])
 def review(request):
     qid = int(request.data["id"])
+    print(request.data["username"])
     if request.method == "POST":
         if qid > 0:
             queryset = Questionnaire.objects.filter(
                 owner__user__username=request.data["username"], id=qid
             )[0]
+            serializer = RevieweSerializer(queryset, many=False)
+            return Response(serializer.data)
         else:
             queryset = Questionnaire.objects.filter(
                 owner__user__username=request.data["username"]
-            ).order_by("-created_date")[0]
-        serializer = RevieweSerializer(queryset, many=False)
-        return Response(serializer.data)
+            ).order_by("-created_date")
+            serializer = RevieweSerializer(queryset, many=True)
+            return Response(serializer.data)
+        
 
 
 @api_view(["POST"])

@@ -59,7 +59,7 @@ const routes = [
     path: '/testreal',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', name: 'testreal', component: () => import('pages/Realtestpage') }
+      { path: '/testreal/:test', name: 'testreal', component: (test) => import('pages/Realtestpage') }
     ],
     meta: {
       requiresLogged: false

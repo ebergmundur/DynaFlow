@@ -1,33 +1,30 @@
 <template>
-  <q-page class="flex flex-center">
-
-    <div
-      v-if="spinnegal"
-      class="content-center"
-      style="z-index: 1000;"
-    >
-      <q-spinner-bars
-        color="primary"
-        size="8em"
-      />
-      <q-tooltip :offset="[0, 8]">QSpinnerBars</q-tooltip>
+  <q-page class="flex q-pa-none self-start column">
+    <!-- <q-tooltip :offset="[0, 8]">QSpinnerBars</q-tooltip> -->
+    <div v-if="spinnegal" class="content-center" style="z-index: 1000; position: absolute; top: 30%; left: 45%;">
+      <q-spinner-bars color="primary" size="8em" />
     </div>
-
-    <q-card
+    <q-card flat class="q-pt-lg pagecard tpage">
+      <!-- <q-card
       flat
       class="pagecard"
-    >
+    > -->
       <q-toolbar class="q-dark">
         <q-toolbar-title>
           Mælaborð - meðaltal {{ averagescore }}
         </q-toolbar-title>
+        <div class="float-right">
+ <q-btn
+      round
+      color="warning"
+      size="md"
+      icon="help"
+      @click="helptour"
+    />
+        </div>
       </q-toolbar>
-
       <q-card-section class="q-pa-none echarts">
-        <IEcharts
-          :option="option"
-          ref="echart"
-        />
+        <IEcharts :option="option" ref="echart" />
       </q-card-section>
       <!-- <q-card-actions>
         <q-btn @click="onAnswerSubmit" color="positive" label="Allt"/>
@@ -43,22 +40,13 @@
       {{this.option.xAxis}}
       </pre>
     </div> -->
-    <v-tour
-      name="myTour"
-      :steps="steps"
-    ></v-tour>
+    <v-tour name="myTour" :steps="steps"></v-tour>
     <div
       id="vstep0"
       style="position: absolute; top: 150px; right: 150px;"
     ></div>
-    <div
-      id="vstep1"
-      style="position: absolute; top: 400px; right: 50%;"
-    ></div>
-    <div
-      id="vstep2"
-      style="position: absolute; top: 650px; left: 150px;"
-    ></div>
+    <div id="vstep1" style="position: absolute; top: 400px; right: 50%;"></div>
+    <div id="vstep2" style="position: absolute; top: 650px; left: 150px;"></div>
   </q-page>
 </template>
 
@@ -109,21 +97,24 @@ export default {
           params: {
             placement: 'right' // Any valid Popper.js placement. See https://popper.js.org/popper-documentation.html#Popper.placements
           },
-          content: 'Hægt er að fela/birta fög eftir óskum, t.d. til að skoða framvindu stakra faga eða án tiltekins fags.'
+          content:
+            'Hægt er að fela/birta fög eftir óskum, t.d. til að skoða framvindu stakra faga eða án tiltekins fags.'
         },
         {
           target: '#vstep1',
           header: {
             title: 'Próf og æfingar'
           },
-          content: 'Ef smellt er á kubb þá sést fjöldi spurninga og rétt svör. Þar er lika hnappur til að sjá svör og niðurstöður.'
+          content:
+            'Ef smellt er á kubb þá sést fjöldi spurninga og rétt svör. Þar er lika hnappur til að sjá svör og niðurstöður.'
         },
         {
           header: {
             title: 'Tímabil'
           },
           target: '#vstep2',
-          content: 'Hér má stilla hvaða próf eða æfingar sjást útfrá dagsetningu þeirra. ',
+          content:
+            'Hér má stilla hvaða próf eða æfingar sjást útfrá dagsetningu þeirra. ',
           params: {
             placement: 'top' // Any valid Popper.js placement. See https://popper.js.org/popper-documentation.html#Popper.placements
           }
@@ -131,10 +122,11 @@ export default {
       ],
       option: {
         // MARK: -Options
-        width: '84%',
+        // width: '100%',
         grid: {
           bottom: '90px',
-          left: '75px'
+          left: '75px',
+          right: '75px'
         },
         toolbox: {
           top: '10px',
@@ -153,10 +145,11 @@ export default {
         },
         legend: {
           // data: ['Fag', 'Líffræði', 'Efnafræði', 'Eðlisfræði', 'Stærðfræði', 'Almenn þekking'],
-          type: 'scroll',
-          orient: 'horisontal',
-          right: 15,
-          top: 50
+          // type: 'scroll',
+          orient: 'horizontal',
+          top: 0
+          // right: 15,
+          // top: 50
         },
         tooltip: {
           trigger: 'item',
@@ -177,11 +170,29 @@ export default {
               tar = params
             }
             var name = tar.name.split(',')
-            var ahref = '<a href="#/review/' + catQuestScore[params.dataIndex].id + '/">'
-            var catQuest = ahref + catQuestScore[params.dataIndex][params.seriesIndex][0] + ' spurningar,'
-            var catScore = catQuestScore[params.dataIndex][params.seriesIndex][1] + ' stig ' + catQuestScore[params.dataIndex][params.seriesIndex][1] / 5 + ' rétt<br>Sjá niðurstöður</a>'
+            var ahref =
+              '<a href="#/review/' + catQuestScore[params.dataIndex].id + '/">'
+            var catQuest =
+              ahref +
+              catQuestScore[params.dataIndex][params.seriesIndex][0] +
+              ' spurningar,'
+            var catScore =
+              catQuestScore[params.dataIndex][params.seriesIndex][1] +
+              ' stig ' +
+              catQuestScore[params.dataIndex][params.seriesIndex][1] / 5 +
+              ' rétt<br>Sjá niðurstöður</a>'
 
-            return name[1] + '<br/>' + tar.seriesName + ' : ' + tar.value + '<br/>' + catQuest + ' ' + catScore
+            return (
+              name[1] +
+              '<br/>' +
+              tar.seriesName +
+              ' : ' +
+              tar.value +
+              '<br/>' +
+              catQuest +
+              ' ' +
+              catScore
+            )
           }
         },
         xAxis: {
@@ -207,19 +218,21 @@ export default {
           inverse: false,
           splitArea: { show: true }
         },
-        dataZoom: [{
-          show: true,
-          type: 'slider',
-          // brushSelect: true,
-          start: 0,
-          end: 100,
-          rangeMode: ['percent', 'percent'],
-          labelFormatter: function (value, valueStr) {
-            var par = valueStr.split(',')
-            var dt = par[0]
-            return date.formatDate(dt, 'YYYY-MM-DD')
+        dataZoom: [
+          {
+            show: true,
+            type: 'slider',
+            // brushSelect: true,
+            start: 0,
+            end: 100,
+            rangeMode: ['percent', 'percent'],
+            labelFormatter: function (value, valueStr) {
+              var par = valueStr.split(',')
+              var dt = par[0]
+              return date.formatDate(dt, 'YYYY-MM-DD')
+            }
           }
-        }],
+        ],
         series: []
       }
     }
@@ -233,11 +246,12 @@ export default {
       return date.formatDate(d, 'YYYY-MM-DD')
     },
     onAnswerSubmit () {
-
+    },
+    helptour () {
+      this.$tours.myTour.start()
     }
   },
-  updated () {
-  },
+  updated () {},
   beforeMount () {
     this.testDate = this.$route.params.tdate.toString() || null
   },
@@ -265,7 +279,13 @@ export default {
         var iii = 0
 
         this.xTests = [[], [], [], [], []]
-        const catNames = ['Líffræði', 'Efnafræði', 'Eðlisfræði', 'Stærðfræði', 'Almenn þekking']
+        const catNames = [
+          'Líffræði',
+          'Efnafræði',
+          'Eðlisfræði',
+          'Stærðfræði',
+          'Almenn þekking'
+        ]
 
         for (i = 0; i < this.exams.length; i++) {
           var ii = 0
@@ -280,7 +300,13 @@ export default {
           // const kkey = theTest.created_date
           const tdate = new Date(theTest.modified_date)
 
-          const kkeyText = theTest.name + '\n' + testtype + ' ' + theTest.q_count + ' spurningar'
+          const kkeyText =
+            theTest.name +
+            '\n' +
+            testtype +
+            ' ' +
+            theTest.q_count +
+            ' spurningar'
           // const tdtext = tdate.getFullYear() + '-' + tdate.getMonth() + 1 + '-' + tdate.getDate() + 'T' + tdate.getHours() + ':' + tdate.getMinutes() + ':00Z'
           // const tdtext = tdate.getFullYear() + '-' + tdate.getMonth() + '-' + tdate.getDate()
           const kkey = [tdate, kkeyText]
@@ -290,13 +316,25 @@ export default {
           this.option.xAxis.data.push(kkey)
           var catHolder = [0, 0, 0, 0, 0]
 
-          catQuestScore.push({ name: kkey, id: theTest.id, 0: [0, 0], 1: [0, 0], 2: [0, 0], 3: [0, 0], 4: [0, 0] })
+          catQuestScore.push({
+            name: kkey,
+            id: theTest.id,
+            0: [0, 0],
+            1: [0, 0],
+            2: [0, 0],
+            3: [0, 0],
+            4: [0, 0]
+          })
 
           for (ii = 0; ii < theTest.answers.length; ii++) {
             // tekur saman einkunn fyrir hvert fag fyrir sig
-            const scorefactor = (theTest.answers.length * catHolder.length)
+            const scorefactor = theTest.answers.length * catHolder.length
             const catSlot = theTest.answers[ii].question_category - 1
-            catHolder[catSlot] = Number(catHolder[catSlot]) + parseInt(Number(theTest.answers[ii].points_given / scorefactor) * 100)
+            catHolder[catSlot] =
+              Number(catHolder[catSlot]) +
+              parseInt(
+                Number(theTest.answers[ii].points_given / scorefactor) * 100
+              )
             catQuestScore[i][catSlot][0]++
             catQuestScore[i][catSlot][1] += theTest.answers[ii].points_given
 
@@ -321,7 +359,7 @@ export default {
               margin: 15,
               fontSize: 18,
               position: 'top',
-              formatter: (params) => {
+              formatter: params => {
                 let total = 0
                 this.option.series.forEach(serie => {
                   total += serie.data[params.dataIndex]
@@ -343,7 +381,8 @@ export default {
           this.option.series.push(bar)
         }
         // this.chart.setOption(this.option)
-        this.averagescore = parseInt((avrgscore / this.exams.length) * 100) / 100
+        this.averagescore =
+          parseInt((avrgscore / this.exams.length) * 100) / 100
         this.spinnegal = false
         this.chart = this.$refs.echart
       })
@@ -369,7 +408,10 @@ export default {
           for (ix = 0; ix < datalength; ix++) {
             // console.log('dagar', this.option.xAxis.data[ix][0].getDate(), start.getDate())
             // console.log(this.option.xAxis.data[ix][0], this.option.xAxis.data[ix][0].getTime(), this.option.xAxis.data[ix][0].getTime() <= start.getTime(), start, start.getTime())
-            if (this.option.xAxis.data[ix][0].getDate() === start.getDate() && startSet) {
+            if (
+              this.option.xAxis.data[ix][0].getDate() === start.getDate() &&
+              startSet
+            ) {
               // console.log('inn', ix, idxStart, idxEnd, this.testDate)
               idxStart = ix
               startSet = false
@@ -389,18 +431,19 @@ export default {
           this.startDate = parseInt((idxStart / datalength) * 100)
           this.endDate = parseInt((idxEnd / datalength) * 100)
 
-          this.chart.instance.setOption({ dataZoom: [{ start: this.startDate }] })
+          this.chart.instance.setOption({
+            dataZoom: [{ start: this.startDate }]
+          })
           this.chart.instance.setOption({ dataZoom: [{ end: this.endDate }] })
         }
         // console.log(this.chart)
-        this.$tours.myTour.start()
+        // this.$tours.myTour.start()
       })
       .catch(error => console.log('Error', error.message))
 
     // this.IEcharts.instance.setOption(this.option)
   }
 }
-
 </script>
 
 <style lang="sass" scoped>
@@ -413,5 +456,4 @@ export default {
   border: 1px solid green
   color: red
   text-decoration: none
-
 </style>
