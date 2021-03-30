@@ -84,7 +84,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     API endpoint that allows groups to be viewed or edited.
     """
 
-    queryset = Category.objects.all()
+    queryset = Category.objects.filter(name__gt='')
     serializer_class = CategorySerializer
 
 

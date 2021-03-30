@@ -23,7 +23,7 @@
             <img
               alt="Enám logo"
               src="../assets/DokktNam.svg"
-              style="height: 20vh; width: auto; alignment: left; float: none; margin: 0 0 0 0;"
+              style="height: 20vh; min-height: 400px; width: auto; alignment: left; float: none; margin: 0 0 0 0;"
             />
             <div class="text-h3 text-center">Velkomin á e-nám</div>
             <div style="max-width: 600px;">
@@ -159,10 +159,10 @@
       </q-carousel>
 
       <div class="row q-gutter-md justify-center col q-mt-md flex col-12">
-        <q-card class="col-lg-2 col-md-4 col-sm-10 ">
+        <q-card class="col-lg-2 col-md-4 col-sm-10">
           <q-card-section class="text-center">
-            <a href="/#/dashboard/allt" class="iconlink">
-              <q-icon name="class" size="160px" class="card-icon"
+            <a href="/#/dashboard/allt" class="iconlink dark">
+              <q-icon name="class" size="160px" class=""
             /></a>
             <div class="text-h6">Mælaborð</div>
             <div class="text-subtitle2">0% lokið</div>
@@ -177,7 +177,7 @@
         <q-card class="col-lg-2 col-md-4 col-sm-10">
           <q-card-section class="text-center">
             <a href="/#/flipcard" class="iconlink"
-              ><q-icon name="flip" size="160px" class="card-icon"
+              ><q-icon name="flip" size="160px" class=""
             /></a>
             <div class="text-h6">Flettikort</div>
             <div class="text-subtitle2">14% lokið</div>
@@ -255,7 +255,7 @@ export default {
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2), 0 3px 5px 0 rgba(0, 0, 0, 0.1)
 
 .card-icon
-  opacity: 0.8
+  opacity: 0.7
   // color: #271ce0
   // color: #6d91b7
 
@@ -268,10 +268,13 @@ export default {
   font-size: large
 
 .iconlink
-  color: black
+  color: #8b8989
   text-decoration: none
   :hover
     opacity: 0.6
+
+.iconlink--dark
+  color: white
 
 .cslide
   min-width: 100%

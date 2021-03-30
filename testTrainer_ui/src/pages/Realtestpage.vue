@@ -1,167 +1,57 @@
 <template>
-  <q-page class="flex flex-center">
+  <q-page class="flex q-pa-none self-start">
+    <div  class="q-pt-lg pagecard tpage">
 
-    <div v-if="spinnegal">
-      <q-spinner-bars
-        color="primary"
-        size="8em"
-      />
-      <q-tooltip :offset="[0, 8]">QSpinnerBars</q-tooltip>
-    </div>
-
-    <q-dialog v-model="testFinished">
-      <q-card>
-        <q-toolbar>
-          <q-avatar>
-            <img src="../assets/enam-logo.svg">
-          </q-avatar>
-          <q-toolbar-title><span class="text-weight-bold">E-nám</span> Ljúka prófi?</q-toolbar-title>
-          <q-btn
-            flat
-            round
-            dense
-            icon="close"
-            v-close-popup
-          />
-        </q-toolbar>
-        <q-card-section class="scroll">
-          Viltu fara í gegnum svörin núna?
-          <q-btn @click="reviewTest">
-            Já endilega hreint.
-          </q-btn>
-
-        </q-card-section>
-      </q-card>
-    </q-dialog>
-
-    <!--    <div class="row col redborder">-->
-    <q-card
-      flat
-      class="pagecard"
-      v-model='currentQuestion'
-      v-if="currentQuestion"
-    >
-      <q-toolbar class="q-dark">
-        <q-toolbar-title>
-          Próf |{{ totaltime }} | {{currentQuestion.category.name }}
-          <div style="float: right;"> spurning {{ questNum }} af
-            {{ totalQuestions }} | {{ questTime }}
-          </div>
-        </q-toolbar-title>
-        <div class="col-auto">
-
-          <!--          <q-toggle v-model="postpone" value="false" label="Sleppa " class=" q-ma-sm"/>-->
-
-        </div>
-      </q-toolbar>
-      <q-card-section class="row col">
-        <div class="col-md-6 q-pr-lg ">
-          <div class="text-h6">{{ currentQuestion.question }}</div>
-          <!--            <div class="text-subtitle2">{{ currentQuestion.name }}</div>-->
-          <!--            <div class="text-subtitle2">{{ currentQuestion.owner.fullname }}</div>-->
-          <div
-            v-if="hinttext"
-            class="text-white bg-orange q-pa-sm "
-          >{{ hinttext }}
-          </div>
-          <div class="qdeskr scroll q-mb-md">
-            {{ currentQuestion.description }}
-          </div>
-
-        </div>
-        <div class="col-md-6 col-sm-12 col-xs-12">
-          <div
-            v-for="opt in currentOptions"
-            :key="opt.id"
-            class="quest-options"
-          >
-            <q-radio
-              v-if="currentQuestion.single_selection"
-              :name="opt.question_ref.toString()"
-              :label="opt.answer"
-              value="false"
-              :val="opt.id"
-              v-model="currTestAnsw"
-              @input="setAnswerChecked"
-            />
-            <q-checkbox
-              v-if="!currentQuestion.single_selection"
-              :name="opt.question_ref.toString()"
-              :label="opt.answer"
-              value="false"
-              :val="opt.id"
-              v-model="currTestAnsw"
-              @input="setAnswerChecked"
-            />
-            {{ opt.correct }}
-
-          </div>
-        </div>
-        <!--        <q-linear-progress rounded size="20px" :value="progress" color="red" class="q-mt-sm"/>-->
-      </q-card-section>
-      <q-separator />
-      <q-card-actions class="">
-        <div style="position: absolute; right: 15px; bottom: -35px;">
-          <q-btn
-            @click="onAnswerSubmit"
-            color="positive"
-          >
-            Svara
-          </q-btn>
-        </div>
-      </q-card-actions>
-    </q-card>
-    <!--      </div>-->
-
-    <div class="row questlist content-center ">
-
-      <div class="content-center col ">
-        <q-btn-toggle
-          v-model="questNum"
-          :options="questionsNumbersList"
-          size="sm"
-          @input="setQuestion"
-        >
-        </q-btn-toggle>
-      </div>
-    </div>
-
-    <q-dialog
-      v-model="persistent"
+    <!-- <q-dialog
+      v-model="prolog"
       persistent
       transition-show="scale"
       transition-hide="scale"
-    >
-      <q-card
-        class=""
-        style="width: 500px"
-      >
+      full-height
+      full-width
+    > -->
+      <!-- <q-card class="column full-height full-width"> -->
         <q-toolbar class="bg-dark text-white">
-          <q-avatar>
-            <img src="../assets/enam-logo.svg">
-          </q-avatar>
+          <!-- <q-avatar>
+            <img src="../assets/enam-logo.svg" />
+          </q-avatar> -->
           <q-toolbar-title>Próf:</q-toolbar-title>
         </q-toolbar>
 
-        <q-card-section class="">
-         Prófið er 60 spurningar og 120 mínútur gefnar til að svara.
-         Að þeim loknum lokast prófið og þá er hægt að fara yfir niðurstöður í framhaldi, eða síðar.<br>
-         Ekki er hægt að stöðva tímatalningu á meðan prófið stendur yfir.
+        <q-card-section class="text-h4" >
+          Prófið er 60 spurningar og 120 mínútur gefnar til að svara. Að þeim
+          loknum lokast prófið og þá er hægt að fara yfir niðurstöður í
+          framhaldi, eða síðar.<br />
+          Ekki er hægt að stöðva tímatalningu á meðan prófið stendur yfir.
         </q-card-section>
         <q-separator></q-separator>
-        <q-card-actions
-          align="right"
-          class="bg-white"
-        >
-          <q-btn
-            color="positive"
-            label="OK"
-            @click="setupExam"
-          />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
 
+        <q-card-section class="">
+          <div class="row wrap justify-evenly">
+            <q-card
+              v-for="cat in categories"
+              :key="cat.name"
+              class="col-xs-12 col-sm-12 col-md-4 col-lg"
+            >
+              <q-toolbar class="q-dark text-center">
+                <q-toolbar-title>
+                  {{ cat.name }}
+                </q-toolbar-title>
+              </q-toolbar>
+              <q-card-section class="text-center">
+                <q-icon :name="cat.icon" size="12vh" class="card-icon" />
+              </q-card-section>
+            </q-card>
+          </div>
+        </q-card-section>
+        <q-separator></q-separator>
+        <q-card-actions align="right" class="bg-white">
+          <q-btn color="positive" label="OK" />
+          <!-- @click="setupExam" -->
+        </q-card-actions>
+
+      </div>
+    <!-- </q-dialog> -->
   </q-page>
 </template>
 
@@ -172,12 +62,12 @@ import { date } from 'quasar'
 
 const access = store.getters.token
 
-var exam = 0
 export default {
   data () {
     return {
       // currentOptions: this.currentQuestion.options,
       name: 'Realtestpage',
+      categories: [],
       testFinished: false,
       hinttext: '',
       cQ: 0,
@@ -209,24 +99,28 @@ export default {
       questStartTime: null,
       questTime: null,
       spinnegal: true,
-      persistent: true
+      prolog: true
     }
   },
   computed: {
-    currentQuestion () {
-      return store.getters.currQest.payload
-    },
-    formDate () {
-      return date.formatDate(this.date, 'YYYY-MM-DD')
-    },
-    currentOptions () {
-      return store.getters.currQest.payload.options
-    }
+    // currentQuestion () {
+    //   return store.getters.currQest.payload
+    // },
+    // formDate () {
+    //   return date.formatDate(this.date, 'YYYY-MM-DD')
+    // },
+    // currentOptions () {
+    //   return store.getters.currQest.payload.options
+    // }
   },
   methods: {
     timers () {
-      this.totaltime = date.formatDate(this.timeTotal - Date.now(), 'HH:mm:ss').toString()
-      this.questTime = date.formatDate(Date.now() - this.questStartTime, 'mm:ss').toString()
+      // this.totaltime = date
+      //   .formatDate(this.timeTotal - Date.now(), 'HH:mm:ss')
+      //   .toString()
+      // this.questTime = date
+      //   .formatDate(Date.now() - this.questStartTime, 'mm:ss')
+      //   .toString()
     },
     setQuestion (e) {
       var index = 0
@@ -237,7 +131,9 @@ export default {
       }
       this.hinttext = ''
       this.editingIndex = index
-      this.question = JSON.parse(JSON.stringify(this.myJson.question_collection[index]))
+      this.question = JSON.parse(
+        JSON.stringify(this.myJson.question_collection[index])
+      )
       store.commit({ type: 'setQuestion', payload: this.question })
       this.currPoints = this.question.points
       this.questNum = index + 1
@@ -267,10 +163,15 @@ export default {
     },
     onAnswerSubmit (e) {
       if (this.currTestAnsw < 1) {
-        if (confirm('Hey ætlar þú ekki að svara?\n OK merkir spurninguna til að hún gleymist ekki.')) {
+        if (
+          confirm(
+            'Hey ætlar þú ekki að svara?\n OK merkir spurninguna til að hún gleymist ekki.'
+          )
+        ) {
           this.questionsNumbersList[this.questNum - 1].answered = true
           this.questionsNumbersList[this.questNum - 1].color = 'warning'
-          this.questionsNumbersList[this.questNum - 1]['toggle-color'] = 'negative'
+          this.questionsNumbersList[this.questNum - 1]['toggle-color'] =
+            'negative'
         }
       }
 
@@ -326,32 +227,15 @@ export default {
     hint (e) {
       e.target.offsetParent.disabled = true
       this.hinttext = this.currentQuestion.hint
-      this.currPoints = this.currentQuestion.points - this.currentQuestion.hint_cost
+      this.currPoints =
+        this.currentQuestion.points - this.currentQuestion.hint_cost
     },
     openUrl () {
-      window.open('https://api.enam.is/admin/questions/question/' + this.currentQuestion.id, '_blank')
-    },
-    openMemos () {
-      this.memolist = true
-    },
-    showCal () {
-      this.calendar = true
-      this.showDate = !this.showDate
-    },
-    formatDate (d) {
-      return date.formatDate(d, 'YYYY-MM-DD')
-    },
-    showTooltip (e) {
-      // console.log(e)
-    },
-    timerCount () {
-      this.time_allowed = this.currentQuestion.time_allowed // 10 // til að stytta
-    },
-    reviewTest () {
-      this.testFinished = false
-      this.$router.push({ path: '/review', params: { exam: 52 } }).catch(err => {
-        console.log(err.message)
-      })
+      window.open(
+        'https://api.enam.is/admin/questions/question/' +
+          this.currentQuestion.id,
+        '_blank'
+      )
     },
     setupExam () {
       const username = store.getters.getUserName
@@ -384,7 +268,10 @@ export default {
               answer: 0
             })
           }
-          this.$store.dispatch('setTestTimeTotal', date.addToDate(Date.now(), { minutes: 120 }))
+          this.$store.dispatch(
+            'setTestTimeTotal',
+            date.addToDate(Date.now(), { minutes: 120 })
+          )
           this.questionsNumbersList = qs
           this.setQuestion(1)
           this.spinnegal = false
@@ -392,17 +279,23 @@ export default {
         .catch(error => console.log('Error', error.message))
     }
   },
-  updated () {
-    this.setAnswerChecked()
-  },
-  created () {
-    if (exam > 0) {
-      alert('CREATED REVIEW')
-    }
-    this.clock = setInterval(this.timers, 1000)
+  beforeMount () {
+    getAPI({
+      url: '/api/category/',
+      method: 'get',
+      headers: { Authorization: `Bearer ${access}` }
+    })
+      .then(response => {
+        const rdata = JSON.parse(JSON.stringify(response.data))
+        var i
+        for (i = 0; i < rdata.length; i++) {
+          // console.log(this.myJson.question_collection[i].name)
+          this.categories.push(rdata[i])
+        }
+      })
+      .catch(error => console.log('Error', error.message))
   }
 }
-
 </script>
 
 <style scoped lang="sass">

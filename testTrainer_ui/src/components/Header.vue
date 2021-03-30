@@ -155,7 +155,7 @@
       v-if="$q.platform.is.mobile"
     >
       <q-toolbar class="text-white bg-primary flex">
-        <a href="/#">
+        <a href="/#/">
         <img
           src="../assets/enam-logo.svg"
           style="height: 40px; margin: 0; width: auto;"

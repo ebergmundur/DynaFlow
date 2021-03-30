@@ -52,6 +52,7 @@ class Category(Base):
     # group = models.ManyToManyField(Group, blank=True)
     # question = models.ManyToManyField(Question, blank=True)
     order = models.IntegerField( default=0 )
+    icon = models.CharField(max_length=200, default="")
 
     def __str__(self):
         return self.name

@@ -42,6 +42,8 @@ class CategorySerializer(serializers.ModelSerializer):
             'name',
             'q_count',
             'order',
+            'icon',
+            'description',
         ]
 
 class QuestionGroupRelationSerializer(serializers.ModelSerializer):

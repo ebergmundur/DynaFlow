@@ -281,7 +281,7 @@ class GroupAdmin(TabbedTranslationAdmin):
 
 @admin.register(Category)
 class CategoryAdmin(TabbedTranslationAdmin):
-    list_display = ('name', 'order')
+    list_display = ('name', 'icon', 'order')
     list_editable = ['order']
 
 
