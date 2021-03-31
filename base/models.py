@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.timezone import now
 from django.conf.global_settings import LANGUAGES
+from tinymce.models import HTMLField
 
 default_user = User.objects.get(id=1)
 
@@ -23,7 +24,8 @@ from django.db import close_old_connections
 class Base(models.Model):
 
     name = models.CharField(max_length=200, blank=True)
-    description = models.TextField(blank=True)
+    description = HTMLField()
+    # description_wysiwyg = HTMLField(default=)
     note = models.TextField(blank=True)
     active = models.BooleanField(default=True)
     created_by = models.ForeignKey(

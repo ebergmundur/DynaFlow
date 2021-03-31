@@ -4,6 +4,7 @@ from person.models import PersonUser
 from django.utils.functional import cached_property
 import pytz
 from datetime import datetime
+
 #from django.utils.translation import gettext as _
 
 # Create your models here.
@@ -32,6 +33,9 @@ class TextBlock(Base):
     slot = models.CharField(max_length=100, help_text="Heiti á hólfi, samfellt og án sértákna, lágstafir")
     spot = models.SmallIntegerField(default=0, help_text="Svæði,  ", choices=SPOTS)
     order = models.IntegerField( default=0, help_text="Röð á svæði, númer: 0…n" )
+    urlpath =  models.CharField(max_length=200, null=True, blank=True)
+    icon_code = models.CharField(max_length=200, null=True, blank=True)
+
 
     def __str__(self):
         return self.name

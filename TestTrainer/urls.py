@@ -42,12 +42,16 @@ router.register(r'userset', question_views.UserViewSet)
 # Additionally, we include login URLs for the browsable API.
 
 urlpatterns = [
+                #   path('tinymce/', include('tinymce.urls')),
                   path('admin/', admin.site.urls),
                   path('admin/doc/', include('django.contrib.admindocs.urls')),
                   path('api/', include(router.urls)),
+                  path('summernote/', include('django_summernote.urls')),
                   path('api/memos/', question_views.memo_add),
+                  path('api/catstat/', question_views.catstat),
                   path('api/userinfo/', question_views.userdata, name='userdata' ),
                   path('api/answer/', question_views.answer_add),
+                  path('api/indexcards/', question_views.indexcards),
                   path('api/review/', question_views.review),
                   path('api/dashboarddata/', question_views.dashboard),
                   path('api/questionnaiere/', question_views.practice_test),
@@ -66,4 +70,4 @@ urlpatterns = [
                   # path('mods/', question_views.ModsView.as_view(), name='mods_view'),
                   path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
                   path('baton/', include('baton.urls')),
-              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

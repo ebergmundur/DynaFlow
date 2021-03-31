@@ -1,8 +1,22 @@
 from django.contrib.auth.models import User, Group
 from .models import Question, Questionnaire, QuestionGroupRelation, QuestionnaireGroupRelation, \
-    Option, Category, Group as QGroup, TestMemo, TestAnswers
+    Option, Category, Group as QGroup, TestMemo, TestAnswers, TextBlock
 from person.models import PersonUser
 from rest_framework import serializers
+
+class TextBlockSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TextBlock
+        fields = [
+            'id',
+            'name',
+            'spot',
+            'description',
+            'order',
+            'icon_code',
+            'urlpath',
+        ]
+
 
 
 
@@ -45,6 +59,16 @@ class CategorySerializer(serializers.ModelSerializer):
             'icon',
             'description',
         ]
+
+
+class CatStatSerializer(serializers.Serializer):
+    category = CategorySerializer(many=False)
+    catcount = serializers.IntegerField(read_only=True)
+    answcount = serializers.IntegerField(read_only=True)
+    
+
+
+
 
 class QuestionGroupRelationSerializer(serializers.ModelSerializer):
 

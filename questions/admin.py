@@ -5,18 +5,32 @@ from modeltranslation.admin import TranslationAdmin, TabbedTranslationAdmin, Tra
     TranslationStackedInline, TranslationInlineModelAdmin, TranslationTabularInline
 import pytz
 from datetime import datetime
+from django import forms
 from django.forms import ModelForm
 from functools import partial
+# from ckeditor.widgets import CKEditorWidget
+from TestTrainer.settings import LANGUAGES 
+# from tinymce.models import tinymce_widgets
+from django_summernote.admin import SummernoteModelAdmin
 
+def helper_get_translated_widgets(field_names, widget):
+    widgets = {}
+
+    for name in field_names:
+        for key, value in LANGUAGES:
+            widgets["{}_{}".format(name, key)] = widget
+
+    return widgets
 
 def curry(func, *a, **kw):
     return partial(func, *a, **kw)
 
 
 @admin.register(Option)
-class OptionAdmin(TabbedTranslationAdmin):
+class OptionAdmin(TabbedTranslationAdmin, SummernoteModelAdmin):
     list_display = ('answer', 'question_ref', 'name', 'correct', 'owner')
     list_filter = ['question_ref__name', 'owner__user__username', 'correct', ]
+    summernote_fields = ('description', 'note')
 
     def get_form(self, request, obj, **kwargs):
         form = super(OptionAdmin, self).get_form(request, obj, **kwargs)
@@ -196,11 +210,12 @@ class OptionInline(TranslationTabularInline):
 
 
 @admin.register(Question)
-class QuestionAdmin(TabbedTranslationAdmin):
+class QuestionAdmin(TabbedTranslationAdmin, SummernoteModelAdmin):
     list_display = ('name', 'question', 'category', 'exam_question', 'flipcard_question', 'answer_count', 'owner','single_selection',)
     inlines = [OptionInline, ]
     list_filter = [ 'category', 'owner', 'exam_question', 'single_selection',]
     list_editable = ['single_selection', 'exam_question', 'category', 'flipcard_question', ]
+    summernote_fields = ('description', 'question', 'hint')
 
     def get_form(self, request, obj, **kwargs):
         form = super(QuestionAdmin, self).get_form(request, obj, **kwargs)
@@ -218,11 +233,12 @@ class QuestionAdmin(TabbedTranslationAdmin):
                 'exam_question',
                 'single_selection',
                 'points',
+                'image',
                 'question',
                 'category',
                 'hint_cost',
                 'hint',
-                'image',
+                'description',
                 'active',
             ),
             'classes': (
@@ -275,14 +291,16 @@ class QuestionAdmin(TabbedTranslationAdmin):
 
 
 @admin.register(Group)
-class GroupAdmin(TabbedTranslationAdmin):
-    pass
+class GroupAdmin(TabbedTranslationAdmin, SummernoteModelAdmin):
+    list_display = ('name', )
+    summernote_fields = ('description', 'note')
 
 
 @admin.register(Category)
-class CategoryAdmin(TabbedTranslationAdmin):
+class CategoryAdmin(TabbedTranslationAdmin, SummernoteModelAdmin):
     list_display = ('name', 'icon', 'order')
     list_editable = ['order']
+    summernote_fields = ('description', 'note')
 
 
 @admin.register(Questionnaire)
@@ -302,21 +320,29 @@ class TestMemoAdmin(TabbedTranslationAdmin):
     pass
 
 @admin.register(QuestionsAndAnswers)
-class QuestionsAndAnswersAdmin(TabbedTranslationAdmin):
-    pass
+class QuestionsAndAnswersAdmin(TabbedTranslationAdmin, SummernoteModelAdmin):
+    summernote_fields = ('description', 'note',)
 
 @admin.register(TextBlock)
-class TextBlockAdmin(TabbedTranslationAdmin):
-    list_display = ('name', 'spot', 'order', )
+class TextBlockAdmin(TabbedTranslationAdmin, SummernoteModelAdmin):
+    list_display = ('name', 'spot', 'order', 'description')
     list_filter = ['spot']
-    list_editable = ['order']
+    list_editable = ['order', 'spot']
+    summernote_fields = ('description',)
+
+    # widgets = {
+    #         **helper_get_translated_widgets(["description"], TinyMCE(mce_attrs=settings.TINYMCE_TABLE_CONFIG)),
+    #         **helper_get_translated_widgets(["heading"], forms.Textarea),
+    #     }
+
     fieldsets = [
         (u'', {
             'fields': (
                 'name',
                 'spot',
                 'order',
-                # 'slot',
+                'icon_code',
+                'urlpath',
                 'description',
             ),
             'classes': (),

@@ -23,32 +23,61 @@
           loknum lokast prófið og þá er hægt að fara yfir niðurstöður í
           framhaldi, eða síðar.<br />
           Ekki er hægt að stöðva tímatalningu á meðan prófið stendur yfir.
+          <strong>Prófið hefst þegar smellt er á grein</strong>
         </q-card-section>
         <q-separator></q-separator>
 
+        <!-- <div class="q-pa-md">
+    <q-btn-group spread>
+      <q-btn
+        v-for="cat in categories"
+        :key="cat.name"
+        :ref="cat.id"
+        :label="cat.name"
+        :icon="cat.icon"
+        stack
+        size="xl"
+      />
+    </q-btn-group>
+  </div> -->
+
         <q-card-section class="">
-          <div class="row wrap justify-evenly">
+          <div class="row wrap q-gutter-md justify-evenly">
             <q-card
               v-for="cat in categories"
-              :key="cat.name"
+              :key="cat.category.name"
+              :ref="cat.category.id"
               class="col-xs-12 col-sm-12 col-md-4 col-lg"
             >
               <q-toolbar class="q-dark text-center">
                 <q-toolbar-title>
-                  {{ cat.name }}
+                  {{ cat.category.name }}
                 </q-toolbar-title>
               </q-toolbar>
               <q-card-section class="text-center">
-                <q-icon :name="cat.icon" size="12vh" class="card-icon" />
+               <q-item clickable class="flex-center" :to="'/test/'+cat.category.id">
+               <!-- <q-item clickable class="flex-center" @click="catSelect(cat.id)"> -->
+                <q-icon :name="cat.category.icon" size="12vh" />
+                </q-item>
               </q-card-section>
+                <q-card-section class="text-center">
+                <div  class="text-h5">
+                 {{cat.answcount}} af {{cat.catcount}}
+                <q-linear-progress  rounded size="20px" :value="cat.answcount/cat.catcount" color="positive" class="q-mt-sm" />
+                </div>
+                <div class="q-pt-none text-justify"  v-html="cat.category.description">
+                </div>
+              </q-card-section>
+
             </q-card>
           </div>
         </q-card-section>
-        <q-separator></q-separator>
-        <q-card-actions align="right" class="bg-white">
-          <q-btn color="positive" label="OK" />
+
+        <!-- <q-separator></q-separator> -->
+        <!-- <q-card-actions align="right" class="bg-white">
+          <q-btn color="positive" size="lg"  label="Byrja próf" /> -->
           <!-- @click="setupExam" -->
-        </q-card-actions>
+        <!-- </q-card-actions> -->
 
       </div>
     <!-- </q-dialog> -->
@@ -114,6 +143,10 @@ export default {
     // }
   },
   methods: {
+    catSelect (catid) {
+      console.log(this.$refs[catid])
+      // this.$refs[catid].$el.lastElementChild
+    },
     timers () {
       // this.totaltime = date
       //   .formatDate(this.timeTotal - Date.now(), 'HH:mm:ss')
@@ -279,19 +312,42 @@ export default {
         .catch(error => console.log('Error', error.message))
     }
   },
-  beforeMount () {
+  // beforeMount () {
+  //   getAPI({
+  //     url: '/api/category/',
+  //     method: 'get',
+  //     headers: { Authorization: `Bearer ${access}` }
+  //   })
+  //     .then(response => {
+  //       const rdata = JSON.parse(JSON.stringify(response.data))
+  //       var i
+  //       for (i = 0; i < rdata.length; i++) {
+  //         // console.log(this.myJson.question_collection[i].name)
+  //         this.categories.push(rdata[i])
+  //       }
+  //     })
+  //     .catch(error => console.log('Error', error.message))
+  // },
+  mounted () {
+    const username = store.getters.getUserName
     getAPI({
-      url: '/api/category/',
-      method: 'get',
+      url: '/api/catstat/',
+      method: 'post',
+      data: {
+        user: username,
+        timed: true,
+        time_allowed: 0
+      },
       headers: { Authorization: `Bearer ${access}` }
     })
       .then(response => {
-        const rdata = JSON.parse(JSON.stringify(response.data))
-        var i
-        for (i = 0; i < rdata.length; i++) {
-          // console.log(this.myJson.question_collection[i].name)
-          this.categories.push(rdata[i])
-        }
+        this.categories = JSON.parse(JSON.stringify(response.data))
+        // console.log(rdata)
+        // var i
+        // for (i = 0; i < rdata.length; i++) {
+        //   // console.log(this.myJson.question_collection[i].name)
+        //   this.categories.push(rdata[i])
+        // }
       })
       .catch(error => console.log('Error', error.message))
   }

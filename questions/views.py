@@ -1,4 +1,5 @@
 import datetime
+from django.db.models.expressions import F
 
 from django.shortcuts import render
 from rest_framework import viewsets
@@ -6,6 +7,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from django.db.models import Count
+from django.core.serializers import serialize
 
 from .serializers import (
     OptionSerializer,
@@ -20,6 +22,8 @@ from .serializers import (
     UserSerializer,
     DashboardSerializer,
     HeatmapSerializer,
+    TextBlockSerializer,
+    CatStatSerializer,
 )
 from .models import (
     Option,
@@ -30,7 +34,7 @@ from .models import (
     Group,
     Category,
     TestMemo,
-    TestAnswers,
+    TestAnswers, TextBlock,
 )
 from person.models import PersonUser
 
@@ -196,6 +200,33 @@ def userdata(request):
         user = PersonUser.objects.filter(user__username=request.user)
         serializer = PersonSerializer(user[0], many=False)
         return Response(serializer.data)
+
+
+@api_view(["POST"])
+def indexcards(request):
+    if request.method == "POST":
+        idx_cards = TextBlock.objects.filter(spot__in=[1, 2]).order_by('spot', 'order')
+
+        serializer = TextBlockSerializer(idx_cards, many=True)
+        return Response(serializer.data)
+
+
+@api_view(["POST"])
+def catstat(request):
+    if request.method == "POST":
+        cats = Category.objects.all()
+        cat_list = []
+
+        for c in cats:
+            ta = TestAnswers.objects.filter(created_by__username=request.user,question__category=c).order_by( 'question__id').distinct('question__id').count()
+            cat_list.append({'category': c, 'catcount': c.q_count(), 'answcount': ta})
+        
+        print(cat_list)
+
+        serializer = CatStatSerializer(cat_list, many=True)
+        return Response(serializer.data)
+
+        
 
 
 @api_view(["POST"])
