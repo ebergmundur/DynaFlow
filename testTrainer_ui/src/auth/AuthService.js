@@ -2,8 +2,8 @@ import auth0 from 'auth0-js'
 import EventEmitter from 'eventemitter3'
 import router from 'src/router'
 
-const server = 'https://einars-macbook-pro.local:8000'
-// const server = 'https://enam.is'
+// const server = 'https://einars-macbook-pro.local:8000'
+const server = 'https://api.enam.is'
 
 export default class AuthService {
   authenticated = this.isAuthenticated()
