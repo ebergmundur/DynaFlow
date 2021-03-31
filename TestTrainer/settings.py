@@ -111,7 +111,7 @@ CORS_ALLOW_HEADERS = default_headers + (
     'contenttype',
 )
 
-X_FRAME_OPTIONS = 'SAMEORIGIN'
+# X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 # Application definition
 
