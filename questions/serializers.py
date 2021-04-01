@@ -54,6 +54,7 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'name',
+            'color_class',
             'q_count',
             'order',
             'icon',

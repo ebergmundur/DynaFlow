@@ -298,8 +298,8 @@ class GroupAdmin(TabbedTranslationAdmin, SummernoteModelAdmin):
 
 @admin.register(Category)
 class CategoryAdmin(TabbedTranslationAdmin, SummernoteModelAdmin):
-    list_display = ('name', 'icon', 'order')
-    list_editable = ['order']
+    list_display = ('name', 'icon', 'order', 'color_class')
+    list_editable = ['order', 'color_class']
     summernote_fields = ('description', 'note')
 
 

@@ -8,7 +8,7 @@ export default {
   mounted () {
     this.$store.dispatch('logoutUser')
       .then(() => {
-        // this.$router.push({ name: 'home' })
+        this.$router.push({ name: 'home' })
       })
   }
 }

@@ -6,3 +6,5 @@ datadump
 datadump.json
 fixture202107
 .vscode
+get-pip.py
+notebook.ipynb

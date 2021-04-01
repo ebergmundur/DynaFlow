@@ -57,13 +57,14 @@ class Category(Base):
     # question = models.ManyToManyField(Question, blank=True)
     order = models.IntegerField( default=0 )
     icon = models.CharField(max_length=200, default="")
+    color_class = models.CharField(max_length=200, default="")
 
     def __str__(self):
         return self.name
 
     class Meta:
-        verbose_name = "flokkur",
-        verbose_name_plural = "flokkar"
+        verbose_name = "grein",
+        verbose_name_plural = "greinar"
         ordering = ['order']
 
     @cached_property
