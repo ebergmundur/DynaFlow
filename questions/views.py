@@ -3,7 +3,8 @@ from django.db.models.expressions import F
 
 from django.shortcuts import render
 from rest_framework import viewsets
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework import status
 from django.db.models import Count
@@ -38,7 +39,6 @@ from .models import (
 )
 from person.models import PersonUser
 
-from rest_framework.response import Response
 from rest_framework import generics
 
 
@@ -202,9 +202,11 @@ def userdata(request):
         return Response(serializer.data)
 
 
-@api_view(["POST"])
+# @permission_classes([IsAuthenticatedOrReadOnly, AllowAny])
+@permission_classes([AllowAny])
+@api_view(["GET"])
 def indexcards(request):
-    if request.method == "POST":
+    if request.method == "GET":
         idx_cards = TextBlock.objects.filter(spot__in=[1, 2]).order_by('spot', 'order')
 
         serializer = TextBlockSerializer(idx_cards, many=True)

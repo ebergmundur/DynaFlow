@@ -68,7 +68,7 @@
 import { getAPI } from 'src/api/axios-base'
 import store from 'src/store'
 
-const access = store.getters.token
+const access = store.getters.token || null
 
 export default {
   data () {
@@ -89,16 +89,16 @@ export default {
   created () {
     // this.$q.dark.set(true)
   },
-  beforeMount () {
+  mounted () {
     getAPI({
       url: '/api/indexcards/',
-      method: 'post',
-      headers: { Authorization: `Bearer ${access}` }
+      headers: { Authorization: `Bearer ${access}` },
+      method: 'get'
     })
       .then(response => {
         const rdata = JSON.parse(JSON.stringify(response.data))
-        console.log('rdata')
-        console.log(rdata)
+        // console.log('rdata')
+        // console.log(rdata)
 
         var i = 0
         for (i = 0; i < rdata.length; i++) {
@@ -109,7 +109,7 @@ export default {
             this.boxCards.push(rdata[i])
           }
         }
-        console.log(this.topCards)
+        // console.log(this.topCards)
       })
       .catch(error => console.log('Error', error.message))
   }
