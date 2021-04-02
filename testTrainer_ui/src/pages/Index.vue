@@ -6,7 +6,7 @@
         v-model="slide"
         transition-prev="slide-right"
         transition-next="slide-left"
-        :autoplay="autoplay"
+        autoplay="autoplay"
         infinite
         @mouseenter="autoplay = 0"
         @mouseleave="autoplay = 3500"
@@ -14,19 +14,21 @@
         animated
         control-color="primary"
         padding
-        height="45vh"
+        height="40vh"
         arrows
         class="carshadow col-12"
       >
         <q-carousel-slide
           v-for="t in topCards"
           :key="t.id"
-          :name="t.order" class="flex flex-center cslide">
+          :name="t.order"
+          class="flex flex-center cslide"
+          >
           <div class="q-mt-md text-center q-pa-md">
             <img
               alt="Enám logo"
-              src="../assets/DokktNam.svg"
-              style="height: 20vh; width: auto; alignment: left; float: none; margin: 0 0 0 0;"
+              src="../assets/DokktNam.png"
+              style="height: 15vh; width: auto; alignment: left; float: none; margin: 0 0 0 0;"
             />
             <div class="text-h3 text-center" v-html="t.name" ></div>
             <div style="max-width: 600px;">
@@ -74,7 +76,7 @@ export default {
   data () {
     return {
       name: 'Index',
-      slide: 'welcome',
+      slide: 0,
       autoplay: 5500,
       topCards: [],
       boxCards: [],
@@ -82,14 +84,14 @@ export default {
         'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque voluptatem totam, architecto cupiditate officia rerum, error dignissimos praesentium libero ab nemo.'
     }
   },
-  components: {
-    // Footer
-  },
-  methods: {},
-  created () {
-    // this.$q.dark.set(true)
-  },
-  mounted () {
+  // components: {
+  //   // Footer
+  // },
+  // methods: {},
+  // created () {
+  //   // this.$q.dark.set(true)
+  // },
+  beforeMount () {
     getAPI({
       url: '/api/indexcards/',
       headers: { Authorization: `Bearer ${access}` },
@@ -97,7 +99,7 @@ export default {
     })
       .then(response => {
         const rdata = JSON.parse(JSON.stringify(response.data))
-        // console.log('rdata')
+        console.log('rdata')
         // console.log(rdata)
 
         var i = 0
@@ -109,7 +111,7 @@ export default {
             this.boxCards.push(rdata[i])
           }
         }
-        // console.log(this.topCards)
+        console.log(this.topCards)
       })
       .catch(error => console.log('Error', error.message))
   }

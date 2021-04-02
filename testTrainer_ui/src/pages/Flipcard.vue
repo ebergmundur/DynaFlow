@@ -1,18 +1,23 @@
 <template>
   <q-page
     class="flex flex-center"
-    @focusin.native="activateNavigation"
-    @focusout.native="deactivateNavigation"
     @keydown.native="keyprocess"
   >
+    <!-- @focusin.native="activateNavigation"
+    @focusout.native="deactivateNavigation" -->
 
-    <div class="content">
+    <div class="content"
+        @keypress.native.space.prevent
+    @keydown.native.space.prevent
+    @keyup.native.space.prevent
+    >
       <div
         v-if="activeSession"
         class="card"
         ref="cardholder"
         v-touch-swipe.mouse.touch="doSomething"
         v-on:click="toggleCard"
+        @keypress.space.prevent
       >
         <div
           class="front row"
@@ -31,11 +36,7 @@
             class="q-mt-no self-end"
           > -->
             <!-- <div class="absolute-full q-mt-no self-end flex flex-center">-->
-              <q-badge
-                color="white"
-                text-color="accent"
-                :label="progressLabel"
-              />
+
            <!-- </div> -->
           <!-- </q-linear-progress>  -->
           <!-- </div> -->
@@ -68,12 +69,13 @@
     <q-dialog
       v-model="persistent"
       persistent
+      full-height
+      full-width
       transition-show="scale"
       transition-hide="scale"
+      style="width: 90vw; height: 90vh"
     >
       <q-card
-        class=""
-        style="width: 500px"
       >
         <q-toolbar class="bg-dark text-white">
           <q-avatar>
@@ -343,16 +345,16 @@ export default {
         this.setup_session()
       }
     },
-    // goLeft () {
-    goRight () {
+    goLeft () {
+    // goRight () {
       console.log('goLeft')
       // this.$refs.cardfront.setAttribute('style', 'color: #5566f7;')
       this.$refs.cardholder.setAttribute('style', 'left: -400px; opacity: 0.0; transition: 300ms ease-in-out;')
       this.reset(this.$refs.cardholder)
       this.setQuestion(1)
     },
-    // goRight () {
-    goLeft () {
+    // goLeft () {
+    goRight () {
       console.log('goRight')
       this.$refs.cardholder.setAttribute('style', 'right: -400px; opacity: 0.0; transition: 300ms ease-in-out;')
       this.reset(this.$refs.cardholder)
@@ -452,7 +454,9 @@ $orange: rgb(227, 230, 25);
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  max-width: 1000px;
+  // max-width: 1000px;
+  width: 95vw;
+  height: 90vh;
 }
 
 .card {
@@ -461,8 +465,8 @@ $orange: rgb(227, 230, 25);
   // width: calc(33% - 2rem);
   // min-width: calc(33% - 2rem);
   // height: 400px;
-  width: 300px;
-  height: 483px;
+  width: 100%;
+  height: 100%;
   // min-height: 400px;
   perspective: 1000px;
   margin: 0.02rem;
@@ -490,15 +494,16 @@ $orange: rgb(227, 230, 25);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   transform-style: preserve-3d;
-  transition: all ease-in-out 600ms;
+  transition: all ease-in-out 300ms;
   // overflow: hidden;
 }
 
 .front {
   background-size: cover;
   background-blend-mode: overlay;
-  padding: 2rem;
-  font-size: 1.3rem;
+  padding: 4rem;
+  // font-size: 1.3rem;
+  font-size: 4vh;
   font-weight: 600;
   color: #fff;
   overflow: hidden;
@@ -526,9 +531,11 @@ $orange: rgb(227, 230, 25);
 .back {
   background: rgb(208, 211, 206);
   transform: rotateY(-180deg);
-  padding: 0 2em;
+  // padding: 0 2em;
+  padding: 4rem;
   font-weight: 600;
-  font-size: 1.24rem;
+  // font-size: 1.24rem;
+  font-size: 6vh;
 
   // .button {
   //   background: linear-gradient(135deg, adjust-hue($primary, -20deg), $primary);

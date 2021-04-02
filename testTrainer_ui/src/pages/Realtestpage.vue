@@ -21,9 +21,12 @@
         <q-card-section class="text-h4" >
           Prófið er 60 spurningar og 120 mínútur gefnar til að svara. Að þeim
           loknum lokast prófið og þá er hægt að fara yfir niðurstöður í
-          framhaldi, eða síðar.<br />
+          framhaldi, eða síðar.
           Ekki er hægt að stöðva tímatalningu á meðan prófið stendur yfir.
-          <strong>Prófið hefst þegar smellt er á grein</strong>
+
+          <q-banner inline-actions class="text-white bg-red q-mt-md ">
+      <div class="text-h4 text-center">Prófið hefst þegar smellt er á grein</div>
+    </q-banner>
         </q-card-section>
         <q-separator></q-separator>
 
@@ -50,20 +53,20 @@
               class="col-xs-12 col-sm-12 col-md-4 col-lg"
             >
               <q-toolbar class="q-dark text-center">
-                <q-toolbar-title>
+                <q-toolbar-title >
                   {{ cat.category.name }}
                 </q-toolbar-title>
               </q-toolbar>
-              <q-card-section class="text-center">
+              <q-card-section class="text-center" >
                <q-item clickable class="flex-center" :to="'/test/'+cat.category.id">
                <!-- <q-item clickable class="flex-center" @click="catSelect(cat.id)"> -->
-                <q-icon :name="cat.category.icon" size="12vh" />
+                <q-icon :name="cat.category.icon" size="12vh"  />
                 </q-item>
               </q-card-section>
                 <q-card-section class="text-center">
                 <div  class="text-h5">
-                 {{cat.answcount}} af {{cat.catcount}}
-                <q-linear-progress  rounded size="20px" :value="cat.answcount/cat.catcount" color="positive" class="q-mt-sm" />
+                 {{cat.answcount}} af {{cat.catcount}} lokið
+                <q-linear-progress  rounded size="20px" :value="cat.answcount/cat.catcount" :class="cat.category.color_class" />
                 </div>
                 <div class="q-pt-none text-justify"  v-html="cat.category.description">
                 </div>
@@ -342,7 +345,7 @@ export default {
     })
       .then(response => {
         this.categories = JSON.parse(JSON.stringify(response.data))
-        // console.log(rdata)
+        console.log(this.categories)
         // var i
         // for (i = 0; i < rdata.length; i++) {
         //   // console.log(this.myJson.question_collection[i].name)

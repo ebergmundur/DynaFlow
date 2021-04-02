@@ -13,6 +13,12 @@
 import Header from 'components/Header'
 import Footer from 'components/Footer'
 
+window.addEventListener('keydown', function (e) {
+  if (e.keyCode === 32 && e.target === document.body) {
+    e.preventDefault()
+  }
+})
+
 export default {
   name: 'MainLayout',
   components: {
