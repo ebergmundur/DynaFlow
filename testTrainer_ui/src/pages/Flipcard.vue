@@ -5,20 +5,16 @@
 
     <div
       class="content"
-      @keypress.native.space.prevent
-      @keydown.native.space.prevent
-      @keyup.native.space.prevent
     >
       <div
         v-if="activeSession"
         class="card"
         ref="cardholder"
-        v-touch-swipe.mouse.touch="doSomething"
         v-on:click="toggleCard"
-        @keypress.space.prevent
+        v-touch-swipe.mouse.touch="doSomething"
       >
-        <div class="front row" id="cardfrontID" ref="cardfront">
-          <div class="q-pa-md flex flex-center">
+        <div class="front row q-pa-none " id="cardfrontID" ref="cardfront">
+          <div class="q-pa-none flex flex-center non-selectable">
             {{ currentQuestion.question }}
           </div>
           <div style="position: absolute; bottom: 0; right: 10px; font-size: 0.9rem; font-weight: 100;">
@@ -32,7 +28,7 @@
               :key="opt.id"
               class="col-12 q-pa-md scroll"
             >
-              <div v-if="opt.correct" class="content-center">
+              <div v-if="opt.correct" class="content-center non-selectable">
                 {{ opt.answer }}
               </div>
             </div>
@@ -418,7 +414,7 @@ $orange: rgb(227, 230, 25);
 
 .content {
   display: flex;
-  margin: 0 0;
+  margin: 10px 0 0 0;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
@@ -439,12 +435,19 @@ $orange: rgb(227, 230, 25);
   perspective: 1000px;
   margin: 0.02rem;
   position: relative;
-  // @include mobile (800px) {
-  //   width: 80%;
-  // }
-  // @include mobile (500px) {
-  //   width: 100%;
-  // }
+  @include mobile (900px) {
+    height: 77vh;
+    margin-top: 40px;
+  }
+  position: relative;
+  @include mobile (800px) {
+    height: 90vh;
+    margin-top: 30px;
+  }
+  @include mobile (500px) {
+    margin-top: 40px;
+    height: 85vh;
+  }
 }
 
 .front,
@@ -469,9 +472,9 @@ $orange: rgb(227, 230, 25);
 .front {
   background-size: cover;
   background-blend-mode: overlay;
-  padding: 4rem;
+  padding: 1rem;
   // font-size: 1.3rem;
-  font-size: 5vh;
+  font-size: 4vh;
   font-weight: 600;
   color: #fff;
   overflow: hidden;
@@ -503,7 +506,7 @@ $orange: rgb(227, 230, 25);
   padding: 4rem;
   font-weight: 600;
   // font-size: 1.24rem;
-  font-size: 5vh;
+  font-size: 4vh;
 
   // .button {
   //   background: linear-gradient(135deg, adjust-hue($primary, -20deg), $primary);
