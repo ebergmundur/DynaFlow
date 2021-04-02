@@ -1,15 +1,13 @@
 <template>
-  <q-page
-    class="flex flex-center"
-    @keydown.native="keyprocess"
-  >
+  <q-page class="flex flex-center" @keydown.native="keyprocess">
     <!-- @focusin.native="activateNavigation"
     @focusout.native="deactivateNavigation" -->
 
-    <div class="content"
-        @keypress.native.space.prevent
-    @keydown.native.space.prevent
-    @keyup.native.space.prevent
+    <div
+      class="content"
+      @keypress.native.space.prevent
+      @keydown.native.space.prevent
+      @keyup.native.space.prevent
     >
       <div
         v-if="activeSession"
@@ -19,44 +17,22 @@
         v-on:click="toggleCard"
         @keypress.space.prevent
       >
-        <div
-          class="front row"
-          id="cardfrontID"
-          ref="cardfront"
-        >
-          <div class="q-pa-md flex flex-center">{{ currentQuestion.question }}</div>
-          <!-- <div
-            class="absolute-full flex"
-            style=""
-          > -->
-          <!-- <q-linear-progress
-            size="30px"
-            :value="progress"
-            color="info"
-            class="q-mt-no self-end"
-          > -->
-            <!-- <div class="absolute-full q-mt-no self-end flex flex-center">-->
-
-           <!-- </div> -->
-          <!-- </q-linear-progress>  -->
-          <!-- </div> -->
-          <!-- {{ currentQuestion.description }} -->
+        <div class="front row" id="cardfrontID" ref="cardfront">
+          <div class="q-pa-md flex flex-center">
+            {{ currentQuestion.question }}
+          </div>
+          <div style="position: absolute; bottom: 0; right: 10px; font-size: 0.9rem; font-weight: 100;">
+            {{progressLabel}}
+          </div>
         </div>
-        <div
-          class="back"
-          id="cardbackID"
-          ref="cardback"
-        >
+        <div class="back" id="cardbackID" ref="cardback">
           <div v-if="activeSession">
             <div
               v-for="opt in currentQuestion.options"
               :key="opt.id"
               class="col-12 q-pa-md scroll"
             >
-              <div
-                v-if="opt.correct"
-                class="content-center"
-              >
+              <div v-if="opt.correct" class="content-center">
                 {{ opt.answer }}
               </div>
             </div>
@@ -75,29 +51,25 @@
       transition-hide="scale"
       style="width: 90vw; height: 90vh"
     >
-      <q-card
-      >
+      <q-card>
         <q-toolbar class="bg-dark text-white">
           <q-avatar>
-            <img src="../assets/enam-logo.svg">
+            <img src="../assets/enam-logo.svg" />
           </q-avatar>
           <q-toolbar-title>Fjöldi spurninga og fög:</q-toolbar-title>
         </q-toolbar>
 
         <q-card-section class="">
-          <q-input
-            v-model="tot_count"
-            label="Fjöldi"
-          />
+          <q-input v-model="tot_count" label="Fjöldi" />
           <!-- @input="setup_session" -->
 
           <q-slider
             v-model="tot_count"
-            :min='0'
+            :min="0"
             color="primary"
             label
-            :max='100'
-            :step='5'
+            :max="100"
+            :step="5"
           />
           <!-- @input="setup_session" -->
           <!-- </q-field> -->
@@ -112,38 +84,28 @@
           </div>
         </q-card-section>
         <q-separator></q-separator>
-        <q-card-actions
-          align="right"
-          class="bg-white"
-        >
-          <q-btn
-            color="positive"
-            label="OK"
-            @click="setup_session"
-          />
+        <q-card-actions align="right" class="bg-white">
+          <q-btn color="positive" label="OK" @click="setup_session" />
         </q-card-actions>
       </q-card>
     </q-dialog>
 
-        <q-dialog
+    <q-dialog
       v-model="finale"
       persistent
       transition-show="scale"
       transition-hide="scale"
     >
-      <q-card
-        class=""
-        style="width: 500px"
-      >
+      <q-card class="" style="width: 500px">
         <q-toolbar class="bg-dark text-white">
           <q-avatar>
-            <img src="../assets/enam-logo.svg">
+            <img src="../assets/enam-logo.svg" />
           </q-avatar>
           <q-toolbar-title>Spjöldin eru búin.</q-toolbar-title>
         </q-toolbar>
- <q-card-section class="flex flex-center">
-   <div class="row q-gutter-lg q-pa-md flex flex-center">
-        <q-btn
+        <q-card-section class="flex flex-center">
+          <div class="row q-gutter-lg q-pa-md flex flex-center">
+            <q-btn
               dense
               color="primary"
               size="lg"
@@ -152,35 +114,25 @@
               @click="finale = false"
             />
 
-<q-btn
-      dense
-      color="primary"
-      size="lg"
-      label="Nýtt sett"
-      class="q-pa-sm col-xs-12 col-lg-3"
-    />
+            <q-btn
+              dense
+              color="primary"
+              size="lg"
+              label="Nýtt sett"
+              class="q-pa-sm col-xs-12 col-lg-3"
+            />
 
-<q-btn
-      dense
-      color="primary"
-      size="lg"
-      label="Gott í bili"
-      class="q-pa-sm col-xs-12 col-lg-3"
-    />
-
-    </div>
+            <q-btn
+              dense
+              color="primary"
+              size="lg"
+              label="Gott í bili"
+              class="q-pa-sm col-xs-12 col-lg-3"
+            />
+          </div>
         </q-card-section>
       </q-card>
     </q-dialog>
-
-    <!--
-    <q-linear-progress
-      size="35px"
-      :value="progress"
-      color="info"
-      :label="progressLabel"
-      class="q-mt-sm"
-    /> -->
   </q-page>
 </template>
 
@@ -234,7 +186,6 @@ export default {
           frontT: 'Invented the "Clarke Calculator"',
           backT: 'Edith Clarke',
           flipped: false
-
         },
         {
           frontT: 'Famous World War II Enigma code breaker',
@@ -251,7 +202,7 @@ export default {
   },
   computed: {
     progressLabel () {
-      return (this.currentQnum + 1) + '/' + this.questions.length
+      return this.currentQnum + 1 + '/' + this.questions.length
     }
   },
   methods: {
@@ -299,7 +250,10 @@ export default {
         this.currentQnum = this.questions.length
         this.finale = true
       } else {
-        if (this.currentQnum <= this.questions.length && this.currentQnum >= 0) {
+        if (
+          this.currentQnum <= this.questions.length &&
+          this.currentQnum >= 0
+        ) {
           // console.log('range ok')
           this.activeSession = true
           this.currentQuestion = this.questions[this.currentQnum]
@@ -346,17 +300,23 @@ export default {
       }
     },
     goLeft () {
-    // goRight () {
+      // goRight () {
       console.log('goLeft')
       // this.$refs.cardfront.setAttribute('style', 'color: #5566f7;')
-      this.$refs.cardholder.setAttribute('style', 'left: -400px; opacity: 0.0; transition: 300ms ease-in-out;')
+      this.$refs.cardholder.setAttribute(
+        'style',
+        'left: -400px; opacity: 0.0; transition: 200ms ease-in-out;'
+      )
       this.reset(this.$refs.cardholder)
       this.setQuestion(1)
     },
     // goLeft () {
     goRight () {
       console.log('goRight')
-      this.$refs.cardholder.setAttribute('style', 'right: -400px; opacity: 0.0; transition: 300ms ease-in-out;')
+      this.$refs.cardholder.setAttribute(
+        'style',
+        'right: -400px; opacity: 0.0; transition: 200ms ease-in-out;'
+      )
       this.reset(this.$refs.cardholder)
       this.setQuestion(-1)
     },
@@ -375,10 +335,16 @@ export default {
       // console.log(this.$refs.cardholder)
       if (this.flipped) {
         this.$refs.cardfront.setAttribute('style', 'transform: rotateY(0deg);')
-        this.$refs.cardback.setAttribute('style', 'transform: rotateY(-180deg)')
+        this.$refs.cardback.setAttribute(
+          'style',
+          'transform: rotateY(-180deg)'
+        )
       } else {
         this.$refs.cardback.setAttribute('style', 'transform: rotateY(0deg)')
-        this.$refs.cardfront.setAttribute('style', 'transform: rotateY(180deg);')
+        this.$refs.cardfront.setAttribute(
+          'style',
+          'transform: rotateY(180deg);'
+        )
       }
       this.flipped = !this.flipped
     },
@@ -390,9 +356,12 @@ export default {
       setTimeout(function () {
         frontur.setAttribute('style', 'transform: rotateY(0deg)')
         bak.setAttribute('style', 'transform: rotateY(-180deg)')
-        f.setAttribute('style', 'transform: rotateY(0deg); bottom: 0; left: 0; opacity: 1; transition: opacity 300ms ease-in-out;')
+        f.setAttribute(
+          'style',
+          'transform: rotateY(0deg); bottom: 0; left: 0; opacity: 1; transition: opacity 200ms ease-in-out;'
+        )
         // this.$refs.cardfront.setAttribute('style', 'transform: color: #FFFFF; transition: color 800ms;')
-      }, 400)
+      }, 200)
       // this.flippit()
     }
   },
@@ -424,10 +393,9 @@ export default {
     window.removeEventListener('keyup', this.keyprocess)
   }
 }
-
 </script>
 
-<style scoped lang='scss'>
+<style scoped lang="scss">
 $primary: rgb(6, 2, 245);
 $primary-light: rgb(82, 131, 247);
 
@@ -494,7 +462,7 @@ $orange: rgb(227, 230, 25);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   transform-style: preserve-3d;
-  transition: all ease-in-out 300ms;
+  transition: all ease-in-out 200ms;
   // overflow: hidden;
 }
 
@@ -503,7 +471,7 @@ $orange: rgb(227, 230, 25);
   background-blend-mode: overlay;
   padding: 4rem;
   // font-size: 1.3rem;
-  font-size: 4vh;
+  font-size: 5vh;
   font-weight: 600;
   color: #fff;
   overflow: hidden;
@@ -535,7 +503,7 @@ $orange: rgb(227, 230, 25);
   padding: 4rem;
   font-weight: 600;
   // font-size: 1.24rem;
-  font-size: 6vh;
+  font-size: 5vh;
 
   // .button {
   //   background: linear-gradient(135deg, adjust-hue($primary, -20deg), $primary);
