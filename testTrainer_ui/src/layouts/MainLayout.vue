@@ -13,6 +13,7 @@
 import Header from 'components/Header'
 import Footer from 'components/Footer'
 
+// prevent page jumps on spacebar pressed
 window.addEventListener('keydown', function (e) {
   if (e.keyCode === 32 && e.target === document.body) {
     e.preventDefault()
