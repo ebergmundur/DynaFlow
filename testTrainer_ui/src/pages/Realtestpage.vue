@@ -57,12 +57,12 @@
                   {{ cat.category.name }}
                 </q-toolbar-title>
               </q-toolbar>
-              <q-card-section class="text-center" >
                <q-item clickable class="flex-center" :to="'/test/'+cat.category.id">
+              <q-card-section class="text-center" >
                <!-- <q-item clickable class="flex-center" @click="catSelect(cat.id)"> -->
                 <q-icon :name="cat.category.icon" size="12vh"  />
-                </q-item>
               </q-card-section>
+                </q-item>
                 <q-card-section class="text-center">
                 <div  class="text-h5">
                  {{cat.answcount}} af {{cat.catcount}} lokið
