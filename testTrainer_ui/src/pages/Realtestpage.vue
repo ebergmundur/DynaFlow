@@ -345,7 +345,7 @@ export default {
     })
       .then(response => {
         this.categories = JSON.parse(JSON.stringify(response.data))
-        console.log(this.categories)
+        // console.log(this.categories)
         // var i
         // for (i = 0; i < rdata.length; i++) {
         //   // console.log(this.myJson.question_collection[i].name)

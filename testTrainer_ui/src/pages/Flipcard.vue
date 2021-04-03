@@ -55,21 +55,26 @@
           <q-toolbar-title>Fjöldi spurninga og fög:</q-toolbar-title>
         </q-toolbar>
 
-        <q-card-section class="">
-          <q-input v-model="tot_count" label="Fjöldi" />
+        <q-card-section class="q-ma-lg">
+          <!-- <q-input v-model="tot_count" label="Fjöldi" /> -->
           <!-- @input="setup_session" -->
-
+          <q-input
+          v-model="tot_count"
+          type="number" label=""
+          class="text-h4"
+          :rules="[ val => val <= 50 || 'Hámark 50']"
+          style="height: 80px; margin-top: -40px;"/>
           <q-slider
             v-model="tot_count"
             :min="0"
             color="primary"
             label
-            :max="100"
+            :max="50"
             :step="5"
           />
           <!-- @input="setup_session" -->
           <!-- </q-field> -->
-          <div v-if="!activeSession">
+          <!-- <div v-if="!activeSession">
             <q-checkbox
               v-for="(data, index) in questions"
               :key="index"
@@ -77,20 +82,67 @@
               :label="data.name"
               v-model="cats_count[index].use"
             />
+          </div> -->
+        </q-card-section>
+        <q-card-section class="">
+          <div class="row wrap q-gutter-md justify-evenly">
+            <q-card
+              v-for="(cat, index) in cats"
+              :key="index"
+              :value="cat.category.id"
+              class="col-xs-12 col-sm-5 col-md-6 col-lg"
+            >
+              <q-toolbar class="q-dark text-center">
+                  <q-checkbox
+              v-model="cats_count[index].use"
+              size="lg"
+              dark
+            />
+                <q-toolbar-title >
+                  {{ cat.category.name }}
+                </q-toolbar-title>
+            <q-checkbox
+              size="lg"
+              v-model="hideCheck"
+              value=-1
+              style="visibility: hidden;"
+            />
+              </q-toolbar>
+               <q-item
+               clickable
+               class="flex-center"
+               @click="cats_count[index].use = !cats_count[index].use"
+               >
+               <!-- :to="'/test/'+cat.category.id" -->
+              <q-card-section class="text-center" >
+               <!-- <q-item clickable class="flex-center" @click="catSelect(cat.id)"> -->
+                <q-icon :name="cat.category.icon" size="8vh"  />
+              </q-card-section>
+                </q-item>
+                <q-card-section class="text-center">
+                <div  class="text-h5">
+                 {{cat.answcount}} af {{cat.catcount}} lokið
+                <q-linear-progress  rounded size="20px" :value="cat.answcount/cat.catcount" :class="cat.category.color_class" />
+                </div>
+                <div class="q-pt-none text-justify"  v-html="cat.category.description">
+                </div>
+              </q-card-section>
+
+            </q-card>
           </div>
         </q-card-section>
         <q-separator></q-separator>
         <q-card-actions align="right" class="bg-white">
-          <q-btn color="positive" label="OK" @click="setup_session" />
+          <q-btn color="positive" label="Byrja" @click="setup_session" size="lg" />
         </q-card-actions>
       </q-card>
     </q-dialog>
 
     <q-dialog
       v-model="finale"
-      persistent
       transition-show="scale"
       transition-hide="scale"
+      persistent
     >
       <q-card class="" style="width: 500px">
         <q-toolbar class="bg-dark text-white">
@@ -116,6 +168,7 @@
               size="lg"
               label="Nýtt sett"
               class="q-pa-sm col-xs-12 col-lg-3"
+              @click="newSet"
             />
 
             <q-btn
@@ -124,6 +177,7 @@
               size="lg"
               label="Gott í bili"
               class="q-pa-sm col-xs-12 col-lg-3"
+              to="/"
             />
           </div>
         </q-card-section>
@@ -148,7 +202,7 @@ export default {
       cQ: 0,
       navigationActive: false,
       // cancel: 0,
-      tot_count: 15,
+      tot_count: 5,
       toggle1: false,
       time_allowed: 0,
       time_taken: 0,
@@ -162,6 +216,7 @@ export default {
       persistent: true,
       cats_count: [],
       cats: [],
+      hideCheck: true,
       qPerCat: 2,
       questions: [],
       question_count: 0,
@@ -241,7 +296,7 @@ export default {
       this.currentQnum = this.currentQnum + Number(n)
       if (this.currentQnum <= 0 && this.activeSession) {
         this.currentQnum = 0
-        alert('fyrsta spjald')
+        // alert('fyrsta spjald')
       } else if (this.currentQnum >= this.questions.length) {
         this.currentQnum = this.questions.length
         this.finale = true
@@ -359,29 +414,54 @@ export default {
         // this.$refs.cardfront.setAttribute('style', 'transform: color: #FFFFF; transition: color 800ms;')
       }, 200)
       // this.flippit()
+    },
+    newSet () {
+      this.finale = false
+      this.persistent = true
+      // this.$router
+      //   .push({ path: '/flipcard' })
+      //   .catch(err => {
+      //     console.log(err.message)
+      //   })
+    },
+    pageSetUp () {
+      const username = store.getters.getUserName
+      getAPI({
+        url: '/api/catstat/',
+        method: 'post',
+        data: {
+          user: username,
+          timed: true,
+          time_allowed: 0
+        },
+        headers: { Authorization: `Bearer ${access}` }
+      })
+        .then(response => {
+        // console.log(response)
+          this.cats = JSON.parse(JSON.stringify(response.data))
+          // console.log(this.cats)
+          var i
+          for (i = 0; i < this.cats.length; i++) {
+            var cid = this.cats[i].category
+            this.cats_count.push({ id: cid.id, use: true })
+          // this.cats_count.push(false)
+          }
+        })
+        .catch(error => console.log('Error', error.message))
     }
   },
   beforeMount () {
-    getAPI({
-      url: '/api/category/',
-      method: 'get',
-      headers: { Authorization: `Bearer ${access}` }
-    })
-      .then(response => {
-        // console.log(response)
-        this.questions = JSON.parse(JSON.stringify(response.data))
-        var i
-        for (i = 0; i < this.questions.length; i++) {
-          var cid = this.questions[i]
-          this.cats_count.push({ id: cid.id, use: true })
-          // this.cats_count.push(false)
-        }
-      })
-      .catch(error => console.log('Error', error.message))
+    // getAPI({
+    //   url: '/api/category/',
+    //   method: 'get',
+    //   headers: { Authorization: `Bearer ${access}` }
+    // })
+
     // this.questions = JSON.parse(JSON.stringify(json))
   },
   mounted () {
     // this.flippit()
+    this.pageSetUp()
     window.addEventListener('keyup', this.keyprocess)
   },
   beforeDestroy () {
