@@ -273,6 +273,8 @@ export default {
     },
     setup_session (e) {
       this.persistent = false
+      // this.finale = false
+      // this.progress = 0
 
       getAPI({
         method: 'POST',
@@ -416,8 +418,19 @@ export default {
       // this.flippit()
     },
     newSet () {
-      this.finale = false
       this.persistent = true
+      this.cats_count = []
+      this.cats = []
+      this.hideCheck = true
+      this.qPerCat = 2
+      this.questions = []
+      this.question_count = 0
+      this.currentQnum = 0
+      this.currentQuestion = null
+      this.activeSession = false
+      this.progress = 0
+      this.finale = false
+      this.pageSetUp()
       // this.$router
       //   .push({ path: '/flipcard' })
       //   .catch(err => {
