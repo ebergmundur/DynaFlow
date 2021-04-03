@@ -429,6 +429,7 @@ SUMMERNOTE_CONFIG = {
 
     # Set custom model for attachments (default: 'django_summernote.Attachment')
     # 'attachment_model': 'my.custom.attachment.model', # must inherit 'django_summernote.AbstractAttachment'
+    'attachment_model': 'django_summernote.Attachment', # must inherit 'django_summernote.AbstractAttachment'
 
     # You can completely disable the attachment feature.
     'disable_attachment': False,
