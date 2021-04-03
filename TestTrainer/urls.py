@@ -52,6 +52,7 @@ urlpatterns = [
                   path('api/userinfo/', question_views.userdata, name='userdata' ),
                   path('api/answer/', question_views.answer_add),
                   path('api/indexcards/', question_views.indexcards),
+                  path('api/about/', question_views.about),
                   path('api/review/', question_views.review),
                   path('api/dashboarddata/', question_views.dashboard),
                   path('api/questionnaiere/', question_views.practice_test),

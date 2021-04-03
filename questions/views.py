@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.db.models import Count
 from django.core.serializers import serialize
+from django.http import HttpResponse, JsonResponse
 
 from .serializers import (
     OptionSerializer,
@@ -202,14 +203,27 @@ def userdata(request):
         return Response(serializer.data)
 
 
-# @permission_classes([IsAuthenticatedOrReadOnly, AllowAny])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticatedOrReadOnly, AllowAny])
+# @permission_classes([AllowAny])
 @api_view(["GET"])
 def indexcards(request):
     if request.method == "GET":
         idx_cards = TextBlock.objects.filter(spot__in=[1, 2]).order_by('spot', 'order')
 
         serializer = TextBlockSerializer(idx_cards, many=True)
+        # response = JsonResponse(serializer.data)
+        return Response(serializer.data)
+
+
+@permission_classes([IsAuthenticatedOrReadOnly, AllowAny])
+# @permission_classes([AllowAny])
+@api_view(["GET"])
+def about(request):
+    if request.method == "GET":
+        idx_cards = TextBlock.objects.filter(spot=3).order_by('order')
+
+        serializer = TextBlockSerializer(idx_cards, many=True)
+        # response = JsonResponse(serializer.data)
         return Response(serializer.data)
 
 
@@ -222,8 +236,6 @@ def catstat(request):
         for c in cats:
             ta = TestAnswers.objects.filter(created_by__username=request.user,question__category=c).order_by( 'question__id').distinct('question__id').count()
             cat_list.append({'category': c, 'catcount': c.q_count(), 'answcount': ta})
-        
-        print(cat_list)
 
         serializer = CatStatSerializer(cat_list, many=True)
         return Response(serializer.data)
