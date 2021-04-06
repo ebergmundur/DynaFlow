@@ -189,6 +189,7 @@ export default {
     })
       .then(response => {
         this.myJson = JSON.parse(JSON.stringify(response.data))
+        // console.log(this.myJson)
 
         this.totalQuestions = this.myJson.answers.length
         // console.log(this.totalQuestions)

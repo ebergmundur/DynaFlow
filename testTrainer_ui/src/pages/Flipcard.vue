@@ -49,10 +49,17 @@
     >
       <q-card>
         <q-toolbar class="bg-dark text-white">
-          <q-avatar>
+          <!-- <q-avatar>
             <img src="../assets/enam-logo.svg" />
-          </q-avatar>
-          <q-toolbar-title>Fjöldi spurninga og fög:</q-toolbar-title>
+          </q-avatar> -->
+          <q-toolbar-title>
+            Fjöldi spurninga og fög:
+
+<div style="float: right;">
+          <q-btn color="negative" label="Hætta" to="/" size="md" />
+</div>
+
+            </q-toolbar-title>
         </q-toolbar>
 
         <q-card-section class="q-ma-lg">

@@ -57,7 +57,8 @@
                   {{ cat.category.name }}
                 </q-toolbar-title>
               </q-toolbar>
-               <q-item clickable class="flex-center" :to="'/test/'+cat.category.id">
+               <!-- <q-item clickable class="flex-center" :to="'/test/'+cat.category.id"> -->
+               <q-item clickable class="flex-center" @click="onTestSubmit(cat.category.id)">
               <q-card-section class="text-center" >
                <!-- <q-item clickable class="flex-center" @click="catSelect(cat.id)"> -->
                 <q-icon :name="cat.category.icon" size="12vh"  />
@@ -90,7 +91,7 @@
 <script>
 import { getAPI } from 'src/api/axios-base'
 import store from 'src/store'
-import { date } from 'quasar'
+// import { date } from 'quasar'
 
 const access = store.getters.token
 
@@ -146,37 +147,65 @@ export default {
     // }
   },
   methods: {
-    catSelect (catid) {
-      console.log(this.$refs[catid])
-      // this.$refs[catid].$el.lastElementChild
-    },
-    timers () {
-      // this.totaltime = date
-      //   .formatDate(this.timeTotal - Date.now(), 'HH:mm:ss')
-      //   .toString()
-      // this.questTime = date
-      //   .formatDate(Date.now() - this.questStartTime, 'mm:ss')
-      //   .toString()
-    },
-    setQuestion (e) {
-      var index = 0
-      if (e > -1) {
-        index = e - 1
-      } else {
-        index = 0
+    onTestSubmit (catid) {
+      const questionCollection = [{ id: catid, num: 20, use: true }]
+      const formdata = {
+        question_collection_str: questionCollection,
+        question_collection: questionCollection,
+        timed: true,
+        time_allowed: 120,
+        only_failed: false,
+        omit_known: false,
+        practice: false,
+        user: store.getters.getUserName
       }
-      this.hinttext = ''
-      this.editingIndex = index
-      this.question = JSON.parse(
-        JSON.stringify(this.myJson.question_collection[index])
-      )
-      store.commit({ type: 'setQuestion', payload: this.question })
-      this.currPoints = this.question.points
-      this.questNum = index + 1
-
-      this.questStartTime = Date.now()
-      this.timeTotal = store.getters.getTestTimeTotal
+      console.log(formdata)
+      getAPI({
+        url: '/api/questionnaiere/',
+        method: 'post',
+        headers: { Authorization: `Bearer ${access}` },
+        data: formdata
+      })
+        .then(() => {
+          this.wrongCred = false
+          this.$router.push({ name: 'testpractice' })
+        })
+        .catch(err => {
+          console.log(err)
+          this.wrongCred = true // if the credentials were wrong set wrongCred to true
+        })
     },
+    // catSelect (catid) {
+    //   console.log(this.$refs[catid])
+    //   // this.$refs[catid].$el.lastElementChild
+    // },
+    // timers () {
+    //   // this.totaltime = date
+    //   //   .formatDate(this.timeTotal - Date.now(), 'HH:mm:ss')
+    //   //   .toString()
+    //   // this.questTime = date
+    //   //   .formatDate(Date.now() - this.questStartTime, 'mm:ss')
+    //   //   .toString()
+    // },
+    // setQuestion (e) {
+    //   var index = 0
+    //   if (e > -1) {
+    //     index = e - 1
+    //   } else {
+    //     index = 0
+    //   }
+    //   this.hinttext = ''
+    //   this.editingIndex = index
+    //   this.question = JSON.parse(
+    //     JSON.stringify(this.myJson.question_collection[index])
+    //   )
+    //   store.commit({ type: 'setQuestion', payload: this.question })
+    //   this.currPoints = this.question.points
+    //   this.questNum = index + 1
+
+    //   this.questStartTime = Date.now()
+    //   this.timeTotal = store.getters.getTestTimeTotal
+    // },
     setAnswerChecked (e) {
       if (this.currentQuestion.id !== this.cQ) {
         this.cQ = this.currentQuestion.id
@@ -196,124 +225,124 @@ export default {
         headers: { Authorization: `Bearer ${access}` },
         data: formdata
       }).catch(error => console.log('Error', error.message))
-    },
-    onAnswerSubmit (e) {
-      if (this.currTestAnsw < 1) {
-        if (
-          confirm(
-            'Hey ætlar þú ekki að svara?\n OK merkir spurninguna til að hún gleymist ekki.'
-          )
-        ) {
-          this.questionsNumbersList[this.questNum - 1].answered = true
-          this.questionsNumbersList[this.questNum - 1].color = 'warning'
-          this.questionsNumbersList[this.questNum - 1]['toggle-color'] =
-            'negative'
-        }
-      }
-
-      var formdata = {
-        options_ids: this.currTestAnsw.toString(),
-        curr_question: parseInt(this.currentQuestion.id),
-        test_practice: parseInt(this.myJson.id),
-        points: parseInt(this.currPoints),
-        known: this.known,
-        postpone: this.postpone
-      }
-
-      getAPI({
-        url: '/api/answer/',
-        method: 'post',
-        data: formdata,
-        headers: { Authorization: `Bearer ${access}` }
-      })
-
-      this.questionsNumbersList[this.questNum - 1].answer = this.currTestAnsw
-      this.questionsNumbersList[this.questNum - 1].answered = true
-      this.questionsNumbersList[this.questNum - 1].color = '$primary'
-      this.known = false
-
-      var answers = 0
-      var i
-      for (i = 0; i < this.totalQuestions; i++) {
-        if (this.questionsNumbersList[i].answered) {
-          answers++
-        }
-      }
-
-      if (answers === this.totalQuestions) {
-        this.testFinished = true
-      }
-
-      var ii
-      for (ii = 0; ii < this.totalQuestions; ii++) {
-        if (!this.questionsNumbersList[ii].answered) {
-          this.setQuestion(ii + 1)
-          ii = this.totalQuestions
-        }
-      }
-      // console.log(this.questionsNumbersList)
-    },
-    onMemoReset () {
-      this.memotext = ''
-      this.difficulty = 50
-      this.accept = false
-      this.calendar = false
-      this.showDate = false
-    },
-    hint (e) {
-      e.target.offsetParent.disabled = true
-      this.hinttext = this.currentQuestion.hint
-      this.currPoints =
-        this.currentQuestion.points - this.currentQuestion.hint_cost
-    },
-    openUrl () {
-      window.open(
-        'https://api.enam.is/admin/questions/question/' +
-          this.currentQuestion.id,
-        '_blank'
-      )
-    },
-    setupExam () {
-      const username = store.getters.getUserName
-      this.persistent = false
-      getAPI({
-        url: '/api/realtest/',
-        method: 'post',
-        data: {
-          user: username,
-          timed: true,
-          time_allowed: 0
-        },
-        headers: { Authorization: `Bearer ${access}` }
-      })
-        .then(response => {
-          // console.log(response.data)
-          this.myJson = JSON.parse(JSON.stringify(response.data))
-          this.totalQuestions = this.myJson.question_collection.length
-          var i
-          var qs = []
-          for (i = 0; i < this.totalQuestions; i++) {
-            // console.log(this.myJson.question_collection[i].name)
-            qs.push({
-              label: i + 1,
-              value: i + 1,
-              slot: i + 1,
-              title: this.myJson.question_collection[i].name,
-              color: 'info',
-              answered: false,
-              answer: 0
-            })
-          }
-          this.$store.dispatch(
-            'setTestTimeTotal',
-            date.addToDate(Date.now(), { minutes: 120 })
-          )
-          this.questionsNumbersList = qs
-          this.setQuestion(1)
-          this.spinnegal = false
-        })
-        .catch(error => console.log('Error', error.message))
     }
+    // onAnswerSubmit (e) {
+    //   if (this.currTestAnsw < 1) {
+    //     if (
+    //       confirm(
+    //         'Hey ætlar þú ekki að svara?\n OK merkir spurninguna til að hún gleymist ekki.'
+    //       )
+    //     ) {
+    //       this.questionsNumbersList[this.questNum - 1].answered = true
+    //       this.questionsNumbersList[this.questNum - 1].color = 'warning'
+    //       this.questionsNumbersList[this.questNum - 1]['toggle-color'] =
+    //         'negative'
+    //     }
+    //   }
+
+    //   var formdata = {
+    //     options_ids: this.currTestAnsw.toString(),
+    //     curr_question: parseInt(this.currentQuestion.id),
+    //     test_practice: parseInt(this.myJson.id),
+    //     points: parseInt(this.currPoints),
+    //     known: this.known,
+    //     postpone: this.postpone
+    //   }
+
+    //   getAPI({
+    //     url: '/api/answer/',
+    //     method: 'post',
+    //     data: formdata,
+    //     headers: { Authorization: `Bearer ${access}` }
+    //   })
+
+    //   this.questionsNumbersList[this.questNum - 1].answer = this.currTestAnsw
+    //   this.questionsNumbersList[this.questNum - 1].answered = true
+    //   this.questionsNumbersList[this.questNum - 1].color = '$primary'
+    //   this.known = false
+
+    //   var answers = 0
+    //   var i
+    //   for (i = 0; i < this.totalQuestions; i++) {
+    //     if (this.questionsNumbersList[i].answered) {
+    //       answers++
+    //     }
+    //   }
+
+    //   if (answers === this.totalQuestions) {
+    //     this.testFinished = true
+    //   }
+
+    //   var ii
+    //   for (ii = 0; ii < this.totalQuestions; ii++) {
+    //     if (!this.questionsNumbersList[ii].answered) {
+    //       this.setQuestion(ii + 1)
+    //       ii = this.totalQuestions
+    //     }
+    //   }
+    //   // console.log(this.questionsNumbersList)
+    // },
+    // onMemoReset () {
+    //   this.memotext = ''
+    //   this.difficulty = 50
+    //   this.accept = false
+    //   this.calendar = false
+    //   this.showDate = false
+    // },
+    // hint (e) {
+    //   e.target.offsetParent.disabled = true
+    //   this.hinttext = this.currentQuestion.hint
+    //   this.currPoints =
+    //     this.currentQuestion.points - this.currentQuestion.hint_cost
+    // },
+    // openUrl () {
+    //   window.open(
+    //     'https://api.enam.is/admin/questions/question/' +
+    //       this.currentQuestion.id,
+    //     '_blank'
+    //   )
+    // },
+    // setupExam () {
+    //   const username = store.getters.getUserName
+    //   this.persistent = false
+    //   getAPI({
+    //     url: '/api/realtest/',
+    //     method: 'post',
+    //     data: {
+    //       user: username,
+    //       timed: true,
+    //       time_allowed: 0
+    //     },
+    //     headers: { Authorization: `Bearer ${access}` }
+    //   })
+    //     .then(response => {
+    //       // console.log(response.data)
+    //       this.myJson = JSON.parse(JSON.stringify(response.data))
+    //       this.totalQuestions = this.myJson.question_collection.length
+    //       var i
+    //       var qs = []
+    //       for (i = 0; i < this.totalQuestions; i++) {
+    //         // console.log(this.myJson.question_collection[i].name)
+    //         qs.push({
+    //           label: i + 1,
+    //           value: i + 1,
+    //           slot: i + 1,
+    //           title: this.myJson.question_collection[i].name,
+    //           color: 'info',
+    //           answered: false,
+    //           answer: 0
+    //         })
+    //       }
+    //       this.$store.dispatch(
+    //         'setTestTimeTotal',
+    //         date.addToDate(Date.now(), { minutes: 120 })
+    //       )
+    //       this.questionsNumbersList = qs
+    //       this.setQuestion(1)
+    //       this.spinnegal = false
+    //     })
+    //     .catch(error => console.log('Error', error.message))
+    // }
   },
   // beforeMount () {
   //   getAPI({
@@ -337,9 +366,7 @@ export default {
       url: '/api/catstat/',
       method: 'post',
       data: {
-        user: username,
-        timed: true,
-        time_allowed: 0
+        user: username
       },
       headers: { Authorization: `Bearer ${access}` }
     })

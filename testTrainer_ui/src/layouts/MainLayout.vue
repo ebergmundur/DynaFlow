@@ -4,14 +4,14 @@
       <q-page-container>
         <router-view/>
       </q-page-container>
-     <Footer></Footer>
+     <!-- <Footer></Footer> -->
   </q-layout>
 </template>
 
 <script>
 // import { mapState } from 'vuex'
 import Header from 'components/Header'
-import Footer from 'components/Footer'
+// import Footer from 'components/Footer'
 
 // prevent page jumps on spacebar pressed
 window.addEventListener('keydown', function (e) {
@@ -23,8 +23,8 @@ window.addEventListener('keydown', function (e) {
 export default {
   name: 'MainLayout',
   components: {
-    Header,
-    Footer
+    Header
+    // Footer
   },
   data () {
     return {}

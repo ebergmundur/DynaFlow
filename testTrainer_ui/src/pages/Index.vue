@@ -68,8 +68,9 @@
 <script>
 // import Footer from 'components/Footer'
 import { getAPI } from 'src/api/axios-base'
-import store from 'src/store'
+// import axios from 'axios'
 
+import store from 'src/store'
 const access = store.getters.token || null
 
 export default {
@@ -95,8 +96,12 @@ export default {
     getAPI({
       url: '/api/indexcards/',
       headers: { Authorization: `Bearer ${access}` },
-      method: 'get'
+      method: 'post'
     })
+    // axios({
+    //   method: 'get',
+    //   url: 'https://localhost:8000/api/indexcards/'
+    // })
       .then(response => {
         const rdata = JSON.parse(JSON.stringify(response.data))
         console.log('rdata')

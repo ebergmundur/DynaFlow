@@ -8,9 +8,9 @@
     >
       <q-card>
         <q-toolbar class="bg-dark text-white">
-          <q-avatar>
+          <!-- <q-avatar>
             <img src="../assets/enam-logo.svg" />
-          </q-avatar>
+          </q-avatar> -->
           <q-toolbar-title>
             <span class="text-weight-bold">E-nám</span>
             Ljúka prófi?
@@ -34,9 +34,9 @@
     <q-dialog v-model="memo">
       <q-card>
         <q-toolbar>
-          <q-avatar>
+          <!-- <q-avatar>
             <img src="../assets/enam-logo.svg" />
-          </q-avatar>
+          </q-avatar> -->
 
           <q-toolbar-title>
             <span class="text-weight-bold">E-nám</span>
@@ -60,18 +60,19 @@
             </div>
 
             <div class="q-pa-md q-ma-xs">
-              <q-input v-model="memotext" filled type="textarea" />
+              <q-input v-model="memotext" filled label="Minnisatriði" autogrow type="textarea" />
             </div>
-            <q-toggle v-model="known" label="Kann vel " class="q-ma-sm" />
-            <div>
-              <q-btn label="Skrá" type="submit" color="primary" />
+            <div style="float: left">
+              <q-toggle v-model="known" label="Kann vel " class="q-ma-sm" />
+            </div>
+            <div align="right" >
               <q-btn
                 label="Hreinsa"
                 type="reset"
                 color="primary"
-                flat
-                class="q-ml-sm"
+                class="q-ma-md"
               />
+              <q-btn label="Skrá" type="submit" color="positive" class="q-ma-md" />
             </div>
           </q-form>
         </q-card-section>
@@ -114,7 +115,7 @@
                       Þyngd: {{ data.difficulty }}
                       <q-linear-progress
                         size="14px"
-                        :value="data.difficulty / 15"
+                        :value="data.difficulty / 100"
                         color="red"
                         track-color="orange"
                         class="q-mt-sm"
@@ -132,7 +133,7 @@
     </q-dialog>
 
     <!--OPTIONS-->
-    <q-dialog v-model="memolist" >
+    <!-- <q-dialog v-model="memolist" >
       <q-card class="memowing">
         <q-card-section class="row items-center q-pb-none col-lg-8">
           <div class="text-h6">Veldu grein</div>
@@ -142,7 +143,7 @@
         <q-card-section>
         </q-card-section>
       </q-card>
-    </q-dialog>
+    </q-dialog> -->
 
     <!--    <div class="row col redborder">-->
 
@@ -182,7 +183,7 @@
       </q-toolbar>
       <q-card-section class="row col">
         <div class="col-md-6 q-pr-lg">
-          <div class="text-h6">{{ currentQuestion.virtname }}</div>
+          <div class="text-h6">{{ currentQuestion.question }}</div>
           <!-- <div class="text-subtitle2">{{ currentQuestion.name }}</div>
                       <div class="text-subtitle2">{{ currentQuestion.owner.fullname }}</div> -->
           <div v-if="hinttext" class="text-white bg-orange q-pa-sm">
@@ -256,8 +257,9 @@
           </q-menu>
         </q-btn>
 
+<!-- TODO clean submitted answer as well or just postpone  -->
         <q-btn
-          @click="currTestAnsw = []"
+          @click="currentQuestion.answer = []"
           color="info"
           style="position: absolute; left: 50%;"
         >
@@ -287,7 +289,7 @@
               unelevated
               :label="quest.label"
               size="lg"
-              @click="setQuestion(quest.label)"
+              @click="setQuestion(quest.label - 1 )"
             >
               <q-tooltip
                 :v-model="quest.label"
@@ -389,10 +391,13 @@ export default {
     setQuestion (q) {
       var index = 0
       if (q > -1) {
-        index = q - 1
+        index = q
       } else {
         index = 0
       }
+
+      // console.log(this.currentQuestion)
+
       if (this.currentQuestion) {
         console.log('T', this.clock)
         console.log('A', this.currentQuestion.time)
@@ -456,6 +461,8 @@ export default {
         headers: { Authorization: `Bearer ${access}` },
         data: formdata
       }).catch(error => console.log('Error', error.message))
+      this.memo = false
+      this.currentQuestion.memos.push(formdata)
     },
     onAnswerSubmit (e) {
       if (this.currentQuestion.answer < 1) {
@@ -506,15 +513,24 @@ export default {
 
       if (answers === this.totalQuestions) {
         this.testFinished = true
-      }
-
-      var ii
-      for (ii = 0; ii < this.totalQuestions; ii++) {
-        if (!this.questions[ii].answered) {
-          this.setQuestion(ii + 1)
-          ii = this.totalQuestions
+      } else {
+        var ii
+        for (ii = 0; ii < this.totalQuestions; ii++) {
+          console.log(ii, this.questions[ii].id, this.currentQuestion.id, this.questions[ii].id === this.currentQuestion.id)
+          if (this.questions[ii].id === this.currentQuestion.id) {
+            this.setQuestion(ii + 1)
+            ii = this.totalQuestions
+          }
         }
       }
+
+      // var ii
+      // for (ii = 0; ii < this.totalQuestions; ii++) {
+      //   if (!this.questions[ii].answered) {
+      //     this.setQuestion(ii + 1)
+      //     ii = this.totalQuestions
+      //   }
+      // }
       // console.log(this.questionsNumbersList)
     },
     onMemoReset () {
@@ -556,7 +572,7 @@ export default {
     reviewTest () {
       this.testFinished = false
       this.$router
-        .push({ path: '/review', params: { exam: 52 } })
+        .push({ path: '/review/' + this.myJson.id + '/' })
         .catch(err => {
           console.log(err.message)
         })
@@ -591,7 +607,7 @@ export default {
 
         this.startTime = Date.now()
         this.$store.dispatch('setTotalTime', Date.now())
-        this.setQuestion(1)
+        this.setQuestion(0)
       })
       .catch(error => console.log('Error', error.message))
   },

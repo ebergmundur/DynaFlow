@@ -145,6 +145,7 @@ export default {
         only_failed: this.only_failed,
         omit_known: this.omit_known,
         examname: this.examname,
+        practice: true,
         user: store.getters.getUserName
       }
       console.log(formdata)
