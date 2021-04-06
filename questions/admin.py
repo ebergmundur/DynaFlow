@@ -119,11 +119,13 @@ class OptionInline(TranslationTabularInline):
 
 @admin.register(Question)
 class QuestionAdmin(TabbedTranslationAdmin, SummernoteModelAdmin):
-    list_display = ('name', 'question', 'category', 'exam_question', 'flipcard_question', 'answer_count', 'owner','single_selection',)
+    list_display = ('name', 'question', 'category', 'exam_question', 'flipcard_question', 'answer_count', 'owner','single_selection', 'active', )
     inlines = [OptionInline, ]
-    list_filter = [ 'category', 'owner', 'exam_question', 'single_selection',]
-    list_editable = ['single_selection', 'exam_question', 'category', 'flipcard_question', ]
+    list_filter = [ 'category', 'owner', 'exam_question', 'single_selection', 'active', ]
+    list_editable = ['single_selection', 'exam_question', 'category', 'flipcard_question', 'active',  ]
     summernote_fields = ('description', 'question', 'hint')
+    search_fields = ('name', 'question', 'description', 'hint', )
+    date_hierarchy = ('created_date')
 
     def get_form(self, request, obj, **kwargs):
         form = super(QuestionAdmin, self).get_form(request, obj, **kwargs)

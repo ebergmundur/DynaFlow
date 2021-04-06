@@ -133,10 +133,10 @@ def dashboard(request):
         return Response(serializer.data)
 
 
-@api_view(["GET", "POST"])
+@api_view(["POST"])
 def review(request):
     qid = int(request.data["id"])
-    print(request.data["username"])
+    print(request.data["id"])
     if request.method == "POST":
         if qid > 0:
             queryset = Questionnaire.objects.filter(
@@ -144,7 +144,7 @@ def review(request):
             )[0]
             serializer = RevieweSerializer(queryset, many=False)
             return Response(serializer.data)
-        else:
+        elif qid == 0:
             queryset = Questionnaire.objects.filter(
                 owner__user__username=request.data["username"]
             ).order_by("-created_date")
@@ -203,11 +203,11 @@ def userdata(request):
         return Response(serializer.data)
 
 
-@permission_classes([IsAuthenticatedOrReadOnly, AllowAny])
+# @permission_classes([IsAuthenticatedOrReadOnly, AllowAny])
 # @permission_classes([AllowAny])
-@api_view(["GET"])
+@api_view(["POST"])
 def indexcards(request):
-    if request.method == "GET":
+    if request.method == "POST":
         idx_cards = TextBlock.objects.filter(spot__in=[1, 2]).order_by('spot', 'order')
 
         serializer = TextBlockSerializer(idx_cards, many=True)
@@ -376,7 +376,7 @@ def flipp_view(request):
                 cat_ids.append(int(c["id"]))
 
         # memos = TestAnswers.objects.filter(curr_question=request)
-        flips = Question.objects.order_by("?").filter(category_id__in=cat_ids)[:count]
+        flips = Question.objects.order_by("?").filter(category_id__in=cat_ids, active=True)[:count]
         serializer = QuestionSerializer(flips, many=True)
         return Response(serializer.data)
 
@@ -415,18 +415,19 @@ def practice_test(request):
             time_allowed=data["time_allowed"],
             omit_known=data["omit_known"],
             only_failed=data["only_failed"],
+            practice=data["practice"],
             question_collection_str=str(data["question_collection_str"]),
         )
         obj.save()
 
         i = 0  # index of array refers to Category id
-        print(data["question_collection"])
+        print(data)
         for q in data["question_collection"]:
             if q != None:
                 print("actual q: ", q["id"])
                 category = Category.objects.get(id=q["id"])
                 # print(category.name)
-                questions = category.question_set.all().order_by("?")
+                questions = category.question_set.filter(active=True).order_by("?")
                 # print(questions.count())
                 quest_counter = 0
                 for question in questions:
