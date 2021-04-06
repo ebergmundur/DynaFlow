@@ -149,7 +149,7 @@
 
     <q-card
       flat
-      class="q-pt-lg pagecard tpage"
+      class="q-pt-lg pagecard tpage fit"
       v-model="currentQuestion"
       v-if="currentQuestion"
     >
@@ -181,7 +181,7 @@
           <!--          <q-toggle v-model="postpone" value="false" label="Sleppa " class=" q-ma-sm"/>-->
         </div>
       </q-toolbar>
-      <q-card-section class="row col">
+      <q-card-section class="row col" >
         <div class="col-md-6 q-pr-lg">
           <div class="text-h6">{{ currentQuestion.question }}</div>
           <!-- <div class="text-subtitle2">{{ currentQuestion.name }}</div>
@@ -242,12 +242,12 @@
         />
 
         <q-btn color="orange" class="">
-          {{ currentQuestion.memos.length }} Minnismiðar
+          Minnismiðar: {{ currentQuestion.memos.length }}
           <q-menu cover auto-close>
             <!-- v-if="currentQuestion.memos.length > 0" -->
             <q-list>
               <q-btn @click="openMemos" color="orange" style="width: 100%;">
-                {{ currentQuestion.memos.length }} Minnismiðar
+                Minnismiðar: {{ currentQuestion.memos.length }}
               </q-btn>
               <br />
               <q-btn color="green" @click="memo = true" style="width: 100%;">
@@ -278,8 +278,8 @@
         <q-separator />
       </q-card-actions>
 
-      <q-card-section>
-        <div class="flex flex-center">
+      <q-card-section class="flex flex-center window-width">
+        <div class="scroll">
           <q-btn-group>
             <q-btn
               v-for="quest in questions"
@@ -300,13 +300,6 @@
               </q-tooltip>
             </q-btn>
           </q-btn-group>
-
-          <!-- <q-btn-toggle
-            v-model="questNum"
-            :options="questions"
-            size="md"
-            @input="setQuestion"
-          ></q-btn-toggle> -->
         </div>
       </q-card-section>
     </q-card>
