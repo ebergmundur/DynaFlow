@@ -181,7 +181,7 @@
           <!--          <q-toggle v-model="postpone" value="false" label="Sleppa " class=" q-ma-sm"/>-->
         </div>
       </q-toolbar>
-      <q-card-section class="row col" >
+      <q-card-section class="row col" style="min-height: 50vh;">
         <div class="col-md-6 q-pr-lg">
           <div class="text-h6">{{ currentQuestion.question }}</div>
           <!-- <div class="text-subtitle2">{{ currentQuestion.name }}</div>

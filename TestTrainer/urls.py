@@ -51,6 +51,7 @@ urlpatterns = [
                   path('api/catstat/', question_views.catstat),
                   path('api/userinfo/', question_views.userdata, name='userdata' ),
                   path('api/answer/', question_views.answer_add),
+                  path('indexcards/', question_views.indexcards),
                   path('api/indexcards/', question_views.indexcards),
                   path('api/about/', question_views.about),
                   path('api/review/', question_views.review),

@@ -21,8 +21,8 @@
             :class="iscorrect( item.result, item.question.category.order )"
             expand-separator
             group="item.question.category.name"
-            :label="item.question.virtname"
-            :caption="item.question.category.name"
+            :label="item.question.question"
+            :caption="item.question.category.name + ' –  minnismiðar: ' + item.question.memos.length"
           >
             <q-card-section style="background-color: white;" class="row quest-options">
               <div class="col-6">
@@ -47,7 +47,8 @@
             <span v-for="(memo, innx) in item.question.memos"
                   :key="innx"
             >
-              <strong>{{ formatDate(memo.created_date) }}:</strong> {{ memo.memo }}<br>
+              <strong>{{ formatDate(memo.created_date) }}:</strong> {{ memo.memo }}
+              <strong>Þyngd:</strong> {{ memo.difficulty }} <span v-if="memo.known"> – Kann vel</span><br>
             </span>
               </div>
 
